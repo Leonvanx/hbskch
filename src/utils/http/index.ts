@@ -15,7 +15,7 @@ class DefAxios {
     this.axiosInstance = axios.create({
       baseURL: '/apiProxy',
       timeout: 10 * 1000,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' }
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     });
     this.setupInterceptors();
   }

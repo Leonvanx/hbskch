@@ -1,17 +1,20 @@
 {
-  "name": "hbskch",
-  "private": true,
+  "name": "hbskxh",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "lint": "eslint --ext .js,.jsx,.vue,.ts src",
-    "lint:fix": "eslint --fix --ext .js,.jsx,.vue,.ts src"
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write src/",
+    "prepare": "husky"
   },
   "dependencies": {
-    "@vitejs/plugin-vue-jsx": "^4.1.2",
     "@vueuse/core": "^13.0.0",
     "axios": "^1.8.4",
     "dayjs": "^1.11.13",
@@ -22,28 +25,36 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
+    "@tsconfig/node22": "^22.0.1",
+    "@types/node": "^22.13.14",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/parser": "^8.29.0",
-    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue-jsx": "^4.1.2",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.5.0",
     "@vue/tsconfig": "^0.7.0",
-    "eslint": "8.56.0",
+    "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-config-standard": "17.1.0",
     "eslint-plugin-prettier": "^5.2.6",
-    "eslint-plugin-vue": "9.26.0",
+    "eslint-plugin-vue": "~10.0.0",
     "husky": "^9.1.7",
+    "jiti": "^2.4.2",
     "lint-staged": "^15.5.0",
+    "npm-run-all2": "^7.0.2",
+    "prettier": "3.5.3",
     "sass": "^1.86.3",
-    "typescript": "~5.7.2",
+    "typescript": "~5.8.0",
     "unplugin-auto-import": "^19.1.2",
     "unplugin-vue-components": "^28.4.1",
-    "vite": "^6.2.0",
-    "vue-tsc": "^2.2.4"
+    "vite": "^6.2.4",
+    "vite-plugin-vue-devtools": "^7.7.2",
+    "vue-tsc": "^2.2.8"
   },
   "lint-staged": {
-    "*.{js,vue,ts,jsx,tsx}": [
-      "eslint --fix"
+    "*.{js,ts,jsx,tsx,vue}": [
+      "pnpm lint",
+      "pnpm format"
     ]
   }
 }

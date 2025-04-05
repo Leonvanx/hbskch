@@ -1,14 +1,18 @@
+import { fileURLToPath, URL } from 'node:url';
+
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import vueDevTools from 'vite-plugin-vue-devtools';
+
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
-import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    vueDevTools(),
     Components({
       // 配置选项
       dts: true, // 生成类型声明文件
@@ -20,7 +24,7 @@ export default defineConfig({
         // ElementPlusResolver(), // Element Plus
         // AntDesignVueResolver(), // Ant Design Vue
         // VantResolver(), // Vant
-      ]
+      ],
       // 自定义组件前缀(默认空)
       // 例如: 设置为'El'则ElButton会被解析为element-plus的Button
       // prefix: 'El',
@@ -35,29 +39,19 @@ export default defineConfig({
           '@vueuse/core': [
             // 按需导入
             'useMouse',
-            ['useFetch', 'useMyFetch']
-          ]
-        }
+            ['useFetch', 'useMyFetch'],
+          ],
+        },
       ],
       dts: true, // 生成类型声明文件
       eslintrc: {
-        enabled: true // 生成eslint配置
-      }
-    })
+        enabled: true, // 生成eslint配置
+      },
+    }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-      // 添加更多你需要的别名
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
-  server: {
-    proxy: {
-      '/apiProxy': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/apiProxy/, '')
-      }
-    }
-  }
 });
