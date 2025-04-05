@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
@@ -38,9 +39,13 @@ class DefAxios {
     return this.request(url, data, { ...axiosReqConfig, method: 'HEAD' });
   }
   request<T = any>(url: string, data: any, config: AxiosRequestConfig): Promise<T> {
-    let conf: AxiosRequestConfig = JSON.parse(JSON.stringify(config));
+    const conf: AxiosRequestConfig = JSON.parse(JSON.stringify(config));
     conf.url = url;
-    conf.method === 'GET' ? (conf.params = data) : (conf.data = data);
+    if (conf.method === 'GET') {
+      conf.params = data;
+    } else {
+      conf.data = data;
+    }
     return new Promise((resolve, reject) => {
       this.axiosInstance
         .request<any, AxiosResponse<ResultSuccess>>(conf)

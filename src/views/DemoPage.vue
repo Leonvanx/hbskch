@@ -40,7 +40,7 @@ const { text, copy, copied, isSupported } = useClipboard();
 
 const fetchTestApi = async () => {
   try {
-    const res = await testApi({ name: "123", age: 123 });
+    const res = await testApi({ name: '123', age: 123 });
     console.log(res);
   } catch (error) {
     console.error(error);
