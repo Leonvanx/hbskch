@@ -7,6 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -21,6 +22,7 @@ export default defineConfig({
       deep: true, // 是否搜索子目录
       resolvers: [
         // UI库解析器
+        NaiveUiResolver(),
         // ElementPlusResolver(), // Element Plus
         // AntDesignVueResolver(), // Ant Design Vue
         // VantResolver(), // Vant
