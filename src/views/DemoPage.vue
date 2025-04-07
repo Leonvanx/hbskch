@@ -18,10 +18,15 @@
         <span v-else>Copied!</span>
       </button>
       <p>
-        Current copied: <code>{{ text || 'none' }}</code>
+        Current copied:
+        <code>{{ text || 'none' }}</code>
       </p>
     </div>
     <p v-else>Your browser does not support Clipboard API</p>
+    <div>
+      <h1>AiEditor，一个面向 AI 的富文本编辑器</h1>
+    </div>
+    <div ref="divRef" style="height: 600px" />
   </div>
 </template>
 
@@ -31,21 +36,35 @@ import { useCounterStoreV2 } from '@/stores';
 import { storeToRefs } from 'pinia';
 import { useClipboard } from '@vueuse/core';
 import { testApi } from '@/apis';
+import { AiEditor } from 'aieditor';
+import 'aieditor/dist/style.css';
 
 const counter = useCounterStore(); // 获取 Store 实例
 const counterV2 = useCounterStoreV2(); // 获取 Store 实例
 const { count } = storeToRefs(counterV2); // 解构 Store 中的 state
 
 const { text, copy, copied, isSupported } = useClipboard();
-
+const divRef = ref<Element | null>(null);
+let aiEditor: AiEditor | null = null;
 const fetchTestApi = async () => {
   try {
-    const res = await testApi({ name: '123', age: 123 });
-    console.log(res);
+    await testApi({ name: '123', age: 123 });
   } catch (error) {
     console.error(error);
   }
 };
+onMounted(() => {
+  aiEditor = new AiEditor({
+    element: divRef.value as Element,
+    placeholder: '点击输入内容...',
+    content: 'AiEditor 是一个面向 AI 的开源富文本编辑器。 ',
+  });
+});
+onUnmounted(() => {
+  if (aiEditor) {
+    aiEditor.destroy();
+  }
+});
 </script>
 
 <style scoped lang="scss">
