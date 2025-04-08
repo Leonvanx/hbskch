@@ -12,22 +12,22 @@ const menuOptions: MenuOption[] = [
       h(
         RouterLink,
         {
-          to: { name: 'home' },
+          to: { name: 'index' },
         },
-        { default: () => '首页' },
+        { default: () => '后管首页' },
       ),
-    key: '/home', // 修改为与路由路径一致
+    key: '/index', // 修改为与路由路径一致
   },
   {
     label: () =>
       h(
         RouterLink,
         {
-          to: { name: 'demoPage' }, // 使用name代替path
+          to: { name: 'adEditor' }, // 使用name代替path
         },
-        { default: () => '演示页面' },
+        { default: () => '子菜单内容编辑' },
       ),
-    key: '/home/demoPage', // 修改为完整路径
+    key: '/Admin/AiEditor', // 修改为完整路径
   },
 ];
 

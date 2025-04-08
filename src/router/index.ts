@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import BasicLayout from '@/components/layout/BasicLayout.vue';
-import HomeView from '../views/Home/Home.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -11,17 +10,22 @@ const router = createRouter({
     },
     {
       path: '/home',
+      name: 'home',
+      component: () => import('@/views/Home/Home.vue'),
+    },
+    {
+      path: '/admin',
       component: BasicLayout,
       children: [
         {
           path: '',
-          name: 'home',
-          component: HomeView,
+          name: 'index',
+          component: () => import('@/views/Admin/Index.vue'),
         },
         {
-          path: 'demoPage',
-          name: 'demoPage',
-          component: () => import('@/views/DemoPage.vue'),
+          path: 'adEditor',
+          name: 'adEditor',
+          component: () => import('@/views/Admin/AiEditor.vue'),
         },
       ],
     },
