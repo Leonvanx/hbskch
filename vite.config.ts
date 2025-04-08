@@ -50,4 +50,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: process.env.NODE_ENV === 'production', // 生产环境去除console
+        drop_debugger: process.env.NODE_ENV === 'production', // 生产环境去除debugger
+      },
+    },
+  },
 });
