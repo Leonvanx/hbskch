@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core';
 import type { MenuOption } from 'naive-ui';
 import { RouterLink } from 'vue-router';
 
@@ -13,28 +12,32 @@ const menuOptions: MenuOption[] = [
       h(
         RouterLink,
         {
-          to: {
-            name: 'home',
-          },
+          to: { name: 'home' },
         },
         { default: () => '首页' },
       ),
-    key: 'home',
+    key: '/home', // 修改为与路由路径一致
   },
   {
     label: () =>
       h(
         RouterLink,
         {
-          to: {
-            path: '/home/demoPage',
-          },
+          to: { name: 'demoPage' }, // 使用name代替path
         },
         { default: () => '演示页面' },
       ),
-    key: 'demo',
+    key: '/home/demoPage', // 修改为完整路径
   },
 ];
+
+// 添加路由监听
+watch(
+  () => router.currentRoute.value.path,
+  (path) => {
+    activeKey.value = path;
+  },
+);
 
 const activeKey = ref<string | null>(router.currentRoute.value.path);
 const showDrawer = ref(false);

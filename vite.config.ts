@@ -26,19 +26,7 @@ export default defineConfig({
       // prefix: 'El',
     }),
     AutoImport({
-      imports: [
-        'vue',
-        'vue-router',
-        'pinia',
-        // 其他自动导入
-        {
-          '@vueuse/core': [
-            // 按需导入
-            'useMouse',
-            ['useFetch', 'useMyFetch'],
-          ],
-        },
-      ],
+      imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
       dts: true, // 生成类型声明文件
       eslintrc: {
         enabled: true, // 生成eslint配置
