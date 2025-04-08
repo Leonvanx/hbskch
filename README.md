@@ -20,7 +20,7 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+### Compile and Hot-Reload for Development1
 
 ```sh
 pnpm dev
