@@ -20,13 +20,7 @@ export default defineConfig({
       dirs: ['src/components'], // 自动导入的目录
       extensions: ['vue'], // 文件扩展名
       deep: true, // 是否搜索子目录
-      resolvers: [
-        // UI库解析器
-        NaiveUiResolver(),
-        // ElementPlusResolver(), // Element Plus
-        // AntDesignVueResolver(), // Ant Design Vue
-        // VantResolver(), // Vant
-      ],
+      resolvers: [NaiveUiResolver()],
       // 自定义组件前缀(默认空)
       // 例如: 设置为'El'则ElButton会被解析为element-plus的Button
       // prefix: 'El',

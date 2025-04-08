@@ -5,7 +5,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
+    "jsx": "preserve",
     "types": ["vite/client", "unplugin-auto-import/types"],
     "paths": {
       "@/*": ["./src/*"]
