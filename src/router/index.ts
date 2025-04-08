@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import BasicLayout from '@/components/BasicLayout.vue';
+import BasicLayout from '@/components/layout/BasicLayout.vue';
 import HomeView from '../views/Home/Home.vue';
 
 const router = createRouter({
