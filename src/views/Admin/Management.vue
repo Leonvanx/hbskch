@@ -150,7 +150,7 @@ const tableData = ref([
     updateTime: '2025-04-01',
   },
 ]);
-const columns = ref([
+const columns = [
   {
     title: '文章标题',
     key: 'name',
@@ -175,7 +175,7 @@ const columns = ref([
     title: '操作',
     key: 'actions',
   },
-]);
+];
 const editRow = (row: TextInfo) => {
   editTarget.value = { ...row };
   drawerVisible.value = true;
