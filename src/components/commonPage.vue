@@ -12,7 +12,30 @@
 <template>
   <n-flex vertical class="common-page">
     <n-card class="search-part">
-      <n-button type="primary" @click="add">新增</n-button>
+      <!-- 加上搜索功能/分类 -->
+      <n-form
+        ref="searchFormRef"
+        class="search-form"
+        label-placement="left"
+        inline
+        :label-width="80"
+        :model="searchTarget"
+        :rules="searchRules"
+        style="margin-bottom: 0"
+      >
+        <n-form-item path="name" label="Name">
+          <n-input v-model:value="searchTarget.name" />
+        </n-form-item>
+        <n-form-item path="age" label="Age">
+          <n-input v-model:value="searchTarget.age" />
+        </n-form-item>
+        <n-form-item path="address" label="Address">
+          <n-input v-model:value="searchTarget.address" />
+        </n-form-item>
+        <n-form-item :show-label="false">
+          <n-button type="primary" @click="add">新增</n-button>
+        </n-form-item>
+      </n-form>
     </n-card>
     <n-card class="table-part">
       <n-data-table :columns="columns" :data="tableData"></n-data-table>
@@ -35,7 +58,7 @@
           <n-button type="primary" @click="submit">保存</n-button>
         </n-space>
       </template>
-      <n-form ref="formRef" :model="editTarget" :rules="rules">
+      <n-form ref="editFormRef" :model="editTarget" :rules="editRules">
         <n-form-item path="name" label="Name">
           <n-input v-model:value="editTarget.name" />
         </n-form-item>
@@ -51,17 +74,28 @@
 </template>
 
 <script setup lang="ts">
-import type { DataTableColumns, FormRules } from 'naive-ui';
+import type { DataTableColumns, FormRules, FormInst } from 'naive-ui';
 import { NButton, NSpace } from 'naive-ui';
 
 interface RowData {
   id?: string | number;
   name?: string;
-  age?: number;
+  age?: number | string;
   address?: string;
 }
-const rules: FormRules = {};
+// 查找部分的变量
+const searchRules: FormRules = {};
+const searchFormRef = ref<FormInst | null>(null);
+const searchTarget = ref<RowData>({
+  name: '',
+  age: '',
+  address: '',
+});
+// 编辑部分的变量
+const editRules: FormRules = {};
+const editFormRef = ref<FormInst | null>(null);
 const editTarget = ref<RowData>();
+
 const drawerVisible = ref<boolean>(false);
 const createData = (): RowData[] => {
   return [
@@ -166,6 +200,11 @@ const closed = (): void => {
 .common-page {
   width: 100%;
   height: 100%;
+  .search-part {
+    .search-form {
+      margin-bottom: -24px !important;
+    }
+  }
   .table-part {
     flex: 1;
   }
