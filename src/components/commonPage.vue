@@ -53,6 +53,12 @@
         <n-form-item path="subPath" label="展示子菜单">
           <n-select v-model:value="editTarget.subPath" :options="editSelect" placeholder="请选择展示子菜单" />
         </n-form-item>
+        <n-form-item path="isHomePage" label="在首页展示">
+          <n-switch v-model:value="editTarget.isHomePage" :checked-value="1" :unchecked-value="0" />
+        </n-form-item>
+        <n-form-item path="isPathPage" label="在菜单展示">
+          <n-switch v-model:value="editTarget.isPathPage" :checked-value="1" :unchecked-value="0" />
+        </n-form-item>
         <n-form-item label="内容编辑">
           <ai-editor></ai-editor>
         </n-form-item>
