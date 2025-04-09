@@ -1,0 +1,52 @@
+<!--
+  功能：table组件封装
+  作者：xulf
+  邮箱：lvin_xu@outlook.com
+  时间：2025年04月09日 23:56:49
+  版本：v1.0
+  修改记录：
+  修改内容：
+  修改人员：
+  修改时间：
+-->
+<template>
+  <n-data-table :columns="processedColumns" :data="data" :pagination="pagination">
+    <!-- 遍历所有插槽，将插槽内容插入到对应的列中 -->
+    <template v-for="(slotName, index) in Object.keys($slots)" :key="index" #[slotName]="{ row }">
+      <slot :name="slotName" :row="row"></slot>
+    </template>
+  </n-data-table>
+</template>
+
+<script setup lang="ts">
+import { defineProps, computed, useSlots } from 'vue';
+import type { DataTableColumns } from 'naive-ui';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type TableDataItem = Record<string, any>;
+type Props = {
+  columns: DataTableColumns<TableDataItem>;
+  data: TableDataItem[];
+  pagination?: object;
+};
+const props = defineProps<Props>();
+
+const $slots = useSlots();
+
+const processedColumns = computed(() => {
+  return props.columns.map((column) => {
+    //@ts-expect-error no-explicit-key
+    if (column.key && typeof column.key === 'string' && $slots[column.key]) {
+      return {
+        ...column,
+        render: (row: TableDataItem) => {
+          //@ts-expect-error no-explicit-key
+          return $slots[column.key]?.({ row });
+        },
+      };
+    }
+    return column;
+  });
+});
+</script>
+
+<style scoped lang="scss"></style>

@@ -18,7 +18,7 @@
           <n-input v-model:value="searchTarget.name" style="width: 150px" placeholder="请输入标题" />
         </n-form-item>
         <n-form-item path="subPath" label="子菜单">
-          <n-select v-model:value="searchTarget.subPath" style="width: 150px" :options="searchSelect" placeholder="请选择子菜单" />
+          <n-select v-model:value="searchTarget.subPath" style="width: 150px" :options="selectOptions" placeholder="请选择子菜单" />
         </n-form-item>
         <n-form-item :show-label="false">
           <n-button type="primary" @click="add">新增</n-button>
@@ -26,7 +26,14 @@
       </n-form>
     </n-card>
     <n-card class="table-part">
-      <n-data-table :columns="columns" :data="tableData"></n-data-table>
+      <CTable :columns="columns" :data="tableData">
+        <template #actions="{ row }">
+          <n-space>
+            <n-button strong tertiary size="small" @click="editRow(row)">编辑</n-button>
+            <n-button strong tertiary size="small" @click="delRow(row)">删除</n-button>
+          </n-space>
+        </template>
+      </CTable>
     </n-card>
     <n-card class="pagination-part">
       <n-flex justify="end">
@@ -51,7 +58,7 @@
           <n-input v-model:value="editTarget.name" placeholder="请输入文章标题" />
         </n-form-item>
         <n-form-item path="subPath" label="展示子菜单">
-          <n-select v-model:value="editTarget.subPath" :options="editSelect" placeholder="请选择展示子菜单" />
+          <n-select v-model:value="editTarget.subPath" :options="selectOptions" placeholder="请选择展示子菜单" />
         </n-form-item>
         <n-form-item path="isHomePage" label="在首页展示">
           <n-switch v-model:value="editTarget.isHomePage" :checked-value="1" :unchecked-value="0" />
@@ -68,8 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DataTableColumns, FormRules, FormInst, SelectOption } from 'naive-ui';
-import { NButton, NSpace } from 'naive-ui';
+import type { FormRules, FormInst } from 'naive-ui';
 
 interface TextInfo {
   id?: string | number;
@@ -80,7 +86,8 @@ interface TextInfo {
   isPathPage?: number;
   updateTime?: string;
 }
-const editSelect = ref<SelectOption[]>([
+const selectOptions = ref([
+  { label: '全部', value: '' },
   {
     label: '菜单1',
     value: '1',
@@ -94,12 +101,9 @@ const editSelect = ref<SelectOption[]>([
     value: '3',
   },
 ]);
-const searchSelect = computed((): SelectOption[] => {
-  return [{ label: '全部', value: '' }, ...editSelect.value];
-});
 // 查找部分的变量
 const searchRules: FormRules = {};
-const searchFormRef = ref<FormInst | null>(null);
+const searchFormRef = ref(null);
 const searchTarget = ref<TextInfo>({
   name: '',
   subPath: '',
@@ -107,120 +111,90 @@ const searchTarget = ref<TextInfo>({
 // 编辑部分的变量
 const editRules: FormRules = {};
 const editFormRef = ref<FormInst | null>(null);
-const editTarget = ref<TextInfo>();
-
-const drawerVisible = ref<boolean>(false);
-const createData = (): TextInfo[] => {
-  return [
-    {
-      id: 1,
-      name: 'John Brown',
-      subPath: '1',
-      pathName: '子菜单1',
-      isHomePage: 1,
-      isPathPage: 1,
-      updateTime: '2025-04-01',
-    },
-    {
-      id: 2,
-      name: 'Jim Green',
-      subPath: '2',
-      pathName: '子菜单2',
-      isHomePage: 1,
-      isPathPage: 1,
-      updateTime: '2025-04-01',
-    },
-    {
-      id: 3,
-      name: 'Joe Black',
-      subPath: '3',
-      pathName: '子菜单3',
-      isHomePage: 1,
-      isPathPage: 1,
-      updateTime: '2025-04-01',
-    },
-  ];
-};
-const createColumns = ({ edit, del }: { edit: (row: TextInfo) => void; del: (row: TextInfo) => void }): DataTableColumns<TextInfo> => {
-  return [
-    {
-      title: '文章标题',
-      key: 'name',
-    },
-    {
-      title: '子菜单',
-      key: 'pathName',
-    },
-    {
-      title: '在首页展示',
-      key: 'isHomePage',
-    },
-    {
-      title: '在菜单展示',
-      key: 'isPathPage',
-    },
-    {
-      title: '更新时间',
-      key: 'updateTime',
-    },
-    {
-      title: '操作',
-      key: 'actions',
-      render(row) {
-        return h(NSpace, [
-          h(
-            NButton,
-            {
-              strong: true,
-              tertiary: true,
-              size: 'small',
-              onClick: () => edit(row),
-            },
-            { default: () => '编辑' },
-          ),
-          h(
-            NButton,
-            {
-              strong: true,
-              tertiary: true,
-              size: 'small',
-              onClick: () => del(row),
-            },
-            { default: () => '删除' },
-          ),
-        ]);
-      },
-    },
-  ];
-};
-
-const page = ref<number>(1);
-const tableData = ref<TextInfo[]>([]);
-tableData.value = createData();
-const columns = ref<DataTableColumns<TextInfo>>();
-columns.value = createColumns({
-  edit(textInfo: TextInfo) {
-    console.log(textInfo);
-    drawerVisible.value = true;
-    editTarget.value = JSON.parse(JSON.stringify(textInfo));
-  },
-  del({ id }: TextInfo) {
-    console.log(id);
-  },
+const editTarget = ref<TextInfo>({
+  name: '',
+  subPath: '',
+  isHomePage: 0,
+  isPathPage: 0,
 });
 
-const add = (): void => {
+const drawerVisible = ref<boolean>(false);
+
+const page = ref<number>(1);
+const tableData = ref([
+  {
+    id: 1,
+    name: 'John Brown',
+    subPath: '1',
+    pathName: '子菜单1',
+    isHomePage: 1,
+    isPathPage: 1,
+    updateTime: '2025-04-01',
+  },
+  {
+    id: 2,
+    name: 'Jim Green',
+    subPath: '2',
+    pathName: '子菜单2',
+    isHomePage: 1,
+    isPathPage: 1,
+    updateTime: '2025-04-01',
+  },
+  {
+    id: 3,
+    name: 'Joe Black',
+    subPath: '3',
+    pathName: '子菜单3',
+    isHomePage: 1,
+    isPathPage: 1,
+    updateTime: '2025-04-01',
+  },
+]);
+const columns = ref([
+  {
+    title: '文章标题',
+    key: 'name',
+  },
+  {
+    title: '子菜单',
+    key: 'pathName',
+  },
+  {
+    title: '在首页展示',
+    key: 'isHomePage',
+  },
+  {
+    title: '在菜单展示',
+    key: 'isPathPage',
+  },
+  {
+    title: '更新时间',
+    key: 'updateTime',
+  },
+  {
+    title: '操作',
+    key: 'actions',
+  },
+]);
+const editRow = (row: TextInfo) => {
+  editTarget.value = { ...row };
+  drawerVisible.value = true;
+};
+const delRow = (row: TextInfo) => {
+  console.log('🚀 ~ delRow ~ row:', row);
+};
+const add = () => {
   editTarget.value = {};
   drawerVisible.value = true;
 };
-const submit = (): void => {
+const submit = () => {
   console.log('submit');
   closed();
 };
-const cancel = (): void => {
+const cancel = () => {
   closed();
 };
-const closed = (): void => {
+const closed = () => {
   drawerVisible.value = false;
   editTarget.value = {};
 };
