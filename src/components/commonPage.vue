@@ -65,11 +65,14 @@
 import type { DataTableColumns, FormRules, FormInst, SelectOption } from 'naive-ui';
 import { NButton, NSpace } from 'naive-ui';
 
-interface RowData {
+interface TextInfo {
   id?: string | number;
   name?: string;
   subPath?: string;
   pathName?: string;
+  isHomePage?: number;
+  isPathPage?: number;
+  updateTime?: string;
 }
 const editSelect = ref<SelectOption[]>([
   {
@@ -91,39 +94,48 @@ const searchSelect = computed((): SelectOption[] => {
 // 查找部分的变量
 const searchRules: FormRules = {};
 const searchFormRef = ref<FormInst | null>(null);
-const searchTarget = ref<RowData>({
+const searchTarget = ref<TextInfo>({
   name: '',
   subPath: '',
 });
 // 编辑部分的变量
 const editRules: FormRules = {};
 const editFormRef = ref<FormInst | null>(null);
-const editTarget = ref<RowData>();
+const editTarget = ref<TextInfo>();
 
 const drawerVisible = ref<boolean>(false);
-const createData = (): RowData[] => {
+const createData = (): TextInfo[] => {
   return [
     {
       id: 1,
       name: 'John Brown',
       subPath: '1',
       pathName: '子菜单1',
+      isHomePage: 1,
+      isPathPage: 1,
+      updateTime: '2025-04-01',
     },
     {
       id: 2,
       name: 'Jim Green',
       subPath: '2',
       pathName: '子菜单2',
+      isHomePage: 1,
+      isPathPage: 1,
+      updateTime: '2025-04-01',
     },
     {
       id: 3,
       name: 'Joe Black',
       subPath: '3',
       pathName: '子菜单3',
+      isHomePage: 1,
+      isPathPage: 1,
+      updateTime: '2025-04-01',
     },
   ];
 };
-const createColumns = ({ edit, del }: { edit: (row: RowData) => void; del: (row: RowData) => void }): DataTableColumns<RowData> => {
+const createColumns = ({ edit, del }: { edit: (row: TextInfo) => void; del: (row: TextInfo) => void }): DataTableColumns<TextInfo> => {
   return [
     {
       title: '文章标题',
@@ -134,8 +146,16 @@ const createColumns = ({ edit, del }: { edit: (row: RowData) => void; del: (row:
       key: 'pathName',
     },
     {
-      title: '文章预览',
-      key: 'address',
+      title: '在首页展示',
+      key: 'isHomePage',
+    },
+    {
+      title: '在菜单展示',
+      key: 'isPathPage',
+    },
+    {
+      title: '更新时间',
+      key: 'updateTime',
     },
     {
       title: '操作',
@@ -169,16 +189,16 @@ const createColumns = ({ edit, del }: { edit: (row: RowData) => void; del: (row:
 };
 
 const page = ref<number>(1);
-const tableData = ref<RowData[]>([]);
+const tableData = ref<TextInfo[]>([]);
 tableData.value = createData();
-const columns = ref<DataTableColumns<RowData>>();
+const columns = ref<DataTableColumns<TextInfo>>();
 columns.value = createColumns({
-  edit(rowData: RowData) {
-    console.log(rowData);
+  edit(textInfo: TextInfo) {
+    console.log(textInfo);
     drawerVisible.value = true;
-    editTarget.value = JSON.parse(JSON.stringify(rowData));
+    editTarget.value = JSON.parse(JSON.stringify(textInfo));
   },
-  del({ id }: RowData) {
+  del({ id }: TextInfo) {
     console.log(id);
   },
 });
