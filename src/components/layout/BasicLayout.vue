@@ -16,7 +16,7 @@ const menuOptions: MenuOption[] = [
         },
         { default: () => '后管首页' },
       ),
-    key: '/index', // 修改为与路由路径一致
+    key: '/admin', // 修改为与路由路径一致
   },
   {
     label: () =>
@@ -27,7 +27,7 @@ const menuOptions: MenuOption[] = [
         },
         { default: () => '菜单维护' },
       ),
-    key: '/Admin/Management', // 修改为完整路径
+    key: '/admin/management', // 修改为完整路径
   },
 ];
 
