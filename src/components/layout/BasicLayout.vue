@@ -1,35 +1,27 @@
 <script setup lang="ts">
 import type { MenuOption } from 'naive-ui';
 import { RouterLink } from 'vue-router';
+import { routes } from '@/router';
 
 const router = useRouter();
 const { width } = useWindowSize();
 const isMobile = computed(() => width.value < 768);
 
-const menuOptions: MenuOption[] = [
-  {
+// 根据 routes 生成 menuOptions
+const menuOptions: MenuOption[] = routes
+  .filter((route) => route.path === '/admin' && route.children)
+  .flatMap((route) => route.children!)
+  .map((route) => ({
     label: () =>
       h(
         RouterLink,
         {
-          to: { name: 'index' },
+          to: { name: route.name },
         },
-        { default: () => '后管首页' },
+        { default: () => route.meta?.label || '' },
       ),
-    key: '/admin', // 修改为与路由路径一致
-  },
-  {
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: { name: 'Management' }, // 使用name代替path
-        },
-        { default: () => '菜单维护' },
-      ),
-    key: '/admin/management', // 修改为完整路径
-  },
-];
+    key: `/admin/${route.path}`,
+  }));
 
 // 添加路由监听
 watch(
