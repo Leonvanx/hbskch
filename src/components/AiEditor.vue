@@ -10,9 +10,6 @@
   修改时间：
 -->
 <template>
-  <div>
-    <h1>AiEditor，一个面向 AI 的富文本编辑器</h1>
-  </div>
   <div ref="divRef" style="height: 600px" />
 </template>
 

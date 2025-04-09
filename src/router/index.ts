@@ -22,11 +22,7 @@ const router = createRouter({
           name: 'index',
           component: () => import('@/views/Admin/Index.vue'),
         },
-        {
-          path: 'adEditor',
-          name: 'adEditor',
-          component: () => import('@/views/Admin/AiEditor.vue'),
-        },
+
         {
           path: 'management',
           name: 'Management',

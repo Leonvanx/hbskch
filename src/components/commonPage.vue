@@ -13,24 +13,12 @@
   <n-flex vertical class="common-page">
     <n-card class="search-part">
       <!-- 加上搜索功能/分类 -->
-      <n-form
-        ref="searchFormRef"
-        class="search-form"
-        label-placement="left"
-        inline
-        :label-width="80"
-        :model="searchTarget"
-        :rules="searchRules"
-        style="margin-bottom: 0"
-      >
-        <n-form-item path="name" label="Name">
-          <n-input v-model:value="searchTarget.name" />
+      <n-form ref="searchFormRef" class="search-form" label-placement="left" inline :label-width="80" :model="searchTarget" :rules="searchRules">
+        <n-form-item path="name" label="标题">
+          <n-input v-model:value="searchTarget.name" style="width: 150px" placeholder="请输入标题" />
         </n-form-item>
-        <n-form-item path="age" label="Age">
-          <n-input v-model:value="searchTarget.age" />
-        </n-form-item>
-        <n-form-item path="address" label="Address">
-          <n-input v-model:value="searchTarget.address" />
+        <n-form-item path="subPath" label="子菜单">
+          <n-select v-model:value="searchTarget.subPath" style="width: 150px" :options="searchSelect" placeholder="请选择子菜单" />
         </n-form-item>
         <n-form-item :show-label="false">
           <n-button type="primary" @click="add">新增</n-button>
@@ -50,7 +38,7 @@
   <n-drawer v-model:show="drawerVisible" :width="502" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
     <n-drawer-content>
       <template #header>
-        {{ editTarget?.id ? '编辑' : '新增' }}
+        {{ editTarget?.id ? '编辑文章' : '新增文章' }}
       </template>
       <template #footer>
         <n-space>
@@ -59,14 +47,14 @@
         </n-space>
       </template>
       <n-form ref="editFormRef" :model="editTarget" :rules="editRules">
-        <n-form-item path="name" label="Name">
-          <n-input v-model:value="editTarget.name" />
+        <n-form-item path="name" label="标题">
+          <n-input v-model:value="editTarget.name" placeholder="请输入文章标题" />
         </n-form-item>
-        <n-form-item path="age" label="Age">
-          <n-input v-model:value="editTarget.age" />
+        <n-form-item path="subPath" label="展示子菜单">
+          <n-select v-model:value="editTarget.subPath" :options="editSelect" placeholder="请选择展示子菜单" />
         </n-form-item>
-        <n-form-item path="address" label="Address">
-          <n-input v-model:value="editTarget.address" />
+        <n-form-item label="内容编辑">
+          <ai-editor></ai-editor>
         </n-form-item>
       </n-form>
     </n-drawer-content>
@@ -74,22 +62,38 @@
 </template>
 
 <script setup lang="ts">
-import type { DataTableColumns, FormRules, FormInst } from 'naive-ui';
+import type { DataTableColumns, FormRules, FormInst, SelectOption } from 'naive-ui';
 import { NButton, NSpace } from 'naive-ui';
 
 interface RowData {
   id?: string | number;
   name?: string;
-  age?: number | string;
-  address?: string;
+  subPath?: string;
+  pathName?: string;
 }
+const editSelect = ref<SelectOption[]>([
+  {
+    label: '菜单1',
+    value: '1',
+  },
+  {
+    label: '菜单2',
+    value: '2',
+  },
+  {
+    label: '菜单3',
+    value: '3',
+  },
+]);
+const searchSelect = computed((): SelectOption[] => {
+  return [{ label: '全部', value: '' }, ...editSelect.value];
+});
 // 查找部分的变量
 const searchRules: FormRules = {};
 const searchFormRef = ref<FormInst | null>(null);
 const searchTarget = ref<RowData>({
   name: '',
-  age: '',
-  address: '',
+  subPath: '',
 });
 // 编辑部分的变量
 const editRules: FormRules = {};
@@ -102,39 +106,39 @@ const createData = (): RowData[] => {
     {
       id: 1,
       name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
+      subPath: '1',
+      pathName: '子菜单1',
     },
     {
       id: 2,
       name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
+      subPath: '2',
+      pathName: '子菜单2',
     },
     {
       id: 3,
       name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
+      subPath: '3',
+      pathName: '子菜单3',
     },
   ];
 };
 const createColumns = ({ edit, del }: { edit: (row: RowData) => void; del: (row: RowData) => void }): DataTableColumns<RowData> => {
   return [
     {
-      title: 'Name',
+      title: '文章标题',
       key: 'name',
     },
     {
-      title: 'Age',
-      key: 'age',
+      title: '子菜单',
+      key: 'pathName',
     },
     {
-      title: 'Address',
+      title: '文章预览',
       key: 'address',
     },
     {
-      title: 'Action',
+      title: '操作',
       key: 'actions',
       render(row) {
         return h(NSpace, [
