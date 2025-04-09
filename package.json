@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix",
     "format": "prettier --write src/",
     "prepare": "husky"
   },
@@ -58,7 +58,7 @@
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx,vue}": [
-      "pnpm lint",
+      "pnpm lint:fix",
       "pnpm format"
     ]
   },
