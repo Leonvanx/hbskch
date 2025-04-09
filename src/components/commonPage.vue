@@ -11,10 +11,11 @@
 -->
 <template>
   <n-flex vertical class="common-page">
-    <n-card class="search-part">这里展示顶部搜素框（如果有）</n-card>
+    <n-card class="search-part">
+      <n-button type="primary" @click="add">新增</n-button>
+    </n-card>
     <n-card class="table-part">
       <n-data-table :columns="columns" :data="tableData"></n-data-table>
-      <!-- <n-button @click="openDrawer">default</n-button> -->
     </n-card>
     <n-card class="pagination-part">
       <n-flex justify="end">
@@ -23,43 +24,68 @@
     </n-card>
   </n-flex>
   <!-- 加一个侧边drawer -->
-  <n-drawer v-model:show="active" :width="502" placement="right">
-    <n-drawer-content>《斯通纳》是美国作家约翰·威廉姆斯在 1965 年出版的小说。</n-drawer-content>
+  <n-drawer v-model:show="drawerVisible" :width="502" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
+    <n-drawer-content>
+      <template #header>
+        {{ editTarget?.id ? '编辑' : '新增' }}
+      </template>
+      <template #footer>
+        <n-space>
+          <n-button @click="cancel">取消</n-button>
+          <n-button type="primary" @click="submit">保存</n-button>
+        </n-space>
+      </template>
+      <n-form ref="formRef" :model="editTarget" :rules="rules">
+        <n-form-item path="name" label="Name">
+          <n-input v-model:value="editTarget.name" />
+        </n-form-item>
+        <n-form-item path="age" label="Age">
+          <n-input v-model:value="editTarget.age" />
+        </n-form-item>
+        <n-form-item path="address" label="Address">
+          <n-input v-model:value="editTarget.address" />
+        </n-form-item>
+      </n-form>
+    </n-drawer-content>
   </n-drawer>
 </template>
 
 <script setup lang="ts">
-import type { DataTableColumns } from 'naive-ui';
+import type { DataTableColumns, FormRules } from 'naive-ui';
+import { NButton } from 'naive-ui';
 
 interface RowData {
-  key: number;
-  name: string;
-  age: number;
-  address: string;
+  id?: string | number;
+  name?: string;
+  age?: number;
+  address?: string;
 }
+const rules: FormRules = {};
+const editTarget = ref<RowData>();
+const drawerVisible = ref<boolean>(false);
 const createData = (): RowData[] => {
   return [
     {
-      key: 0,
+      id: 1,
       name: 'John Brown',
       age: 32,
       address: 'New York No. 1 Lake Park',
     },
     {
-      key: 1,
+      id: 2,
       name: 'Jim Green',
       age: 42,
       address: 'London No. 1 Lake Park',
     },
     {
-      key: 2,
+      id: 3,
       name: 'Joe Black',
       age: 32,
       address: 'Sidney No. 1 Lake Park',
     },
   ];
 };
-const createColumns = (): DataTableColumns<RowData> => {
+const createColumns = ({ managementAction }: { managementAction: (row: RowData) => void }): DataTableColumns<RowData> => {
   return [
     {
       title: 'Name',
@@ -73,18 +99,52 @@ const createColumns = (): DataTableColumns<RowData> => {
       title: 'Address',
       key: 'address',
     },
+    {
+      title: 'Action',
+      key: 'actions',
+      render(row) {
+        return h(
+          NButton,
+          {
+            strong: true,
+            tertiary: true,
+            size: 'small',
+            onClick: () => managementAction(row),
+          },
+          { default: () => '操作' },
+        );
+      },
+    },
   ];
 };
 
-const active = ref<boolean>(false);
 const page = ref<number>(1);
-// const openDrawer = ():void => {
-//   active.value = true;
-// };
 const tableData = ref<RowData[]>([]);
 tableData.value = createData();
 const columns = ref<DataTableColumns<RowData>>();
-columns.value = createColumns();
+columns.value = createColumns({
+  managementAction(rowData: RowData) {
+    console.log(rowData);
+    drawerVisible.value = true;
+    editTarget.value = JSON.parse(JSON.stringify(rowData));
+  },
+});
+
+const add = (): void => {
+  editTarget.value = {};
+  drawerVisible.value = true;
+};
+const submit = (): void => {
+  console.log('submit');
+  closed();
+};
+const cancel = (): void => {
+  closed();
+};
+const closed = (): void => {
+  drawerVisible.value = false;
+  editTarget.value = {};
+};
 </script>
 
 <style scoped lang="scss">
