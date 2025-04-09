@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import type { DataTableColumns, FormRules } from 'naive-ui';
-import { NButton } from 'naive-ui';
+import { NButton, NSpace } from 'naive-ui';
 
 interface RowData {
   id?: string | number;
@@ -85,7 +85,7 @@ const createData = (): RowData[] => {
     },
   ];
 };
-const createColumns = ({ managementAction }: { managementAction: (row: RowData) => void }): DataTableColumns<RowData> => {
+const createColumns = ({ edit, del }: { edit: (row: RowData) => void; del: (row: RowData) => void }): DataTableColumns<RowData> => {
   return [
     {
       title: 'Name',
@@ -103,16 +103,28 @@ const createColumns = ({ managementAction }: { managementAction: (row: RowData) 
       title: 'Action',
       key: 'actions',
       render(row) {
-        return h(
-          NButton,
-          {
-            strong: true,
-            tertiary: true,
-            size: 'small',
-            onClick: () => managementAction(row),
-          },
-          { default: () => '操作' },
-        );
+        return h(NSpace, [
+          h(
+            NButton,
+            {
+              strong: true,
+              tertiary: true,
+              size: 'small',
+              onClick: () => edit(row),
+            },
+            { default: () => '编辑' },
+          ),
+          h(
+            NButton,
+            {
+              strong: true,
+              tertiary: true,
+              size: 'small',
+              onClick: () => del(row),
+            },
+            { default: () => '删除' },
+          ),
+        ]);
       },
     },
   ];
@@ -123,10 +135,13 @@ const tableData = ref<RowData[]>([]);
 tableData.value = createData();
 const columns = ref<DataTableColumns<RowData>>();
 columns.value = createColumns({
-  managementAction(rowData: RowData) {
+  edit(rowData: RowData) {
     console.log(rowData);
     drawerVisible.value = true;
     editTarget.value = JSON.parse(JSON.stringify(rowData));
+  },
+  del({ id }: RowData) {
+    console.log(id);
   },
 });
 
