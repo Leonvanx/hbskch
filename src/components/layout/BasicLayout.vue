@@ -23,11 +23,11 @@ const menuOptions: MenuOption[] = [
       h(
         RouterLink,
         {
-          to: { name: 'adEditor' }, // 使用name代替path
+          to: { name: 'Management' }, // 使用name代替path
         },
-        { default: () => '子菜单内容编辑' },
+        { default: () => '菜单维护' },
       ),
-    key: '/Admin/AiEditor', // 修改为完整路径
+    key: '/Admin/Management', // 修改为完整路径
   },
 ];
 

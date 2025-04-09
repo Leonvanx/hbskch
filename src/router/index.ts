@@ -27,6 +27,11 @@ const router = createRouter({
           name: 'adEditor',
           component: () => import('@/views/Admin/AiEditor.vue'),
         },
+        {
+          path: 'management',
+          name: 'Management',
+          component: () => import('@/views/Admin/Management.vue'),
+        },
       ],
     },
     {
