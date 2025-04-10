@@ -315,6 +315,11 @@
     "watchWithFilter": true,
     "whenever": true,
     "Slot": true,
-    "Slots": true
+    "Slots": true,
+    "useDialog": true,
+    "useLoadingBar": true,
+    "useMessage": true,
+    "useNotification": true,
+    "useModal": true
   }
 }

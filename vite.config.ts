@@ -26,7 +26,15 @@ export default defineConfig({
       // prefix: 'El',
     }),
     AutoImport({
-      imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+      imports: [
+        'vue',
+        'vue-router',
+        'pinia',
+        '@vueuse/core',
+        {
+          'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar', 'useModal'],
+        },
+      ],
       dts: true, // 生成类型声明文件
       eslintrc: {
         enabled: true, // 生成eslint配置
