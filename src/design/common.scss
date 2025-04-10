@@ -82,18 +82,3 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.safety-pb {
-  @media only screen and (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
-    /* 在这里添加通用 Android 设备的样式 */
-    padding-bottom: 20px;
-  }
-  /* 通用 iOS 设备 */
-  @media only screen and (max-device-width: 1024px) {
-    /* 在这里添加通用 iOS 设备的样式 */
-    padding-bottom: 20px;
-  }
-  @media only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-device-pixel-ratio: 3) {
-    /* 在这里添加针对 iPhone X 及更大尺寸设备的样式 */
-    padding-bottom: env(safe-area-inset-bottom) !important;
-  }
-}
