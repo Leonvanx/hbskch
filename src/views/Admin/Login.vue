@@ -52,16 +52,21 @@ const rules = {
   ],
 };
 
-const handleLogin = () => {};
+const handleLogin = () => {
+  console.log('登录信息：', formValue.value);
+  alert('登录成功！');
+};
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(270deg, #0f2027, #203a43, #2c5364);
+  background-size: 600% 600%;
+  animation: gradient 15s ease infinite;
 }
 
 .login-card {
@@ -74,5 +79,17 @@ const handleLogin = () => {};
 
 .login-button {
   margin-top: 15px;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>
