@@ -24,8 +24,14 @@ const routes = [
       {
         path: 'management',
         name: 'management',
-        meta: { label: '菜单维护' },
+        meta: { label: '文章维护' },
         component: () => import('@/views/Admin/Management.vue'),
+      },
+      {
+        path: 'menuManagement',
+        name: 'menuManagement',
+        meta: { label: '子菜单维护' },
+        component: () => import('@/views/Admin/MenuManagement.vue'),
       },
     ],
   },
