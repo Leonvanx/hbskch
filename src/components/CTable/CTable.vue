@@ -37,7 +37,7 @@ type Props = {
   columns: DataTableColumns<TableDataItem>;
   tableData: TableDataItem[];
   // eslint-disable-next-line no-unused-vars
-  rowKey: (row: RowData) => string | number;
+  rowKey?: (row: RowData) => string | number;
   bordered?: boolean;
   striped?: boolean;
   size?: 'small' | 'medium' | 'large';
