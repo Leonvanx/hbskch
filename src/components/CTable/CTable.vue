@@ -10,8 +10,18 @@
   修改时间：
 -->
 <template>
-  <!-- 新增 :row-key="props.rowKey" -->
-  <n-data-table :columns="processedColumns" :data="data" :pagination="pagination" :row-key="props.rowKey">
+  <n-data-table
+    :columns="processedColumns"
+    :data="props.tableData"
+    :pagination="props.tablePage"
+    :row-key="props.rowKey"
+    :bordered="props.bordered"
+    :striped="props.striped"
+    :size="props.size"
+    :loading="props.loading"
+    :show-header="props.showHeader"
+    :row-selection="props.rowSelection"
+  >
     <!-- 遍历所有插槽，将插槽内容插入到对应的列中 -->
     <template v-for="(slotName, index) in Object.keys($slots)" :key="index" #[slotName]="{ row }">
       <slot :name="slotName" :row="row"></slot>
@@ -20,17 +30,25 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, useSlots } from 'vue';
 import type { DataTableColumns } from 'naive-ui';
 import type { RowData } from 'naive-ui/es/data-table/src/interface';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TableDataItem = Record<string, any>;
 type Props = {
   columns: DataTableColumns<TableDataItem>;
-  data: TableDataItem[];
-  pagination?: object;
+  tableData: TableDataItem[];
+  tablePage?: object;
   // eslint-disable-next-line no-unused-vars
   rowKey: (row: RowData) => string | number;
+  bordered?: boolean;
+  striped?: boolean;
+  size?: 'small' | 'medium' | 'large';
+  loading?: boolean;
+  showHeader?: boolean;
+  rowSelection?: {
+    type: 'checkbox' | 'radio';
+    selectedRowKeys?: (string | number)[];
+  };
 };
 const props = defineProps<Props>();
 
