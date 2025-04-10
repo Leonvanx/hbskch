@@ -4,6 +4,7 @@ export interface PageOptions {
   id?: number;
   subPath?: string;
   pathName?: string;
+  searchWord?: string;
   isHomePage?: number;
   isPathPage?: number;
   menuId?: number;

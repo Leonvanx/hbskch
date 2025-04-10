@@ -197,7 +197,8 @@ const delRow = (row: PageOptions) => {
 };
 const searchData = () => {
   searchPage(searchParam.value).then((data) => {
-    if (data.code === '0') {
+    console.log('searchDate:', data);
+    if (data.code === 0) {
       console.log('searchDate:', data.data);
       tableData.value = data.data ? data.data.records : [];
     }

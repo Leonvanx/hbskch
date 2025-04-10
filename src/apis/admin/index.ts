@@ -7,5 +7,5 @@ export const savePage = (params: PageOptions, config?: AxiosRequestConfig) => {
 };
 
 export const searchPage = (params: PageOptions, config?: AxiosRequestConfig) => {
-  return request.get<ResultSuccess<searchOptions<PageOptions>>>(`/tech/article/list/${params.menuId}`, params, config);
+  return request.post<ResultSuccess<searchOptions<PageOptions>>>('/tech/article/list', params, config);
 };
