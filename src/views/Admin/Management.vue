@@ -26,7 +26,7 @@
       </n-form>
     </n-card>
     <n-card class="table-part">
-      <CTable :columns="columns" :data="tableData">
+      <CTable :columns="columns" :table-data="tableData">
         <template #actions="{ row }">
           <n-space>
             <n-button strong tertiary size="small" @click="editRow(row)">编辑</n-button>

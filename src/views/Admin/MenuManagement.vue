@@ -15,7 +15,7 @@
       <n-button type="primary">新增菜单</n-button>
     </n-card>
     <n-card class="menu-tree">
-      <CTable :columns="columns" :data="menuList" :row-key="(row) => row.id">
+      <CTable :columns="columns" :table-data="menuList" :row-key="(row) => row.id">
         <template #actions="{ row }">
           <n-space>
             <n-button strong tertiary size="small" @click="editMenu(row)">编辑</n-button>
@@ -58,7 +58,6 @@
 
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
-import { useDialog, useMessage } from 'naive-ui';
 import type { Menu } from '@/types';
 import { searchMenu, deleteMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
@@ -136,7 +135,9 @@ const searchData = () => {
     }
   });
 };
-
+const cancel = () => {};
+const submit = () => {};
+const closed = () => {};
 searchData();
 </script>
 
