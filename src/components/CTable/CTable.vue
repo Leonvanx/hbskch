@@ -10,7 +10,8 @@
   修改时间：
 -->
 <template>
-  <n-data-table :columns="processedColumns" :data="data" :pagination="pagination">
+  <!-- 新增 :row-key="props.rowKey" -->
+  <n-data-table :columns="processedColumns" :data="data" :pagination="pagination" :row-key="props.rowKey">
     <!-- 遍历所有插槽，将插槽内容插入到对应的列中 -->
     <template v-for="(slotName, index) in Object.keys($slots)" :key="index" #[slotName]="{ row }">
       <slot :name="slotName" :row="row"></slot>
@@ -21,12 +22,15 @@
 <script setup lang="ts">
 import { defineProps, computed, useSlots } from 'vue';
 import type { DataTableColumns } from 'naive-ui';
+import type { RowData } from 'naive-ui/es/data-table/src/interface';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TableDataItem = Record<string, any>;
 type Props = {
   columns: DataTableColumns<TableDataItem>;
   data: TableDataItem[];
   pagination?: object;
+  // eslint-disable-next-line no-unused-vars
+  rowKey: (row: RowData) => string | number;
 };
 const props = defineProps<Props>();
 
