@@ -42,7 +42,7 @@
     </n-card>
   </n-flex>
   <!-- 加一个侧边drawer -->
-  <n-drawer v-model:show="drawerVisible" :width="502" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
+  <n-drawer v-model:show="drawerVisible" :width="1280" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
     <n-drawer-content>
       <template #header>
         {{ editTarget?.id ? '编辑文章' : '新增文章' }}
@@ -67,7 +67,7 @@
           <n-switch v-model:value="editTarget.isPathPage" :checked-value="1" :unchecked-value="0" />
         </n-form-item>
         <n-form-item label="内容编辑">
-          <RichTextEditor></RichTextEditor>
+          <RichTextEditor :content="editTarget.content"></RichTextEditor>
         </n-form-item>
       </n-form>
     </n-drawer-content>
@@ -76,6 +76,7 @@
 
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
+// import { savePage } from '@/apis/admin'
 
 interface TextInfo {
   id?: string | number;
@@ -85,6 +86,7 @@ interface TextInfo {
   isHomePage?: number;
   isPathPage?: number;
   updateTime?: string;
+  content?: string;
 }
 const selectOptions = ref([
   { label: '全部', value: '' },
@@ -116,6 +118,7 @@ const editTarget = ref<TextInfo>({
   subPath: '',
   isHomePage: 0,
   isPathPage: 0,
+  content: '',
 });
 
 const drawerVisible = ref<boolean>(false);
@@ -130,6 +133,7 @@ const tableData = ref([
     isHomePage: 1,
     isPathPage: 1,
     updateTime: '2025-04-01',
+    content: '123',
   },
   {
     id: 2,
@@ -139,6 +143,7 @@ const tableData = ref([
     isHomePage: 1,
     isPathPage: 1,
     updateTime: '2025-04-01',
+    content: '',
   },
   {
     id: 3,
@@ -148,6 +153,7 @@ const tableData = ref([
     isHomePage: 1,
     isPathPage: 1,
     updateTime: '2025-04-01',
+    content: '',
   },
 ]);
 const columns = [
@@ -188,7 +194,9 @@ const add = () => {
   drawerVisible.value = true;
 };
 const submit = () => {
-  console.log('submit');
+  console.log('submit', editTarget.value);
+  //添加新增内容接口
+
   closed();
 };
 const cancel = () => {
