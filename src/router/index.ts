@@ -30,8 +30,8 @@ const routes = [
     ],
   },
   {
-    path: '/admin',
-    name: 'admin',
+    path: '/login',
+    name: 'login',
     component: () => import('@/views/Admin/Login.vue'),
   },
 ];
