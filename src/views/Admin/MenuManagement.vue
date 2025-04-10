@@ -58,40 +58,9 @@
 
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
-
-interface Menu {
-  fixed?: number;
-  id?: number;
-  name?: string;
-  orderNum?: number;
-  parentId?: number;
-  status?: number;
-  children?: Menu[];
-  menuType?: string;
-}
-const menuList = ref<Menu[]>([
-  {
-    children: [
-      {
-        children: [],
-        fixed: 0,
-        id: 2,
-        menuType: 'sub',
-        name: '子菜单',
-        orderNum: 0,
-        parentId: 1,
-        status: 0,
-      },
-    ],
-    fixed: 0,
-    id: 1,
-    menuType: 'main',
-    name: '主菜单',
-    orderNum: 0,
-    parentId: 0,
-    status: 0,
-  },
-]);
+import type { Menu } from '@/types';
+import { searchMenu } from '@/apis/admin';
+const menuList = ref<Menu[]>([]);
 const parentMenuList = computed(() => {
   return menuList.value.map((menu: Menu) => ({
     label: menu.name,
@@ -139,6 +108,16 @@ const editMenu = (menu: Menu) => {
   editTarget.value = JSON.parse(JSON.stringify(menu));
 };
 const delMenu = () => {};
+
+const searchData = () => {
+  searchMenu().then((data) => {
+    if (data.code === 0) {
+      console.log('searchDate:', data.data);
+      menuList.value = data.data ? data.data : [];
+    }
+  });
+};
+searchData();
 </script>
 
 <style scoped lang="scss">

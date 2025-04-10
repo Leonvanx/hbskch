@@ -9,3 +9,7 @@ export const savePage = (params: PageOptions, config?: AxiosRequestConfig) => {
 export const searchPage = (params: PageOptions, config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess<searchOptions<PageOptions>>>('/tech/article/list', params, config);
 };
+// 获取所有菜单
+export const searchMenu = (params?: PageOptions, config?: AxiosRequestConfig) => {
+  return request.get<ResultSuccess<searchOptions<PageOptions>>>('/tech/menu/tree', params, config);
+};
