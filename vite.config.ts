@@ -38,6 +38,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      '/apiProxy': {
+        target: 'http://8.136.107.212',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/apiProxy/, ''),
+      },
+    },
+  },
   build: {
     minify: 'terser',
     terserOptions: {

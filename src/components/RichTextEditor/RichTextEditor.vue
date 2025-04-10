@@ -20,7 +20,7 @@ const divRef = ref<Element | null>(null);
 let aiEditor: AiEditor | null = null;
 
 type Props = {
-  content: string;
+  content?: string;
 };
 const props = defineProps<Props>();
 

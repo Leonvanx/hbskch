@@ -1,10 +1,11 @@
 import request from '@/utils/http';
 import type { AxiosRequestConfig } from 'axios';
-type PageSave = {
-  code: string;
-  data: string;
-  msg: string;
+import type { PageOptions, ResultSuccess, searchOptions } from '@/types';
+
+export const savePage = (params: PageOptions, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess>('/tech/article/save', params, config);
 };
-export const savePage = (data: PageSave, config?: AxiosRequestConfig) => {
-  return request.post<PageSave>('/tech/article/save', data, config);
+
+export const searchPage = (params: PageOptions, config?: AxiosRequestConfig) => {
+  return request.get<ResultSuccess<searchOptions<PageOptions>>>(`/tech/article/list/${params.menuId}`, params, config);
 };
