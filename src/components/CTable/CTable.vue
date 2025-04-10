@@ -13,7 +13,6 @@
   <n-data-table
     :columns="processedColumns"
     :data="props.tableData"
-    :pagination="props.tablePage"
     :row-key="props.rowKey"
     :bordered="props.bordered"
     :striped="props.striped"
@@ -37,7 +36,6 @@ type TableDataItem = Record<string, any>;
 type Props = {
   columns: DataTableColumns<TableDataItem>;
   tableData: TableDataItem[];
-  tablePage?: object;
   // eslint-disable-next-line no-unused-vars
   rowKey: (row: RowData) => string | number;
   bordered?: boolean;
