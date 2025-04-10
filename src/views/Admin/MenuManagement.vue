@@ -58,8 +58,9 @@
 
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
+import { useDialog, useMessage } from 'naive-ui';
 import type { Menu } from '@/types';
-import { searchMenu } from '@/apis/admin';
+import { searchMenu, deleteMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
 const parentMenuList = computed(() => {
   return menuList.value.map((menu: Menu) => ({
@@ -102,21 +103,40 @@ const drawerVisible = ref<boolean>(false);
 const editFormRef = ref<FormInst | null>(null);
 const editRules: FormRules = {};
 const editTarget = ref<Menu>({});
-
+const message = useMessage();
+const dialog = useDialog();
 const editMenu = (menu: Menu) => {
   drawerVisible.value = true;
   editTarget.value = JSON.parse(JSON.stringify(menu));
 };
-const delMenu = () => {};
+const delMenu = ({ id }: Menu) => {
+  console.log('id', id);
+  dialog.warning({
+    title: '警告',
+    content: '你确定删除菜单？',
+    positiveText: '确定',
+    negativeText: '取消',
+    draggable: true,
+    onPositiveClick: () => {
+      deleteMenu(id!).then((data) => {
+        if (data.code === 0) {
+          message.success('删除成功！');
+          searchData();
+        }
+      });
+    },
+  });
+};
 
 const searchData = () => {
   searchMenu().then((data) => {
     if (data.code === 0) {
       console.log('searchDate:', data.data);
-      menuList.value = data.data ? data.data : [];
+      menuList.value = data?.data ? data.data : [];
     }
   });
 };
+
 searchData();
 </script>
 
