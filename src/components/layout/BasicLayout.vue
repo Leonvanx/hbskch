@@ -2,26 +2,35 @@
 import type { MenuOption } from 'naive-ui';
 import { RouterLink } from 'vue-router';
 import { routes } from '@/router';
+import { h } from 'vue';
 
 const router = useRouter();
 const { width } = useWindowSize();
 const isMobile = computed(() => width.value < 768);
 
 // 根据 routes 生成 menuOptions
+// @ts-expect-error no-error
 const menuOptions: MenuOption[] = routes
   .filter((route) => route.path === '/admin' && route.children)
   .flatMap((route) => route.children!)
-  .map((route) => ({
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: { name: route.name },
-        },
-        { default: () => route.meta?.label || '' },
-      ),
-    key: `/admin/${route.path}`,
-  }));
+  .map((route) => {
+    const iconComponent = route.meta?.iconName
+      ? () => h('img', { src: `/src/assets/icons/${route.meta.iconName}.svg`, width: 20, height: 20 })
+      : null;
+
+    return {
+      label: () =>
+        h(
+          RouterLink,
+          {
+            to: { name: route.name },
+          },
+          { default: () => route.meta?.label || '' },
+        ),
+      key: `/admin/${route.path}`,
+      icon: iconComponent,
+    };
+  });
 
 // 添加路由监听
 watch(
