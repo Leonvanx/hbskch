@@ -1,13 +1,13 @@
 import request from '@/utils/http';
 import type { AxiosRequestConfig } from 'axios';
-import type { PageOptions, ResultSuccess, searchOptions, Menu } from '@/types';
+import type { Page, PageOptions, ResultSuccess, searchOptions, Menu } from '@/types';
 // 保存文章
-export const savePage = (params: PageOptions, config?: AxiosRequestConfig) => {
+export const savePage = (params: Page, config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess>('/tech/article/save', params, config);
 };
 // 获取所有文章
 export const searchPage = (params: PageOptions, config?: AxiosRequestConfig) => {
-  return request.post<ResultSuccess<searchOptions<PageOptions>>>('/tech/article/list', params, config);
+  return request.post<ResultSuccess<searchOptions<Page>>>('/tech/article/list', params, config);
 };
 // 删除文章
 export const deletePage = (id: number, config?: AxiosRequestConfig) => {

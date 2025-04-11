@@ -15,10 +15,10 @@
       <!-- 加上搜索功能/分类 -->
       <n-form ref="searchFormRef" class="search-form" label-placement="left" inline :label-width="80" :model="searchTarget" :rules="searchRules">
         <n-form-item path="title" label="标题">
-          <n-input v-model:value="searchTarget.title" style="width: 150px" placeholder="请输入标题" />
+          <n-input v-model:value="searchTarget.searchWord" style="width: 150px" placeholder="请输入标题" />
         </n-form-item>
         <n-form-item path="menuId" label="子菜单">
-          <n-select v-model:value="searchTarget.menuId" style="width: 150px" :options="subMenuList" placeholder="请选择子菜单" />
+          <n-select v-model:value="searchTarget.menuId" clearable style="width: 150px" :options="subMenuList" placeholder="请选择子菜单" />
         </n-form-item>
         <n-form-item :show-label="false">
           <n-space>
@@ -46,7 +46,7 @@
     </n-card>
     <n-card class="pagination-part">
       <n-flex justify="end">
-        <n-pagination v-model:page="pages.page" :page-count="100" :page-slot="7" />
+        <n-pagination v-model:page="pages.page" :item-count="pages.total" :page-size="pages.size" :page-slot="7" @update:page="pageChange" />
       </n-flex>
     </n-card>
   </n-flex>
@@ -97,6 +97,7 @@ const searchTarget = ref<Page>({});
 const pages = ref({
   page: 1,
   size: 10,
+  total: 0,
 });
 
 // 编辑部分的变量
@@ -107,7 +108,7 @@ const editTarget = ref<Page>({});
 const drawerVisible = ref<boolean>(false);
 const editRef = ref();
 
-const tableData = ref<Page[]>();
+const tableData = ref<Page[]>([]);
 const columns = [
   {
     title: '文章标题',
@@ -132,9 +133,12 @@ const columns = [
 ];
 
 const search = () => {
+  pageChange(1);
+};
+const pageChange = (page: number) => {
+  pages.value.page = page;
   searchData();
 };
-
 const editRow = (row: Page) => {
   editTarget.value = { ...row };
   drawerVisible.value = true;
@@ -153,7 +157,12 @@ const delRow = (row: Page) => {
       deletePage(id!).then((data) => {
         if (data.code === 0) {
           message.success('删除成功！');
-          searchData();
+          // 判断当前页是否还有数据，没有则跳到上一页
+          if (tableData.value.length === 1 && pages.value.page > 1) {
+            pageChange(pages.value.page - 1);
+          } else {
+            pageChange(pages.value.page);
+          }
         }
       });
     },
@@ -164,12 +173,12 @@ const searchData = () => {
     page: pages.value.page,
     size: pages.value.size,
     menuId: searchTarget.value.menuId,
+    searchWord: searchTarget.value.searchWord,
   };
   searchPage(params).then((data) => {
-    console.log('searchData:', data);
     if (data.code === 0) {
-      console.log('searchData:', data.data);
       tableData.value = data.data ? data.data.records : [];
+      pages.value.total = data.data ? data.data.total! : 0;
     }
   });
 };
@@ -184,8 +193,12 @@ const submit = () => {
   savePage(editTarget.value).then((data) => {
     if (data.code === 0) {
       message.success('保存成功！');
-      drawerVisible.value = false;
-      searchData();
+      // 如果是新增则返回到第一页
+      if (editTarget.value.id) {
+        pageChange(pages.value.page);
+      } else {
+        pageChange(1);
+      }
     }
   });
   closed();

@@ -12,6 +12,7 @@ export interface Page {
   title?: string;
 }
 export interface PageOptions {
+  searchWord?: string;
   page?: number;
   menuId?: number;
   size?: number;

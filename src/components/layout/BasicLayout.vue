@@ -7,7 +7,7 @@ import { h } from 'vue';
 const router = useRouter();
 const { width } = useWindowSize();
 const isMobile = computed(() => width.value < 768);
-
+const route = useRoute();
 // 根据 routes 生成 menuOptions
 // @ts-expect-error no-error
 const menuOptions: MenuOption[] = routes
@@ -67,7 +67,28 @@ const showDrawer = ref(false);
           </svg>
         </n-icon>
       </div>
-      <RouterView />
+      <n-flex vertical style="height: 100%">
+        <n-card>
+          <n-flex align="center">
+            <span style="font-size: 16px">
+              {{ route.meta.label }}
+            </span>
+            <span style="flex: 1"></span>
+            <n-popover trigger="click">
+              <template #trigger>
+                <img width="34px" height="34px" src="@/assets/icons/avator.svg" />
+              </template>
+              <n-flex vertical>
+                <n-button quaternary>修改密码</n-button>
+                <n-button quaternary>退出登录</n-button>
+              </n-flex>
+            </n-popover>
+          </n-flex>
+        </n-card>
+        <div style="flex: 1">
+          <RouterView />
+        </div>
+      </n-flex>
     </n-layout-content>
   </n-layout>
 </template>
