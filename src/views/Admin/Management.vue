@@ -17,16 +17,25 @@
         <n-form-item path="title" label="标题">
           <n-input v-model:value="searchTarget.title" style="width: 150px" placeholder="请输入标题" />
         </n-form-item>
-        <n-form-item path="subPath" label="子菜单">
-          <n-select v-model:value="searchTarget.subPath" style="width: 150px" :options="selectOptions" placeholder="请选择子菜单" />
+        <n-form-item path="menuId" label="子菜单">
+          <n-select v-model:value="searchTarget.menuId" style="width: 150px" :options="subMenuList" placeholder="请选择子菜单" />
         </n-form-item>
         <n-form-item :show-label="false">
-          <n-button type="primary" @click="add">新增</n-button>
+          <n-space>
+            <n-button type="primary" @click="search">搜索</n-button>
+            <n-button type="primary" @click="add">新增</n-button>
+          </n-space>
         </n-form-item>
       </n-form>
     </n-card>
     <n-card class="table-part">
       <CTable :columns="columns" :table-data="tableData">
+        <template #menuId="{ row }">
+          {{ subMenuList.find((menu) => menu.value === row.menuId)?.label }}
+        </template>
+        <template #status="{ row }">
+          {{ row.status ? '展示' : '不展示' }}
+        </template>
         <template #actions="{ row }">
           <n-space>
             <n-button strong tertiary size="small" @click="editRow(row)">编辑</n-button>
@@ -37,12 +46,12 @@
     </n-card>
     <n-card class="pagination-part">
       <n-flex justify="end">
-        <n-pagination v-model:page="page" :page-count="100" :page-slot="7" />
+        <n-pagination v-model:page="pages.page" :page-count="100" :page-slot="7" />
       </n-flex>
     </n-card>
   </n-flex>
   <!-- 加一个侧边drawer -->
-  <n-drawer v-model:show="drawerVisible" :width="1280" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
+  <n-drawer v-model:show="drawerVisible" width="90%" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
     <n-drawer-content>
       <template #header>
         {{ editTarget?.id ? '编辑文章' : '新增文章' }}
@@ -57,17 +66,17 @@
         <n-form-item path="title" label="标题">
           <n-input v-model:value="editTarget.title" placeholder="请输入文章标题" />
         </n-form-item>
-        <n-form-item path="subPath" label="展示子菜单">
-          <n-select v-model:value="editTarget.subPath" :options="selectOptions" placeholder="请选择展示子菜单" />
+        <n-form-item path="menuId" label="子菜单">
+          <n-select v-model:value="editTarget.menuId" :options="subMenuList" placeholder="请选择子菜单" />
         </n-form-item>
-        <n-form-item path="isHomePage" label="在首页展示">
-          <n-switch v-model:value="editTarget.isHomePage" :checked-value="1" :unchecked-value="0" />
+        <n-form-item path="orderNum" label="展示排序">
+          <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
         </n-form-item>
-        <n-form-item path="isPathPage" label="在菜单展示">
-          <n-switch v-model:value="editTarget.isPathPage" :checked-value="1" :unchecked-value="0" />
+        <n-form-item path="status" label="是否展示">
+          <n-switch v-model:value="editTarget.status" :checked-value="1" :unchecked-value="0" />
         </n-form-item>
         <n-form-item label="内容编辑">
-          <RichTextEditor :content="editTarget.content"></RichTextEditor>
+          <RichTextEditor ref="editRef" :content="editTarget.content"></RichTextEditor>
         </n-form-item>
       </n-form>
     </n-drawer-content>
@@ -76,92 +85,29 @@
 
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
-import type { PageOptions } from '@/types';
-import { savePage, searchPage } from '@/apis/admin';
+import type { Page, Menu } from '@/types';
+import { savePage, searchPage, searchMenu, deletePage } from '@/apis/admin';
 
-// interface PageOptions {
-//   id?: string | number;
-//   title?: string;
-//   subPath?: string;
-//   pathName?: string;
-//   isHomePage?: number;
-//   isPathPage?: number;
-//   updateTime?: string;
-//   content?: string;
-// }
-const selectOptions = ref([
-  { label: '全部', value: '' },
-  {
-    label: '菜单1',
-    value: '1',
-  },
-  {
-    label: '菜单2',
-    value: '2',
-  },
-  {
-    label: '菜单3',
-    value: '3',
-  },
-]);
+const message = useMessage();
+const dialog = useDialog();
 // 查找部分的变量
 const searchRules: FormRules = {};
 const searchFormRef = ref(null);
-const searchTarget = ref<PageOptions>({
-  title: '',
-  subPath: '',
-});
-const searchParam = ref<PageOptions>({
-  menuId: 1,
+const searchTarget = ref<Page>({});
+const pages = ref({
   page: 1,
   size: 10,
 });
+
 // 编辑部分的变量
 const editRules: FormRules = {};
 const editFormRef = ref<FormInst | null>(null);
-const editTarget = ref<PageOptions>({
-  title: '',
-  subPath: '',
-  isHomePage: 0,
-  isPathPage: 0,
-  content: '',
-});
+const editTarget = ref<Page>({});
 
 const drawerVisible = ref<boolean>(false);
+const editRef = ref();
 
-const page = ref<number>(1);
-const tableData = ref<PageOptions[]>([
-  {
-    id: 1,
-    title: 'John Brown',
-    subPath: '1',
-    pathName: '子菜单1',
-    isHomePage: 1,
-    isPathPage: 1,
-    updateTime: '2025-04-01',
-    content: '123',
-  },
-  {
-    id: 2,
-    title: 'Jim Green',
-    subPath: '2',
-    pathName: '子菜单2',
-    isHomePage: 1,
-    isPathPage: 1,
-    updateTime: '2025-04-01',
-    content: '',
-  },
-  {
-    id: 3,
-    title: 'Joe Black',
-    subPath: '3',
-    pathName: '子菜单3',
-    isHomePage: 1,
-    isPathPage: 1,
-    updateTime: '2025-04-01',
-    content: '',
-  },
-]);
+const tableData = ref<Page[]>();
 const columns = [
   {
     title: '文章标题',
@@ -169,15 +115,11 @@ const columns = [
   },
   {
     title: '子菜单',
-    key: 'pathName',
+    key: 'menuId',
   },
   {
-    title: '在首页展示',
-    key: 'isHomePage',
-  },
-  {
-    title: '在菜单展示',
-    key: 'isPathPage',
+    title: '展示',
+    key: 'status',
   },
   {
     title: '更新时间',
@@ -188,18 +130,45 @@ const columns = [
     key: 'actions',
   },
 ];
-const editRow = (row: PageOptions) => {
+
+const search = () => {
+  searchData();
+};
+
+const editRow = (row: Page) => {
   editTarget.value = { ...row };
   drawerVisible.value = true;
 };
-const delRow = (row: PageOptions) => {
-  console.log('🚀 ~ delRow ~ row:', row);
+const delRow = (row: Page) => {
+  const id = row.id;
+  dialog.warning({
+    title: '警告',
+    content: '你确定删除文章？',
+    positiveText: '确定',
+    negativeText: '取消',
+    draggable: true,
+    onPositiveClick: () => {
+      //添加删除接口
+      console.log('delRow', id);
+      deletePage(id!).then((data) => {
+        if (data.code === 0) {
+          message.success('删除成功！');
+          searchData();
+        }
+      });
+    },
+  });
 };
 const searchData = () => {
-  searchPage(searchParam.value).then((data) => {
-    console.log('searchDate:', data);
+  const params = {
+    page: pages.value.page,
+    size: pages.value.size,
+    menuId: searchTarget.value.menuId,
+  };
+  searchPage(params).then((data) => {
+    console.log('searchData:', data);
     if (data.code === 0) {
-      console.log('searchDate:', data.data);
+      console.log('searchData:', data.data);
       tableData.value = data.data ? data.data.records : [];
     }
   });
@@ -209,10 +178,14 @@ const add = () => {
   drawerVisible.value = true;
 };
 const submit = () => {
+  editTarget.value.content = editRef.value.getContent();
   console.log('submit', editTarget.value);
   //添加新增内容接口
   savePage(editTarget.value).then((data) => {
-    if (data.code) {
+    if (data.code === 0) {
+      message.success('保存成功！');
+      drawerVisible.value = false;
+      searchData();
     }
   });
   closed();
@@ -224,7 +197,23 @@ const closed = () => {
   drawerVisible.value = false;
   editTarget.value = {};
 };
+const subMenuList = ref<{ value?: number; label?: string }[]>([]);
+
+const resolveMenu = (menuList: Menu[]) => {
+  menuList.map((menu) => {
+    if (menu.children && menu.children.length > 0) {
+      resolveMenu(menu.children);
+    } else {
+      if (menu.menuType === 'sub') subMenuList.value.push({ value: menu.id, label: menu.name });
+    }
+  });
+};
+const getAllSubMenu = async () => {
+  const data = await searchMenu();
+  resolveMenu(data.data!);
+};
 onMounted(() => {
+  getAllSubMenu();
   searchData();
 });
 </script>

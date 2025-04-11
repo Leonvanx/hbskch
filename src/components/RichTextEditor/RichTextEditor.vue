@@ -24,6 +24,10 @@ type Props = {
 };
 const props = defineProps<Props>();
 
+const getContent = () => {
+  return aiEditor?.getHtml();
+};
+defineExpose({ getContent });
 onMounted(() => {
   aiEditor = new AiEditor({
     element: divRef.value as Element,

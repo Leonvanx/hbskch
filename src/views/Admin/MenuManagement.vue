@@ -12,7 +12,7 @@
 <template>
   <n-flex vertical>
     <n-card class="add-menu">
-      <n-button type="primary">新增菜单</n-button>
+      <n-button type="primary" @click="add">新增菜单</n-button>
     </n-card>
     <n-card class="menu-tree">
       <CTable :columns="columns" :table-data="menuList" :row-key="(row) => row.id">
@@ -21,6 +21,9 @@
             <n-button strong tertiary size="small" @click="editMenu(row)">编辑</n-button>
             <n-button strong tertiary size="small" @click="delMenu(row)">删除</n-button>
           </n-space>
+        </template>
+        <template #menuType="{ row }">
+          {{ menuTypeOptions.find((menu) => menu.value === row.menuType)?.label }}
         </template>
       </CTable>
     </n-card>
@@ -38,7 +41,7 @@
       </template>
       <n-form ref="editFormRef" :model="editTarget" :rules="editRules">
         <n-form-item path="name" label="菜单名称">
-          <n-input v-model:value="editTarget.name" placeholder="请输入文章标题" />
+          <n-input v-model:value="editTarget.name" placeholder="请输入菜单名称" />
         </n-form-item>
         <n-form-item path="menuType" label="菜单类型">
           <n-select v-model:value="editTarget.menuType" :options="menuTypeOptions" placeholder="请选择父级菜单" />
@@ -48,7 +51,7 @@
             <n-select v-model:value="editTarget.parentId" :options="parentMenuList" placeholder="请选择父级菜单" />
           </n-form-item>
         </template>
-        <n-form-item path="orderNum" label="顺序">
+        <n-form-item path="orderNum" label="展示排序">
           <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
         </n-form-item>
       </n-form>
@@ -59,7 +62,7 @@
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Menu } from '@/types';
-import { searchMenu, deleteMenu } from '@/apis/admin';
+import { searchMenu, deleteMenu, saveMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
 const parentMenuList = computed(() => {
   return menuList.value.map((menu: Menu) => ({
@@ -77,7 +80,7 @@ const columns = [
     key: 'menuType',
   },
   {
-    title: '顺序',
+    title: '展示顺序',
     key: 'orderNum',
   },
   {
@@ -108,6 +111,10 @@ const editMenu = (menu: Menu) => {
   drawerVisible.value = true;
   editTarget.value = JSON.parse(JSON.stringify(menu));
 };
+const add = () => {
+  editTarget.value = {};
+  drawerVisible.value = true;
+};
 const delMenu = ({ id }: Menu) => {
   console.log('id', id);
   dialog.warning({
@@ -135,9 +142,22 @@ const searchData = () => {
     }
   });
 };
-const cancel = () => {};
-const submit = () => {};
-const closed = () => {};
+const cancel = () => {
+  drawerVisible.value = false;
+};
+const submit = () => {
+  const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
+  saveMenu(params).then((data) => {
+    if (data.code === 0) {
+      message.success(editTarget.value.id ? '修改成功' : '新增菜单成功');
+      drawerVisible.value = false;
+      searchData();
+    }
+  });
+};
+const closed = () => {
+  editTarget.value = {};
+};
 searchData();
 </script>
 

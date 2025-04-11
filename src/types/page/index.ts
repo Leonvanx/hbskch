@@ -1,22 +1,21 @@
-export interface PageOptions {
+export interface Page {
   content?: string;
   coverImage?: string;
   id?: number;
-  subPath?: string;
   pathName?: string;
   searchWord?: string;
-  isHomePage?: number;
-  isPathPage?: number;
   menuId?: number;
   orderNum?: number;
   status?: number;
-  summary?: string;
+  summary?: number;
   updateTime?: string;
   title?: string;
+}
+export interface PageOptions {
   page?: number;
+  menuId?: number;
   size?: number;
 }
-
 export interface searchOptions<T> {
   current?: number;
   pages?: number;
