@@ -23,7 +23,6 @@ type Props = {
   content?: string;
 };
 const props = defineProps<Props>();
-
 const getContent = () => {
   return aiEditor?.getHtml();
 };
@@ -36,32 +35,59 @@ onMounted(() => {
     image: {
       allowBase64: false,
       defaultSize: 350,
-      uploadUrl: 'https://your-domain/image/upload',
+      uploadUrl: '/apiProxy/tech/files/upload',
       uploadFormName: 'image', //上传时的文件表单名称
       uploadHeaders: {
         jwt: 'xxxxx',
         other: 'xxxx',
       },
-      // uploader: (file, uploadUrl, headers, formName) => {
-      //   //可自定义图片上传逻辑
-      // },
-      // uploaderEvent: {
-      //   onUploadBefore: (file, uploadUrl, headers) => {
-      //     //监听图片上传之前，此方法可以不用回任何内容，但若返回 false，则终止上传
-      //   },
-      //   onSuccess: (file, response) => {
-      //     //监听图片上传成功
-      //     //注意：
-      //     // 1、如果此方法返回 false，则图片不会被插入到编辑器
-      //     // 2、可以在这里返回一个新的 json 给编辑器
-      //   },
-      //   onFailed: (file, response) => {
-      //     //监听图片上传失败，或者返回的 json 信息不正确
-      //   },
-      //   onError: (file, error) => {
-      //     //监听图片上传错误，比如网络超时等
-      //   },
-      // },
+      uploader: (file: File, uploadUrl: string, headers: Record<string, string>, formName: string): Promise<Record<string, string>> => {
+        console.log(formName);
+        const formData = new FormData();
+        formData.append('file', file);
+        return new Promise((resolve, reject) => {
+          fetch(uploadUrl, {
+            method: 'post',
+            headers: { Accept: 'application/json', ...headers },
+            body: formData,
+          })
+            .then((resp) => resp.json())
+            .then((json) => {
+              resolve(json);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      },
+      uploaderEvent: {
+        // onUploadBefore: (file, uploadUrl, headers) => {
+        //   //监听图片上传之前，此方法可以不用回任何内容，但若返回 false，则终止上传
+        // },
+        onSuccess: (file, response) => {
+          //监听图片上传成功
+          //注意：
+          // 1、如果此方法返回 false，则图片不会被插入到编辑器
+          // 2、可以在这里返回一个新的 json 给编辑器
+          if (response.message === '文件上传成功' && response.url) {
+            return {
+              errorCode: 0,
+              data: {
+                src: response.url,
+                alt: file.name,
+              },
+            };
+          } else {
+            return false;
+          }
+        },
+        // onFailed: (file, response) => {
+        //   //监听图片上传失败，或者返回的 json 信息不正确
+        // },
+        // onError: (file, error) => {
+        //   //监听图片上传错误，比如网络超时等
+        // },
+      },
       bubbleMenuItems: ['AlignLeft', 'AlignCenter', 'AlignRight', 'delete'],
     },
   });
