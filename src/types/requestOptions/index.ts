@@ -4,6 +4,9 @@ export interface ResultSuccess<T = any> {
   msg: string;
   data?: T;
 }
+export interface UploadResult<T = any> extends ResultSuccess<T> {
+  url: string;
+}
 export interface UploadFileParams {
   // Other parameters
   data?: any;

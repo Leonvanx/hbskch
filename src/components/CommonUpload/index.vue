@@ -18,7 +18,7 @@
     :max="1"
     @preview="handlePreview"
   />
-  <n-modal v-model:show="showModal" preset="card" style="width: 600px" title="一张很酷的图片">
+  <n-modal v-model:show="showModal" preset="card" style="width: 600px" title="图片预览">
     <img :src="previewImageUrl" style="width: 100%" />
   </n-modal>
 </template>
@@ -27,7 +27,7 @@
 import type { UploadFileInfo, UploadCustomRequestOptions } from 'naive-ui';
 import { uploadFile } from '@/apis';
 type Props = {
-  fileList?: UploadFileInfo[];
+  fileUrl?: string;
   max: number;
 };
 const props = defineProps<Props>();
@@ -46,23 +46,36 @@ const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
   // 上传图片
   const data = await uploadFile({ file: file.file! });
   if (data.url) {
-    previewFileList.value.push({
-      id: file.id,
-      name: '图片预览',
-      status: 'finished',
-      url: data.url,
-    });
+    previewFileList.value = [
+      {
+        id: file.id,
+        name: '图片预览',
+        status: 'finished',
+        url: data.url,
+      },
+    ];
   }
 };
 // 已上传图片列表
 const previewFileList = ref<UploadFileInfo[]>([]);
 // 监听props.fileList
 watch(
-  () => props.fileList,
+  () => props.fileUrl,
   (newVal) => {
+    console.log(newVal);
     if (newVal) {
-      previewFileList.value = newVal;
+      previewFileList.value = [
+        {
+          url: newVal,
+          name: '图片预览',
+          status: 'finished',
+          id: '1',
+        },
+      ];
     }
+  },
+  {
+    immediate: true,
   },
 );
 // 返回一个方法获取url链接给父组件

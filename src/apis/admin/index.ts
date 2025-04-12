@@ -1,6 +1,6 @@
 import request from '@/utils/http';
 import type { AxiosRequestConfig } from 'axios';
-import type { Page, PageOptions, ResultSuccess, searchOptions, Menu, UploadFileParams } from '@/types';
+import type { Page, PageOptions, ResultSuccess, UploadResult, searchOptions, Menu, UploadFileParams } from '@/types';
 // 保存文章
 export const savePage = (params: Page, config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess>('/tech/article/save', params, config);
@@ -27,5 +27,5 @@ export const saveMenu = (params: Menu, config?: AxiosRequestConfig) => {
 };
 // 上传文件
 export const uploadFile = (file: UploadFileParams, config?: AxiosRequestConfig) => {
-  return request.uploadFile<ResultSuccess<{ url: string; message: string }>>(`/tech/files/upload`, file, config);
+  return request.uploadFile<UploadResult<{ url: string; message: string }>>(`/tech/files/upload`, file, config);
 };

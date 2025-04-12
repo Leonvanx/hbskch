@@ -33,6 +33,14 @@
         <template #menuId="{ row }">
           {{ subMenuList.find((menu) => menu.value === row.menuId)?.label }}
         </template>
+        <template #coverImage="{ row }">
+          <template v-if="row.coverImage">
+            <n-image :src="row.coverImage" width="50" height="50"></n-image>
+          </template>
+          <template v-else>
+            <img src="@/assets/icons/default_image.svg" width="50" height="50" />
+          </template>
+        </template>
         <template #status="{ row }">
           <n-switch v-model:value="row.status" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus(row)" />
         </template>
@@ -69,6 +77,9 @@
         <n-form-item path="title" label="标题">
           <n-input v-model:value="editTarget.title" placeholder="请输入文章标题" />
         </n-form-item>
+        <n-form-item path="coverImage" label="展示图">
+          <CommonUpload ref="uploadRef" :max="1" :fileUrl="editTarget.coverImage"></CommonUpload>
+        </n-form-item>
         <n-form-item path="menuId" label="子菜单">
           <n-select v-model:value="editTarget.menuId" :options="subMenuList" placeholder="请选择子菜单" />
         </n-form-item>
@@ -93,7 +104,6 @@
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Page, Menu } from '@/types';
 import { savePage, searchPage, searchMenu, deletePage } from '@/apis';
-
 const message = useMessage();
 const dialog = useDialog();
 // 查找部分的变量
@@ -110,7 +120,7 @@ const pages = ref({
 const editRules: FormRules = {};
 const editFormRef = ref<FormInst | null>(null);
 const editTarget = ref<Page>({});
-
+const uploadRef = ref();
 const drawerVisible = ref<boolean>(false);
 const editRef = ref();
 
@@ -123,6 +133,10 @@ const columns = [
   {
     title: '子菜单',
     key: 'menuId',
+  },
+  {
+    title: '展示图',
+    key: 'coverImage',
   },
   {
     title: '首页展示',
@@ -178,19 +192,18 @@ const delRow = (row: Page) => {
     },
   });
 };
-const searchData = () => {
+const searchData = async () => {
   const params = {
     page: pages.value.page,
     size: pages.value.size,
     menuId: searchTarget.value.menuId,
     searchWord: searchTarget.value.searchWord,
   };
-  searchPage(params).then((data) => {
-    if (data.code === 0) {
-      tableData.value = data.data ? data.data.records : [];
-      pages.value.total = data.data ? data.data.total! : 0;
-    }
-  });
+  const data = await searchPage(params);
+  if (data.code === 0) {
+    tableData.value = data.data ? data.data.records : [];
+    pages.value.total = data.data ? data.data.total! : 0;
+  }
 };
 const add = () => {
   editTarget.value = {};
@@ -198,6 +211,8 @@ const add = () => {
 };
 const submit = () => {
   editTarget.value.content = editRef.value.getContent();
+  editTarget.value.coverImage = uploadRef.value.getFileList()[0]?.url;
+
   console.log('submit', editTarget.value);
   //添加新增内容接口
   savePage(editTarget.value).then((data) => {
@@ -213,7 +228,7 @@ const submit = () => {
   });
   closed();
 };
-const changeShowStatus = (row) => {
+const changeShowStatus = (row: Page) => {
   const params = {
     ...row,
   };
@@ -247,9 +262,9 @@ const getAllSubMenu = async () => {
   const data = await searchMenu();
   resolveMenu(data.data!);
 };
-onMounted(() => {
-  getAllSubMenu();
-  searchData();
+onMounted(async () => {
+  await getAllSubMenu();
+  await searchData();
 });
 </script>
 
