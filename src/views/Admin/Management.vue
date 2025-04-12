@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Page, Menu } from '@/types';
-import { savePage, searchPage, searchMenu, deletePage } from '@/apis/admin';
+import { savePage, searchPage, searchMenu, deletePage } from '@/apis';
 
 const message = useMessage();
 const dialog = useDialog();
