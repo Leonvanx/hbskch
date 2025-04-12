@@ -3,22 +3,23 @@ import { RouterLink } from 'vue-router';
 import { routes } from '@/router';
 import { h } from 'vue';
 import type { MenuOption, FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui';
+import { updatePassword } from '@/apis';
 const router = useRouter();
 const { width } = useWindowSize();
 const message = useMessage();
 const isMobile = computed(() => width.value < 768);
 const route = useRoute();
 interface ModelType {
-  oldPassword: string | null;
-  newPassword: string | null;
-  reenteredPassword: string | null;
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 }
 const formRef = ref<FormInst | null>(null);
 const rPasswordFormItemRef = ref<FormItemInst | null>(null);
 const model = ref<ModelType>({
-  oldPassword: null,
-  newPassword: null,
-  reenteredPassword: null,
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: '',
 });
 const validatePasswordStartWith = (rule: FormItemRule, value: string): boolean => {
   return !!model.value.newPassword && model.value.newPassword.startsWith(value) && model.value.newPassword.length >= value.length;
@@ -39,7 +40,7 @@ const rules: FormRules = {
       message: '请输入新密码',
     },
   ],
-  reenteredPassword: [
+  confirmPassword: [
     {
       required: true,
       message: '请再次输入密码',
@@ -58,7 +59,7 @@ const rules: FormRules = {
   ],
 };
 const handlePasswordInput = () => {
-  if (model.value.reenteredPassword) {
+  if (model.value.confirmPassword) {
     rPasswordFormItemRef.value?.validate({ trigger: 'password-input' });
   }
 };
@@ -67,6 +68,11 @@ const handlePasswordInput = () => {
 const modalVisible = ref(false);
 const editPassword = () => {
   modalVisible.value = true;
+};
+const exit = () => {
+  sessionStorage.removeItem('token');
+  message.info('退出登录成功');
+  router.replace('/login');
 };
 // 根据 routes 生成 menuOptions
 // @ts-expect-error no-error
@@ -107,11 +113,24 @@ const cancel = () => {
   modalVisible.value = false;
 };
 const submitPassword = () => {
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      message.success('验证成功');
-    } else {
-      message.error('验证失败');
+      // 调用修改密码接口
+      const res = await updatePassword(
+        { ...model.value },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          },
+        },
+      );
+      if (res.code === 0) {
+        message.success('修改密码成功');
+        modalVisible.value = false;
+        return;
+      } else {
+        message.error(res.msg);
+      }
     }
   });
 };
@@ -153,7 +172,7 @@ const submitPassword = () => {
               </template>
               <n-flex vertical>
                 <n-button quaternary @click="editPassword">修改密码</n-button>
-                <n-button quaternary>退出登录</n-button>
+                <n-button quaternary @click="exit">退出登录</n-button>
               </n-flex>
             </n-popover>
           </n-flex>
@@ -180,9 +199,9 @@ const submitPassword = () => {
             @keydown.enter.prevent
           />
         </n-form-item>
-        <n-form-item ref="rPasswordFormItemRef" first path="reenteredPassword" label="重复密码">
+        <n-form-item ref="rPasswordFormItemRef" first path="confirmPassword" label="重复密码">
           <n-input
-            v-model:value="model.reenteredPassword"
+            v-model:value="model.confirmPassword"
             :disabled="!model.newPassword"
             placeholder="请再次输入"
             :maxlength="16"

@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+const router = useRouter();
+import { login } from '@/apis';
 const msg = useMessage();
 const formValue = ref({
   username: '',
@@ -54,7 +56,13 @@ const rules = {
 };
 
 const handleLogin = () => {
-  msg.success('登录成功！');
+  login(formValue.value).then((res) => {
+    if (res.token) {
+      msg.success('登录成功！');
+      sessionStorage.setItem('token', res.token);
+      router.push('/admin');
+    }
+  });
 };
 </script>
 

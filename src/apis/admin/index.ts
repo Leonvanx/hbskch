@@ -29,3 +29,11 @@ export const saveMenu = (params: Menu, config?: AxiosRequestConfig) => {
 export const uploadFile = (file: UploadFileParams, config?: AxiosRequestConfig) => {
   return request.uploadFile<UploadResult<{ url: string; message: string }>>(`/tech/files/upload`, file, config);
 };
+// 登录
+export const login = (params: { username: string; password: string }, config?: AxiosRequestConfig) => {
+  return request.post<{ token: string }>(`/tech/auth/login`, params, config);
+};
+// 修改密码
+export const updatePassword = (params: { oldPassword: string; newPassword: string; confirmPassword: string }, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/user/change-password`, params, config);
+};
