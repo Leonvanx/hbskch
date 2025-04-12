@@ -39,7 +39,7 @@ class DefAxios {
   head<T = any>(url: string, data: any, axiosReqConfig?: AxiosRequestConfig): Promise<T> {
     return this.request(url, data, { ...axiosReqConfig, method: 'HEAD' });
   }
-  uploadFile<T = any>(params: UploadFileParams, config: AxiosRequestConfig) {
+  uploadFile<T = any>(url: string, params: UploadFileParams, config: AxiosRequestConfig): Promise<T> {
     const formData = new window.FormData();
     const customFilename = params.name || 'file';
 
@@ -61,8 +61,7 @@ class DefAxios {
         formData.append(key, params.data![key]);
       });
     }
-
-    return this.axiosInstance.request<T>({
+    return this.request(url, params.data, {
       ...config,
       method: 'POST',
       data: formData,
