@@ -10,7 +10,13 @@
   修改时间：
 -->
 <template>
-  <div>后管首页</div>
+  <n-flex vertical>
+    <n-card>
+      <template #header>美术资源</template>
+      <CommonUpload :max="1"></CommonUpload>
+    </n-card>
+    <n-card title="友情链接"></n-card>
+  </n-flex>
 </template>
 
 <script setup lang="ts"></script>
