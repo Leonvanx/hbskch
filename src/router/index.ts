@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import BasicLayout from '@/components/layout/BasicLayout.vue';
+import { isAuthenticated } from '@/utils/loginCheck';
 
 const routes = [
   {
@@ -45,6 +46,15 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (!isAuthenticated() && to.fullPath.indexOf('/admin') != -1) {
+    // 假设 isAuthenticated() 是检查用户是否认证的函数
+    next({ path: '/login' }); // 重定向到登录页或首页
+  } else {
+    next(); // 确保一定要调用 next()
+  }
 });
 
 export default router;
