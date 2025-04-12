@@ -34,7 +34,10 @@
           {{ subMenuList.find((menu) => menu.value === row.menuId)?.label }}
         </template>
         <template #status="{ row }">
-          {{ row.status ? '展示' : '不展示' }}
+          <n-switch v-model:value="row.status" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus(row)" />
+        </template>
+        <template #summary="{ row }">
+          <n-switch v-model:value="row.summary" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus(row)" />
         </template>
         <template #actions="{ row }">
           <n-space>
@@ -72,7 +75,10 @@
         <n-form-item path="orderNum" label="展示排序">
           <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
         </n-form-item>
-        <n-form-item path="status" label="是否展示">
+        <n-form-item path="summary" label="是否展示在首页">
+          <n-switch v-model:value="editTarget.summary" :checked-value="1" :unchecked-value="0" />
+        </n-form-item>
+        <n-form-item path="status" label="是否展示在子菜单">
           <n-switch v-model:value="editTarget.status" :checked-value="1" :unchecked-value="0" />
         </n-form-item>
         <n-form-item label="内容编辑">
@@ -119,7 +125,11 @@ const columns = [
     key: 'menuId',
   },
   {
-    title: '展示',
+    title: '首页展示',
+    key: 'summary',
+  },
+  {
+    title: '子菜单展示',
     key: 'status',
   },
   {
@@ -202,6 +212,18 @@ const submit = () => {
     }
   });
   closed();
+};
+const changeShowStatus = (row) => {
+  const params = {
+    ...row,
+  };
+  savePage(params).then((data) => {
+    if (data.code === 0) {
+      message.success('修改成功！');
+      // 如果是新增则返回到第一页
+      pageChange(pages.value.page);
+    }
+  });
 };
 const cancel = () => {
   closed();

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { UploadFileParams } from '@/types';
 import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
@@ -37,6 +38,38 @@ class DefAxios {
   }
   head<T = any>(url: string, data: any, axiosReqConfig?: AxiosRequestConfig): Promise<T> {
     return this.request(url, data, { ...axiosReqConfig, method: 'HEAD' });
+  }
+  uploadFile<T = any>(params: UploadFileParams, config: AxiosRequestConfig) {
+    const formData = new window.FormData();
+    const customFilename = params.name || 'file';
+
+    if (params.filename) {
+      formData.append(customFilename, params.file, params.filename);
+    } else {
+      formData.append(customFilename, params.file);
+    }
+    if (params.data) {
+      Object.keys(params.data).forEach((key) => {
+        const value = params.data![key];
+        if (Array.isArray(value)) {
+          value.forEach((item) => {
+            formData.append(`${key}[]`, item);
+          });
+          return;
+        }
+
+        formData.append(key, params.data![key]);
+      });
+    }
+
+    return this.axiosInstance.request<T>({
+      ...config,
+      method: 'POST',
+      data: formData,
+      headers: {
+        'Content-type': 'multipart/form-data;charset=UTF-8',
+      },
+    });
   }
   request<T = any>(url: string, data: any, config: AxiosRequestConfig): Promise<T> {
     const conf: AxiosRequestConfig = JSON.parse(JSON.stringify(config));

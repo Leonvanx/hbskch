@@ -58,7 +58,7 @@ const showDrawer = ref(false);
       </n-drawer-content>
     </n-drawer>
 
-    <n-layout-content>
+    <n-layout-content position="absolute">
       <!-- 移动端菜单按钮 -->
       <div v-if="isMobile" class="mobile-menu-btn" @click="showDrawer = true">
         <n-icon size="24">
@@ -85,7 +85,7 @@ const showDrawer = ref(false);
             </n-popover>
           </n-flex>
         </n-card>
-        <div style="flex: 1">
+        <div class="router-view">
           <RouterView />
         </div>
       </n-flex>
@@ -114,7 +114,10 @@ const showDrawer = ref(false);
   border-radius: 4px;
   cursor: pointer;
 }
-
+.router-view {
+  height: calc(100% - 76px - 8px);
+  overflow: auto;
+}
 @media (min-width: 768px) {
   .mobile-menu-btn {
     display: none;

@@ -10,7 +10,7 @@
   修改时间：
 -->
 <template>
-  <n-flex vertical>
+  <n-flex vertical style="height: 100%">
     <n-card class="add-menu">
       <n-button type="primary" @click="add">新增菜单</n-button>
     </n-card>
