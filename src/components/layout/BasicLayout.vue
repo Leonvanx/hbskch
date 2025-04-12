@@ -1,13 +1,73 @@
 <script setup lang="ts">
-import type { MenuOption } from 'naive-ui';
 import { RouterLink } from 'vue-router';
 import { routes } from '@/router';
 import { h } from 'vue';
-
+import type { MenuOption, FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui';
 const router = useRouter();
 const { width } = useWindowSize();
+const message = useMessage();
 const isMobile = computed(() => width.value < 768);
 const route = useRoute();
+interface ModelType {
+  oldPassword: string | null;
+  newPassword: string | null;
+  reenteredPassword: string | null;
+}
+const formRef = ref<FormInst | null>(null);
+const rPasswordFormItemRef = ref<FormItemInst | null>(null);
+const model = ref<ModelType>({
+  oldPassword: null,
+  newPassword: null,
+  reenteredPassword: null,
+});
+const validatePasswordStartWith = (rule: FormItemRule, value: string): boolean => {
+  return !!model.value.newPassword && model.value.newPassword.startsWith(value) && model.value.newPassword.length >= value.length;
+};
+const validatePasswordSame = (rule: FormItemRule, value: string): boolean => {
+  return value === model.value.newPassword;
+};
+const rules: FormRules = {
+  oldPassword: [
+    {
+      required: true,
+      message: '请输入旧密码',
+    },
+  ],
+  newPassword: [
+    {
+      required: true,
+      message: '请输入新密码',
+    },
+  ],
+  reenteredPassword: [
+    {
+      required: true,
+      message: '请再次输入密码',
+      trigger: ['input', 'blur'],
+    },
+    {
+      validator: validatePasswordStartWith,
+      message: '两次密码输入不一致',
+      trigger: 'input',
+    },
+    {
+      validator: validatePasswordSame,
+      message: '两次密码输入不一致',
+      trigger: ['blur', 'password-input'],
+    },
+  ],
+};
+const handlePasswordInput = () => {
+  if (model.value.reenteredPassword) {
+    rPasswordFormItemRef.value?.validate({ trigger: 'password-input' });
+  }
+};
+
+// 修改密码弹框
+const modalVisible = ref(false);
+const editPassword = () => {
+  modalVisible.value = true;
+};
 // 根据 routes 生成 menuOptions
 // @ts-expect-error no-error
 const menuOptions: MenuOption[] = routes
@@ -42,6 +102,19 @@ watch(
 
 const activeKey = ref<string | null>(router.currentRoute.value.path);
 const showDrawer = ref(false);
+
+const cancel = () => {
+  modalVisible.value = false;
+};
+const submitPassword = () => {
+  formRef.value?.validate((errors) => {
+    if (!errors) {
+      message.success('验证成功');
+    } else {
+      message.error('验证失败');
+    }
+  });
+};
 </script>
 
 <template>
@@ -70,7 +143,7 @@ const showDrawer = ref(false);
       <n-flex vertical style="height: 100%">
         <n-card>
           <n-flex align="center">
-            <span style="font-size: 16px">
+            <span style="font-size: 20px; font-weight: 500">
               {{ route.meta.label }}
             </span>
             <span style="flex: 1"></span>
@@ -79,7 +152,7 @@ const showDrawer = ref(false);
                 <img width="34px" height="34px" src="@/assets/icons/avator.svg" />
               </template>
               <n-flex vertical>
-                <n-button quaternary>修改密码</n-button>
+                <n-button quaternary @click="editPassword">修改密码</n-button>
                 <n-button quaternary>退出登录</n-button>
               </n-flex>
             </n-popover>
@@ -91,6 +164,41 @@ const showDrawer = ref(false);
       </n-flex>
     </n-layout-content>
   </n-layout>
+  <n-modal v-model:show="modalVisible" @mask-click="cancel">
+    <n-card style="width: 600px" title="修改密码" :bordered="false" size="huge" role="dialog" aria-modal="true">
+      <n-form ref="formRef" :model="model" :rules="rules">
+        <n-form-item path="oldPassword" label="旧密码">
+          <n-input v-model:value="model.oldPassword" type="password" :maxlength="16" placeholder="请输入旧密码" @keydown.enter.prevent />
+        </n-form-item>
+        <n-form-item path="newPassword" label="新密码">
+          <n-input
+            v-model:value="model.newPassword"
+            type="password"
+            :maxlength="16"
+            placeholder="请输入新密码"
+            @input="handlePasswordInput"
+            @keydown.enter.prevent
+          />
+        </n-form-item>
+        <n-form-item ref="rPasswordFormItemRef" first path="reenteredPassword" label="重复密码">
+          <n-input
+            v-model:value="model.reenteredPassword"
+            :disabled="!model.newPassword"
+            placeholder="请再次输入"
+            :maxlength="16"
+            type="password"
+            @keydown.enter.prevent
+          />
+        </n-form-item>
+      </n-form>
+      <template #footer>
+        <n-flex justify="end">
+          <n-button type="primary" @click="submitPassword">确定</n-button>
+          <n-button @click="cancel">取消</n-button>
+        </n-flex>
+      </template>
+    </n-card>
+  </n-modal>
 </template>
 
 <style scoped>

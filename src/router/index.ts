@@ -18,20 +18,20 @@ const routes = [
       {
         path: '',
         name: 'index',
-        meta: { label: '后管首页' },
+        meta: { label: '首页管理' },
         component: () => import('@/views/Admin/Index.vue'),
-      },
-      {
-        path: 'management',
-        name: 'management',
-        meta: { label: '文章维护', iconName: 'article' },
-        component: () => import('@/views/Admin/Management.vue'),
       },
       {
         path: 'menuManagement',
         name: 'menuManagement',
-        meta: { label: '子菜单维护', iconName: 'menu' },
+        meta: { label: '菜单管理', iconName: 'menu' },
         component: () => import('@/views/Admin/MenuManagement.vue'),
+      },
+      {
+        path: 'management',
+        name: 'management',
+        meta: { label: '内容管理', iconName: 'article' },
+        component: () => import('@/views/Admin/Management.vue'),
       },
     ],
   },

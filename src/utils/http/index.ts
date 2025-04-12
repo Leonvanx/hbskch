@@ -39,10 +39,9 @@ class DefAxios {
   head<T = any>(url: string, data: any, axiosReqConfig?: AxiosRequestConfig): Promise<T> {
     return this.request(url, data, { ...axiosReqConfig, method: 'HEAD' });
   }
-  uploadFile<T = any>(url: string, params: UploadFileParams, config: AxiosRequestConfig): Promise<T> {
+  uploadFile<T = any>(url: string, params: UploadFileParams, config?: AxiosRequestConfig): Promise<T> {
     const formData = new window.FormData();
     const customFilename = params.name || 'file';
-
     if (params.filename) {
       formData.append(customFilename, params.file, params.filename);
     } else {
@@ -61,10 +60,9 @@ class DefAxios {
         formData.append(key, params.data![key]);
       });
     }
-    return this.request(url, params.data, {
+    return this.request(url, formData, {
       ...config,
       method: 'POST',
-      data: formData,
       headers: {
         'Content-type': 'multipart/form-data;charset=UTF-8',
       },
