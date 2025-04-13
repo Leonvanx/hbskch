@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import headerIcon from '@/assets/icons/science-color.svg';
 type Props = {
   webTitle?: string;
   webTitleEn?: string;
@@ -30,7 +31,7 @@ type Props = {
 const props = withDefaults(defineProps<Props>(), {
   webTitle: '湖北省科技进步促进会',
   webTitleEn: 'Hubei Science and Technology Progress Association',
-  webLogo: '/src/assets/icons/science-color.svg',
+  webLogo: headerIcon,
   isShowLogin: false,
 });
 
