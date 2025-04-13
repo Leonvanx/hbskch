@@ -1,6 +1,6 @@
 import request from '@/utils/http';
 import type { AxiosRequestConfig } from 'axios';
-import type { Page, PageOptions, ResultSuccess, UploadResult, searchOptions, Menu, UploadFileParams } from '@/types';
+import type { Page, PageOptions, ResultSuccess, UploadResult, searchOptions, Menu, UploadFileParams, Resource, Link } from '@/types';
 // 保存文章
 export const savePage = (params: Page, config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess>('/tech/article/save', params, config);
@@ -36,4 +36,24 @@ export const login = (params: { username: string; password: string }, config?: A
 // 修改密码
 export const updatePassword = (params: { oldPassword: string; newPassword: string; confirmPassword: string }, config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/user/change-password`, params, config);
+};
+// 获取资源列表
+export const searchResource = (codes?: string, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<Resource[]>>('/tech/resource/list', [codes], config);
+};
+//修改资源
+export const updateResource = (params: Resource, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/resource/saveOrUpdate`, params, config);
+};
+// 获取友情链接列表
+export const searchFriendLink = (config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<Link[]>>('/tech/resource/bottom/list', null, config);
+};
+// 修改友情链接
+export const updateFriendLink = (params: Link, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/resource/bottom/saveOrUpdate`, params, config);
+};
+// 删除友情链接
+export const deleteFriendLink = (id: number, config?: AxiosRequestConfig) => {
+  return request.delete<ResultSuccess<{ code: number; message: string }>>(`/tech/resource/${id}`, {}, config);
 };

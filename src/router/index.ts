@@ -29,6 +29,12 @@ const routes = [
     component: BasicLayout,
     children: [
       {
+        path: 'admin',
+        name: 'admin',
+        meta: { label: '首页管理', iconName: 'menu' },
+        component: () => import('@/views/Admin/Index.vue'),
+      },
+      {
         path: 'menuManagement',
         name: 'menuManagement',
         meta: { label: '菜单管理', iconName: 'menu' },

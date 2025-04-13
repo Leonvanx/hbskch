@@ -20,7 +20,7 @@
     :loading="props.loading"
     :show-header="props.showHeader"
     :row-selection="props.rowSelection"
-    flex-height
+    :flex-height="props.flexHeight"
     style="height: 100%"
   >
     <!-- 遍历所有插槽，将插槽内容插入到对应的列中 -->
@@ -45,12 +45,15 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
   loading?: boolean;
   showHeader?: boolean;
+  flexHeight?: boolean;
   rowSelection?: {
     type: 'checkbox' | 'radio';
     selectedRowKeys?: (string | number)[];
   };
 };
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  flexHeight: true,
+});
 
 const $slots = useSlots();
 
