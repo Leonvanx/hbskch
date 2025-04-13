@@ -78,7 +78,7 @@
           <n-input v-model:value="editTarget.title" placeholder="请输入文章标题" />
         </n-form-item>
         <n-form-item path="coverImage" label="展示图">
-          <CommonUpload ref="uploadRef" :max="1" :fileUrl="editTarget.coverImage"></CommonUpload>
+          <CommonUpload v-model:fileUrl="editTarget.coverImage" :max="1"></CommonUpload>
         </n-form-item>
         <n-form-item path="menuId" label="子菜单">
           <n-select v-model:value="editTarget.menuId" :options="subMenuList" placeholder="请选择子菜单" />
@@ -120,7 +120,6 @@ const pages = ref({
 const editRules: FormRules = {};
 const editFormRef = ref<FormInst | null>(null);
 const editTarget = ref<Page>({});
-const uploadRef = ref();
 const drawerVisible = ref<boolean>(false);
 const editRef = ref();
 
@@ -211,8 +210,6 @@ const add = () => {
 };
 const submit = () => {
   editTarget.value.content = editRef.value.getContent();
-  editTarget.value.coverImage = uploadRef.value.getFileList()[0]?.url;
-
   console.log('submit', editTarget.value);
   //添加新增内容接口
   savePage(editTarget.value).then((data) => {

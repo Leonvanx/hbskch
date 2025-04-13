@@ -54,6 +54,7 @@ const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
         url: data.url,
       },
     ];
+    emit('update:fileUrl', data.url);
   }
 };
 // 已上传图片列表
@@ -82,6 +83,7 @@ watch(
 const getFileList = () => {
   return previewFileList.value;
 };
+const emit = defineEmits(['update:fileUrl']);
 defineExpose({
   getFileList,
 });
