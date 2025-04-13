@@ -13,7 +13,7 @@
   <div class="article-content flex-row">
     <div class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
-        <div v-for="item in top3Article" :key="item.id" class="article-item posr">
+        <div v-for="item in top3Article" :key="item.id" class="article-item posr pointer" @click="clickArticle(item.id)">
           <img class="carousel-img" :src="item.coverImage" />
           <div class="article-title-wrapper">
             <span class="article-title">
@@ -29,7 +29,12 @@
       </n-carousel>
     </div>
     <div class="article-list ovf">
-      <div v-for="item in rightArticleList" :key="item.id" class="article-list-item flex-row align-center ovf justify-between pointer">
+      <div
+        v-for="item in rightArticleList"
+        :key="item.id"
+        class="article-list-item flex-row align-center ovf justify-between pointer"
+        @click="clickArticle(item.id)"
+      >
         <div class="article-title els">
           {{ item.title }}
         </div>
@@ -42,22 +47,32 @@
 <script setup lang="ts">
 import { searchPage } from '@/apis';
 import type { Menu, Page } from '@/types';
+import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 type Props = {
   menuList: Menu[];
   subMenuId?: number;
 };
+const router = useRouter();
 const props = defineProps<Props>();
 
 const articleList = ref<Page[]>([]);
 const top3Article = ref<Page[]>([]);
 const rightArticleList = ref<Page[]>([]);
-
+const clickArticle = (id?: number) => {
+  router.push({
+    name: 'ArticleDetail',
+    query: {
+      id: id,
+    },
+  });
+};
 const getArticleList = () => {
   const params = {
     page: 1,
     size: 10,
     menuId: props.subMenuId || props.menuList?.[1]?.children?.[0]?.id,
+    summary: 1,
   };
   searchPage(params).then((res) => {
     if (res.code === 0) {
@@ -86,9 +101,11 @@ onMounted(() => {});
   margin: 20px auto 0;
   padding-bottom: 20px;
 }
+
 .main-article {
   width: 650px;
   flex-shrink: 0;
+
   .sub-menu-title {
     font-size: 18px;
     height: 20px;
@@ -98,6 +115,7 @@ onMounted(() => {});
     padding-left: 5px;
     margin-bottom: 10px;
     position: relative;
+
     &::before {
       position: absolute;
       left: 0;
@@ -109,6 +127,7 @@ onMounted(() => {});
       background-color: #18a058;
     }
   }
+
   .article-item {
     .article-title-wrapper {
       width: 300px;
@@ -118,13 +137,18 @@ onMounted(() => {});
       min-height: 90px;
       left: 12px;
       bottom: 12px;
+
       .article-title {
         font-size: 14px;
         font-weight: 600;
         margin-top: 6px;
         color: #18a058;
       }
+      .article-title:hover {
+        text-decoration: underline;
+      }
     }
+
     .carousel-img {
       width: 100%;
       height: 400px;
@@ -132,21 +156,26 @@ onMounted(() => {});
     }
   }
 }
+
 .article-list {
   flex: 1;
+
   .article-list-item {
     gap: 16px;
     border-bottom: 1px solid #e5e5e5;
+
     &:hover {
       .article-title {
         color: #18a058;
       }
     }
+
     .article-title {
       padding: 14px 0;
       color: #1a1a1a;
       font-size: 16px;
     }
+
     .release-time {
       font-size: 12px;
       color: #999;
@@ -162,6 +191,7 @@ onMounted(() => {});
   position: absolute;
   bottom: 20px;
   left: 24px;
+
   li {
     display: inline-block;
     width: 12px;
@@ -173,6 +203,7 @@ onMounted(() => {});
       width 0.3s,
       background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+
     &.is-active {
       width: 40px;
       background: #18a058;
@@ -192,20 +223,24 @@ onMounted(() => {});
     width: 550px;
   }
 }
+
 @media (max-width: 900px) {
   .main-article {
     width: 500px;
   }
 }
+
 @media (max-width: 800px) {
   .main-article {
     width: 100%;
   }
+
   .article-content {
     display: flex;
     flex-direction: column;
   }
 }
+
 @media (max-width: 430px) {
   .main-article .article-item .carousel-img {
     width: 100%;
