@@ -57,7 +57,7 @@ const getArticleList = () => {
   const params = {
     page: 1,
     size: 10,
-    menuId: props.subMenuId || props.menuList[1].children[0].id,
+    menuId: props.subMenuId || props.menuList?.[1]?.children?.[0]?.id,
   };
   searchPage(params).then((res) => {
     if (res.code === 0) {
