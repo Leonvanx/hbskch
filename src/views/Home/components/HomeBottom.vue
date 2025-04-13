@@ -74,7 +74,7 @@ const footerLinks = ref([
     id: 1,
     name: '中国科学技术协会',
     orderNum: 0,
-    url: 'www.cast.org.cn',
+    url: 'http://www.cast.org.cn',
     createTime: '2025-04-13T14:04:35',
     updateTime: '2025-04-13T14:04:35',
   },
@@ -166,7 +166,6 @@ const connectInfo = ref({
   flex-wrap: wrap;
   align-content: space-around;
   justify-content: flex-start;
-  gap: 100px;
   .footer-pic {
     width: 100px;
     height: 100px;
@@ -212,19 +211,37 @@ const connectInfo = ref({
     padding: 10px 0;
   }
 }
+
+@media (min-width: 430px) {
+  .contain {
+    width: 80%;
+  }
+  .footer-info {
+    gap: 10px;
+  }
+}
 @media (min-width: 768px) {
   .contain {
-    width: 750px;
+    width: 80%;
+  }
+  .footer-info {
+    gap: 40px;
   }
 }
 @media (min-width: 992px) {
   .contain {
     width: 970px;
   }
+  .footer-info {
+    gap: 60px;
+  }
 }
-@media (min-width: 1196px) {
+@media (min-width: 1200px) {
   .contain {
     width: 1166px;
+  }
+  .footer-info {
+    gap: 100px;
   }
 }
 </style>
