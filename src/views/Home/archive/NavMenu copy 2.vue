@@ -14,7 +14,13 @@
     <div class="nav-menu-wrapper">
       <div class="nav-menu flex-row justify-between">
         <!-- 主菜单 -->
-        <div v-for="item in menuList" :key="item.id" class="nav-menu-item" @mouseenter="showSubMenu(item.id)" @mouseleave="hideSubMenu(item.id)">
+        <div
+          v-for="item in menuList"
+          :key="item.id"
+          class="nav-menu-item"
+          @mouseenter="showSubMenu(item.id)"
+          @mouseleave="hideSubMenu(item.id)"
+        >
           <div :class="{ 'menu-name': item.name !== '首页' }">
             {{ item.name }}
           </div>

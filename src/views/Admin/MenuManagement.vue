@@ -28,7 +28,13 @@
       </CTable>
     </n-card>
   </n-flex>
-  <n-drawer v-model:show="drawerVisible" :width="500" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
+  <n-drawer
+    v-model:show="drawerVisible"
+    :width="500"
+    placement="right"
+    :on-esc="closed"
+    :on-mask-click="() => closed()"
+  >
     <n-drawer-content>
       <template #header>
         {{ editTarget?.id ? '编辑菜单' : '新增菜单' }}
@@ -44,11 +50,19 @@
           <n-input v-model:value="editTarget.name" placeholder="请输入菜单名称" />
         </n-form-item>
         <n-form-item path="menuType" label="菜单类型">
-          <n-select v-model:value="editTarget.menuType" :options="menuTypeOptions" placeholder="请选择父级菜单" />
+          <n-select
+            v-model:value="editTarget.menuType"
+            :options="menuTypeOptions"
+            placeholder="请选择父级菜单"
+          />
         </n-form-item>
         <template v-if="editTarget?.menuType == 'sub'">
           <n-form-item path="parentId" label="父级菜单">
-            <n-select v-model:value="editTarget.parentId" :options="parendMenuOptions" placeholder="请选择父级菜单" />
+            <n-select
+              v-model:value="editTarget.parentId"
+              :options="parendMenuOptions"
+              placeholder="请选择父级菜单"
+            />
           </n-form-item>
         </template>
         <n-form-item path="orderNum" label="展示排序">
@@ -143,8 +157,15 @@ const editMenu = (menu: Menu) => {
   editTarget.value = JSON.parse(JSON.stringify(menu));
 };
 const add = () => {
-  // @ts-expect-error 此处忽略类型检查，新增不用id
-  editTarget.value = { name: '', menuType: 'main', parentId: null, orderNum: 0, id: null };
+  editTarget.value = {
+    name: '',
+    menuType: 'main',
+    // @ts-expect-error 此处忽略类型检查，新增不用id
+    parentId: null,
+    orderNum: 0,
+    // @ts-expect-error 此处忽略类型检查，新增不用id
+    id: null,
+  };
   drawerVisible.value = true;
 };
 const delMenu = ({ id }: Menu) => {

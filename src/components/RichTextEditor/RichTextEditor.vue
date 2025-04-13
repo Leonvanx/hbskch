@@ -41,7 +41,12 @@ onMounted(() => {
         jwt: 'xxxxx',
         other: 'xxxx',
       },
-      uploader: (file: File, uploadUrl: string, headers: Record<string, string>, formName: string): Promise<Record<string, string>> => {
+      uploader: (
+        file: File,
+        uploadUrl: string,
+        headers: Record<string, string>,
+        formName: string,
+      ): Promise<Record<string, string>> => {
         console.log(formName);
         const formData = new FormData();
         formData.append('file', file);
@@ -91,7 +96,12 @@ onMounted(() => {
         jwt: 'xxxxx',
         other: 'xxxx',
       },
-      uploader: (file: File, uploadUrl: string, headers: Record<string, string>, formName: string): Promise<Record<string, string>> => {
+      uploader: (
+        file: File,
+        uploadUrl: string,
+        headers: Record<string, string>,
+        formName: string,
+      ): Promise<Record<string, string>> => {
         console.log(formName);
         const formData = new FormData();
         formData.append('file', file);

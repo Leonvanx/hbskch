@@ -13,7 +13,7 @@ export default defineConfigWithVueTs([
   },
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'node_modules'],
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'node_modules', 'src/apis/*'],
   },
   ...pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
@@ -60,6 +60,25 @@ export default defineConfigWithVueTs([
       'vue/this-in-template': 'error', // 模板中禁止使用this
       'vue/no-template-shadow': 'error', // 禁止模板中的变量名与作用域变量冲突
       'vue/no-reserved-component-names': 'error', // 禁止使用保留的组件名
+      // 只对 Vue 模板启用属性换行
+      'vue/max-attributes-per-line': [
+        'error',
+        {
+          singleline: {
+            max: 1,
+          },
+          multiline: {
+            max: 1,
+          },
+        },
+      ],
+      'vue/first-attribute-linebreak': [
+        'error',
+        {
+          singleline: 'ignore',
+          multiline: 'below',
+        },
+      ],
       // 其他常用规则
       'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
