@@ -70,3 +70,9 @@ img {
 .clearfix {
   zoom: 1;
 }
+.n-upload {
+  width: fit-content;
+}
+.n-upload-file-list {
+  width: 96px;
+}
