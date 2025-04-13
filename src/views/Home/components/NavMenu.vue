@@ -14,7 +14,7 @@
     <div class="nav-menu flex-row justify-between">
       <!-- 主菜单 -->
       <div v-for="item in props.menuList" :key="item.id" class="nav-menu-item" @mouseenter="showSubMenu(item.id)" @mouseleave="hideSubMenu(item.id)">
-        <div :class="{ 'menu-name': item.name !== '首页' }">
+        <div :class="{ 'menu-name': item.name !== '首页' }" @click="clickMainMenu(item.name)">
           {{ item.name }}
         </div>
         <!-- 使用 transition 组件添加淡入淡出动画 -->
@@ -56,6 +56,13 @@ const hideSubMenu = (id: number) => {
   showingSubMenus.value[id] = false;
 };
 
+// 点击首页
+const clickMainMenu = (name?: string) => {
+  if (name === '首页')
+    router.push({
+      name: 'home',
+    });
+};
 // 点击子菜单
 const clickSubMenu = (id: number, name?: string) => {
   router.push({
@@ -79,9 +86,11 @@ const clickSubMenu = (id: number, name?: string) => {
   top: 0;
   z-index: 1000;
   transition: box-shadow 0.3s ease;
+
   &.sticky {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
+
   .nav-menu {
     padding: 14px 0;
     width: 1200px;

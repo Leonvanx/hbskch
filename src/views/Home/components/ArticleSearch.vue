@@ -12,9 +12,9 @@
 <template>
   <div class="search-input-bg flex-column" :style="{ backgroundImage: `url(${navMenuBgImgUrl})` }">
     <div class="flex1 flex-center search-input-wrapper">
-      <n-input v-model:value="searchValue" class="search-input" size="large" placeholder="找不到你想了解的内容？">
+      <n-input v-model:value="searchValue" class="search-input" size="large" placeholder="找不到你想了解的内容？" @keydown.enter="searchArticle()">
         <template #suffix>
-          <span class="search-suffix-btn">搜一下</span>
+          <span class="search-suffix-btn" @click="searchArticle()">搜一下</span>
         </template>
       </n-input>
     </div>
@@ -23,9 +23,19 @@
 
 <script setup lang="ts">
 import navMenuBgImg from '@/assets/imgs/nav-menu-bg.png';
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const searchValue = ref('');
 const navMenuBgImgUrl = ref(navMenuBgImg);
+const searchArticle = () => {
+  router.push({
+    name: 'SubMenuArticleList',
+    query: {
+      meunId: 0,
+      searchWord: searchValue.value,
+    },
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -35,29 +45,35 @@ const navMenuBgImgUrl = ref(navMenuBgImg);
   background-size: 100% 100%;
   flex-shrink: 0;
 }
+
 .search-input-wrapper {
   margin: 0 auto;
   width: 1200px;
 }
+
 .search-input {
   width: 600px;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.7);
+
   .search-suffix-btn {
     cursor: pointer;
     color: #18a058;
   }
 }
+
 @media (max-width: 1200px) {
   .search-input-wrapper {
     width: 80%;
   }
 }
+
 @media (max-width: 768px) {
   .search-input-bg {
     background-size: cover;
   }
 }
+
 @media (max-width: 430px) {
   .search-input-bg {
     height: 200px;
