@@ -15,6 +15,7 @@
     <NavMenu :menu-list="menuList" />
     <ArticleSearch />
     <ArticleContent :menu-list="menuList" />
+    <RouterView />
   </div>
 </template>
 
