@@ -10,23 +10,18 @@
   修改时间：
 -->
 <template>
-  <div class="article-content flex-column">
-    <div>
-      <h3 class="title">
-        <i><img src="" /></i>
-        {{ route.query.name }}
-      </h3>
-      <ui>
-        <template v-for="item in listData" :key="item.id">
-          <li>
-            <a v-on:click="chooseAricle(item.id)">{{ item.title }}</a>
-            <span>{{ item.updateTime }}</span>
-          </li>
-        </template>
-      </ui>
-      <div class="article-pagination">
-        <n-pagination v-model:page="pages.page" :item-count="pages.total" :page-size="pages.size" :page-slot="7" @update:page="pageChange" />
+  <div class="article-list flex-column">
+    <div class="title">
+      {{ route.query.name }}
+    </div>
+    <div class="list">
+      <div v-for="item in listData" :key="item.id" class="list-item flex-row align-center justify-between pointer posr">
+        <span class="article-title" @click="chooseAricle(item.id)">{{ item.title }}</span>
+        <span class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
       </div>
+    </div>
+    <div class="article-pagination">
+      <n-pagination v-model:page="pages.page" :item-count="pages.total" :page-size="pages.size" :page-slot="7" @update:page="pageChange" />
     </div>
   </div>
 </template>
@@ -35,6 +30,7 @@
 import { useRoute, useRouter } from 'vue-router';
 import { searchPage } from '@/apis';
 import type { Page, PageOptions } from '@/types';
+import dayjs from 'dayjs';
 const route = useRoute();
 const router = useRouter();
 const searchOption = ref<PageOptions>({});
@@ -82,49 +78,67 @@ const chooseAricle = (id?: number) => {
 };
 </script>
 <style scoped lang="scss">
-.article-content {
+.article-list {
   width: 1200px;
   margin: 16px auto;
-  gap: 20px;
 }
 .title {
-  font-size: 28px;
-  color: #333333;
-  font-weight: bold;
-  margin: 0;
-  margin-bottom: 20px;
-}
-li {
-  color: #cbb486;
-  padding: 17px 0;
-  text-align: justify;
-  list-style-type: square;
-  a {
-    width: 76%;
-    font-size: 16px;
-    color: #000;
-    margin-left: 0 !important;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: bottom;
-  }
-  a:hover {
-    color: #cbb486;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  span {
-    // width: 80px;
-    float: right;
-    opacity: 1 !important;
-    color: #c4c6c7 !important;
-    font-size: 14px !important;
+  font-size: 18px;
+  color: #1a1a1a;
+  font-weight: 600;
+  &::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 8px;
+    background: linear-gradient(90deg, rgb(24, 160, 82) 0%, rgba(24, 160, 82, 0.05) 100%);
+    border-radius: 4px 4px 4px 4px;
+    position: relative;
+    top: -10px;
   }
 }
+.list {
+  margin-top: 20px;
+  .list-item {
+    padding: 16px 0;
+    gap: 16px;
+    align-items: baseline;
+    &::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      display: block;
+      position: absolute;
+      background-color: #18a058;
+      top: 21px;
+    }
+    .article-title {
+      color: #1a1a1a;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      margin-left: 15px;
+      &:hover {
+        font-weight: 500;
+        color: #18a058;
+      }
+    }
+    .release-time {
+      font-size: 12px;
+      color: #999;
+      flex-shrink: 0;
+    }
+  }
+}
+
 .article-pagination {
-  width: 200px;
   margin: 16px auto;
+}
+
+@media screen and (max-width: 1200px) {
+  .article-list {
+    width: 100%;
+    padding: 0 20px;
+  }
 }
 </style>
