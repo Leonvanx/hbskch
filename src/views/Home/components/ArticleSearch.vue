@@ -22,8 +22,10 @@
 </template>
 
 <script setup lang="ts">
+import navMenuBgImg from '@/assets/imgs/nav-menu-bg.png';
+
 const searchValue = ref('');
-const navMenuBgImgUrl = ref('/src/assets/imgs/nav-menu-bg.png');
+const navMenuBgImgUrl = ref(navMenuBgImg);
 </script>
 
 <style scoped lang="scss">
