@@ -172,7 +172,6 @@ const searchData = () => {
       parendMenuOptions.value = data.data?.map((item) => {
         return { label: item.name!, value: item.id! };
       });
-      console.log('🚀 ~ searchMenu ~ parendMenuOptions:', parendMenuOptions.value);
     }
   });
 };
