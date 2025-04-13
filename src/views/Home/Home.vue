@@ -15,7 +15,7 @@
     <NavMenu :menu-list="menuList" />
     <ArticleSearch />
     <template v-if="route.path === '/home'">
-      <ArticleContent :menu-list="menuList" />
+      <ArticleContent v-if="menuList.length" :menu-list="menuList" />
     </template>
     <template v-else>
       <RouterView />
@@ -52,7 +52,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-
+  position: relative;
   .page-content {
     min-height: 600px;
   }
