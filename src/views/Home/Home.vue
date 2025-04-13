@@ -14,8 +14,12 @@
     <HomeHeader />
     <NavMenu :menu-list="menuList" />
     <ArticleSearch />
-    <ArticleContent :menu-list="menuList" />
-    <RouterView />
+    <template v-if="route.path === '/home'">
+      <ArticleContent :menu-list="menuList" />
+    </template>
+    <template v-else>
+      <RouterView />
+    </template>
   </div>
 </template>
 
@@ -24,9 +28,11 @@ import HomeHeader from './components/Header.vue';
 import NavMenu from './components/NavMenu.vue';
 import ArticleSearch from './components/ArticleSearch.vue';
 import ArticleContent from './components/ArticleContent.vue';
+import { useRoute } from 'vue-router';
 import type { Menu } from '@/types';
 import { searchMenu } from '@/apis';
 
+const route = useRoute();
 const menuList = ref<Menu[]>([]);
 const searchMenuList = async () => {
   const res = await searchMenu();
@@ -44,6 +50,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+
   .page-content {
     min-height: 600px;
   }

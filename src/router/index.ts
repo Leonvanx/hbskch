@@ -11,6 +11,18 @@ const routes = [
     path: '/home',
     name: 'home',
     component: () => import('@/views/Home/Home.vue'),
+    children: [
+      {
+        path: '/home/SubMenuArticleList',
+        name: 'SubMenuArticleList',
+        component: () => import('@/views/Home/SubMenuArticleList.vue'),
+      },
+      {
+        path: '/home/ArticleDetail',
+        name: 'ArticleDetail',
+        component: () => import('@/views/Home/ArticleDetail.vue'),
+      },
+    ],
   },
   {
     path: '/admin',

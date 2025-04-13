@@ -20,7 +20,7 @@
         <!-- 使用 transition 组件添加淡入淡出动画 -->
         <transition name="sub-menu-fade">
           <div v-if="showingSubMenus[item.id] && item.children.length > 0" class="sub-menu">
-            <div v-for="subItem in item.children" :key="subItem.id" class="sub-menu-item">
+            <div v-for="subItem in item.children" :key="subItem.id" class="sub-menu-item" v-on:click="clickSubMenu(subItem.id, subItem.name)">
               {{ subItem.name }}
             </div>
           </div>
@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import type { Menu } from '@/types';
+import { useRouter } from 'vue-router';
 type Props = {
   menuList: Menu[];
   navMenuBgColor?: string;
@@ -40,6 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   menuList: () => [] as Menu[],
   navMenuBgColor: '#18a058',
 });
+const router = useRouter();
 
 // 用于记录每个主菜单对应的子菜单是否显示
 const showingSubMenus = ref<Record<number, boolean>>({});
@@ -53,6 +55,19 @@ const showSubMenu = (id: number) => {
 const hideSubMenu = (id: number) => {
   showingSubMenus.value[id] = false;
 };
+
+// 点击子菜单
+const clickSubMenu = (id: number, name?: string) => {
+  debugger;
+  router.push({
+    name: 'SubMenuArticleList',
+    query: {
+      name: name,
+      menuId: id,
+      searchWord: '',
+    },
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -61,11 +76,13 @@ const hideSubMenu = (id: number) => {
   background-size: 100% 100%;
   flex-shrink: 0;
   background-color: v-bind(navMenuBgColor);
+
   .nav-menu {
     padding: 14px 0;
     width: 1200px;
     margin: auto;
   }
+
   .nav-menu-item {
     position: relative;
     color: #fff;
@@ -73,11 +90,13 @@ const hideSubMenu = (id: number) => {
     height: 24px;
     line-height: 24px;
     cursor: pointer;
+
     // &:hover {
     //   font-weight: 600;
     // }
     .menu-name:hover {
       animation: 300ms menuRiseAndFall;
+
       &::after {
         content: '';
         position: absolute;
@@ -88,6 +107,7 @@ const hideSubMenu = (id: number) => {
         background: transparent;
       }
     }
+
     .sub-menu {
       padding: 8px 12px;
       box-sizing: content-box;
@@ -99,10 +119,12 @@ const hideSubMenu = (id: number) => {
       min-width: 150px;
       z-index: 1000;
       border-radius: 8px;
+
       .sub-menu-item {
         color: #333;
         padding: 8px 12px;
         text-align: center;
+
         &:hover {
           border-radius: 8px;
           background-color: #f8f8f8;
@@ -111,6 +133,7 @@ const hideSubMenu = (id: number) => {
     }
   }
 }
+
 @media (max-width: 1310px) {
   // 最后一个子菜单的位置改为屏幕最右侧
   .nav-menu-wrapper .nav-menu-item:last-child .sub-menu {
@@ -135,18 +158,22 @@ const hideSubMenu = (id: number) => {
 .sub-menu-fade-leave-active {
   transition: opacity 300ms ease-in;
 }
+
 .sub-menu-fade-enter-from,
 .sub-menu-fade-leave-to {
   opacity: 0;
 }
+
 // 定义主菜单升起再落下的动画
 @keyframes menuRiseAndFall {
   0% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
+
   100% {
     transform: translateY(0);
   }
