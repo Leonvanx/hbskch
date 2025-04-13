@@ -35,7 +35,7 @@ onMounted(() => {
     image: {
       allowBase64: false,
       defaultSize: 350,
-      uploadUrl: '/apiProxy/tech/files/upload',
+      uploadUrl: `${import.meta.env.VITE_BASEURL}/tech/files/upload`,
       uploadFormName: 'image', //上传时的文件表单名称
       uploadHeaders: {
         jwt: 'xxxxx',
@@ -85,7 +85,7 @@ onMounted(() => {
       bubbleMenuItems: ['AlignLeft', 'AlignCenter', 'AlignRight', 'delete'],
     },
     video: {
-      uploadUrl: '/apiProxy/tech/files/upload',
+      uploadUrl: `${import.meta.env.VITE_BASEURL}/tech/files/upload`,
       uploadFormName: 'image', //上传时的文件表单名称
       uploadHeaders: {
         jwt: 'xxxxx',

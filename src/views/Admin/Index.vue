@@ -11,10 +11,12 @@
 -->
 <template>
   <n-flex vertical>
-    <n-card>
-      <template #header>美术资源</template>
-      <CommonUpload :max="1"></CommonUpload>
-    </n-card>
+    <n-flex>
+      <n-card>
+        <template #header>美术资源</template>
+        <CommonUpload :max="1"></CommonUpload>
+      </n-card>
+    </n-flex>
     <n-card title="友情链接"></n-card>
   </n-flex>
 </template>

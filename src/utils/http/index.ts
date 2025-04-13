@@ -8,13 +8,13 @@ type ResultSuccess<T = any> = {
   message: string;
   result?: T;
 };
-
+const baseURL = import.meta.env.VITE_BASEURL;
 class DefAxios {
   private axiosInstance: AxiosInstance;
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: '/apiProxy',
+      baseURL: baseURL,
       timeout: 10 * 1000,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     });
