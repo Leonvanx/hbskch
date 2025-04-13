@@ -58,7 +58,6 @@ const hideSubMenu = (id: number) => {
 
 // 点击子菜单
 const clickSubMenu = (id: number, name?: string) => {
-  debugger;
   router.push({
     name: 'SubMenuArticleList',
     query: {

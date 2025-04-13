@@ -10,40 +10,45 @@
   修改时间：
 -->
 <template>
-  <div v-html="pageConfig.content"></div>
+  <div class="article-content">
+    <div>
+      <AricleTitile :page-config="pageConfig"></AricleTitile>
+      <div v-html="pageConfig.content"></div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { Page } from '@/types';
 import { searchPageById } from '@/apis';
-type Props = {
-  id: number;
-};
-const props = defineProps<Props>();
-const pageConfig = ref<Page>({
-  content: '<p>欢迎登录首页</p>',
-});
-const myComputed = computed(() => {
-  return props.id;
-});
-watch(myComputed, (newVal) => {
+import AricleTitile from './components/AricleTitile.vue';
+import { useRoute } from 'vue-router';
+const pageConfig = ref<Page>({});
+const route = useRoute();
+watch(route, () => {
   nextTick(() => {
-    setData(newVal);
+    setData(Number(route.query.id));
   });
 });
 const setData = (id: number) => {
   searchPageById(id).then((data) => {
     if (data.code === 0) {
-      pageConfig.value.content = data.data?.content;
+      pageConfig.value = data.data ? data.data : {};
     } else {
     }
   });
 };
 onMounted(() => {
   nextTick(() => {
-    setData(props.id);
+    setData(Number(route.query.id));
   });
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.article-content {
+  width: 1200px;
+  margin: 16px auto;
+  gap: 20px;
+}
+</style>

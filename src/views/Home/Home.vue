@@ -14,12 +14,10 @@
     <HomeHeader />
     <NavMenu :menu-list="menuList" />
     <ArticleSearch />
-    <template v-if="route.path === '/home'">
-      <ArticleContent :menu-list="menuList" />
-    </template>
-    <template v-else>
-      <RouterView />
-    </template>
+    <ArticleContent v-show="route.path === '/home'" :menu-list="menuList" />
+    <KeepAlive>
+      <RouterView v-show="route.path !== '/home'" />
+    </KeepAlive>
     <HomeBottom />
   </div>
 </template>
