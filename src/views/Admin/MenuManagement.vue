@@ -48,7 +48,7 @@
         </n-form-item>
         <template v-if="editTarget?.menuType == 'sub'">
           <n-form-item path="parentId" label="父级菜单">
-            <n-select v-model:value="editTarget.parentId" label-field="name" value-field="id" :options="menuList" placeholder="请选择父级菜单" />
+            <n-select v-model:value="editTarget.parentId" :options="parendMenuOptions" placeholder="请选择父级菜单" />
           </n-form-item>
         </template>
         <n-form-item path="orderNum" label="展示排序">
@@ -64,6 +64,7 @@ import type { FormRules, FormInst } from 'naive-ui';
 import type { Menu } from '@/types';
 import { searchMenu, deleteMenu, saveMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
+const parendMenuOptions = ref<{ label: string; value: number }[]>();
 const columns = [
   {
     title: '菜单名称',
@@ -97,13 +98,43 @@ const menuTypeOptions = [
 const drawerVisible = ref<boolean>(false);
 
 const editFormRef = ref<FormInst | null>(null);
-const editRules: FormRules = {};
+const basicEditRules: FormRules = {
+  name: {
+    required: true,
+    message: '请输入菜单名称',
+    trigger: 'blur',
+  },
+  menuType: {
+    required: true,
+    message: '请选择菜单类型',
+    trigger: 'blur',
+  },
+};
+const editRules = computed(() => {
+  return editTarget.value.menuType === 'sub'
+    ? {
+        ...basicEditRules,
+        parentId: {
+          required: true,
+          message: '请选择父级菜单',
+          trigger: 'blur',
+          validator: (rule, value: number) => {
+            if (!value) {
+              return new Error('请选择父级菜单');
+            }
+            return true;
+          },
+        },
+      }
+    : basicEditRules;
+});
 const editTarget = ref<Menu>({
-  // @ts-expect-error 此处忽略类型检查，新增不用
+  // @ts-expect-error 此处忽略类型检查，新增不用id
   id: null,
   name: '',
   menuType: 'main',
-  parentId: 0,
+  // @ts-expect-error 此处忽略类型检查，新增不用id
+  parentId: null,
 });
 const message = useMessage();
 const dialog = useDialog();
@@ -112,11 +143,11 @@ const editMenu = (menu: Menu) => {
   editTarget.value = JSON.parse(JSON.stringify(menu));
 };
 const add = () => {
-  editTarget.value = undefined as unknown as Menu;
+  // @ts-expect-error 此处忽略类型检查，新增不用id
+  editTarget.value = { name: '', menuType: 'main', parentId: null, orderNum: 0, id: null };
   drawerVisible.value = true;
 };
 const delMenu = ({ id }: Menu) => {
-  console.log('id', id);
   dialog.warning({
     title: '警告',
     content: '你确定删除菜单？',
@@ -137,8 +168,11 @@ const delMenu = ({ id }: Menu) => {
 const searchData = () => {
   searchMenu().then((data) => {
     if (data.code === 0) {
-      console.log('searchDate:', data.data);
       menuList.value = data?.data ? data.data : [];
+      parendMenuOptions.value = data.data?.map((item) => {
+        return { label: item.name!, value: item.id! };
+      });
+      console.log('🚀 ~ searchMenu ~ parendMenuOptions:', parendMenuOptions.value);
     }
   });
 };
@@ -146,13 +180,18 @@ const cancel = () => {
   drawerVisible.value = false;
 };
 const submit = () => {
-  const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
-  saveMenu(params).then((data) => {
-    if (data.code === 0) {
-      message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
-      drawerVisible.value = false;
-      searchData();
+  editFormRef.value?.validate((error) => {
+    if (error) {
+      return;
     }
+    const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
+    saveMenu(params).then((data) => {
+      if (data.code === 0) {
+        message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
+        drawerVisible.value = false;
+        searchData();
+      }
+    });
   });
 };
 const closed = () => {

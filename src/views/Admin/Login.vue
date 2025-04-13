@@ -10,23 +10,21 @@
   修改时间：
 -->
 <template>
-  <n-config-provider>
-    <div class="login-container">
-      <n-card class="login-card" embedded>
-        <n-form ref="formRef" :model="formValue" :rules="rules" label-placement="left">
-          <n-form-item label="账号" path="username">
-            <n-input v-model:value="formValue.username" placeholder="请输入账号" clearable />
-          </n-form-item>
-          <n-form-item label="密码" path="password">
-            <n-input v-model:value="formValue.password" type="password" placeholder="请输入密码" show-password-on="click" clearable />
-          </n-form-item>
-          <div class="login-button">
-            <n-button type="primary" block @click="handleLogin">登录</n-button>
-          </div>
-        </n-form>
-      </n-card>
-    </div>
-  </n-config-provider>
+  <div class="login-container">
+    <n-card class="login-card" embedded>
+      <n-form ref="formRef" :model="formValue" :rules="rules" label-placement="left">
+        <n-form-item label="账号" path="username">
+          <n-input v-model:value="formValue.username" placeholder="请输入账号" clearable />
+        </n-form-item>
+        <n-form-item label="密码" path="password">
+          <n-input v-model:value="formValue.password" type="password" placeholder="请输入密码" show-password-on="click" clearable />
+        </n-form-item>
+        <div class="login-button">
+          <n-button type="primary" block @click="handleLogin">登录</n-button>
+        </div>
+      </n-form>
+    </n-card>
+  </div>
 </template>
 
 <script setup lang="ts">
