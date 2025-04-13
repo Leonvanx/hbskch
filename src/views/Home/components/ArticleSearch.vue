@@ -56,4 +56,9 @@ const navMenuBgImgUrl = ref('/src/assets/imgs/nav-menu-bg.png');
     background-size: cover;
   }
 }
+@media (max-width: 430px) {
+  .search-input-bg {
+    height: 200px;
+  }
+}
 </style>

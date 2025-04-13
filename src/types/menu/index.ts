@@ -5,6 +5,6 @@ export interface Menu {
   orderNum?: number;
   parentId?: number;
   status?: number;
-  children: Menu[];
+  children?: Menu[];
   menuType?: string;
 }

@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   webTitle: '湖北省科技进步促进会',
   webTitleEn: 'Hubei Science and Technology Progress Association',
   webLogo: '/src/assets/icons/science-color.svg',
-  isShowLogin: true,
+  isShowLogin: false,
 });
 
 const emit = defineEmits(['login']);

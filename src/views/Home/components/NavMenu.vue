@@ -19,7 +19,7 @@
         </div>
         <!-- 使用 transition 组件添加淡入淡出动画 -->
         <transition name="sub-menu-fade">
-          <div v-if="showingSubMenus[item.id] && item.children.length > 0" class="sub-menu">
+          <div v-if="showingSubMenus[item.id] && item.children && item.children.length > 0" class="sub-menu">
             <div v-for="subItem in item.children" :key="subItem.id" class="sub-menu-item" v-on:click="clickSubMenu(subItem.id, subItem.name)">
               {{ subItem.name }}
             </div>
@@ -75,7 +75,13 @@ const clickSubMenu = (id: number, name?: string) => {
   background-size: 100% 100%;
   flex-shrink: 0;
   background-color: v-bind(navMenuBgColor);
-
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: box-shadow 0.3s ease;
+  &.sticky {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
   .nav-menu {
     padding: 14px 0;
     width: 1200px;

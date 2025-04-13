@@ -12,40 +12,59 @@
 <template>
   <div class="article-content flex-row">
     <div class="main-article flex-column ovf">
-      <template v-if="firstArticle">
-        <div class="sub-menu-title">{{ props.menuList[1].name }}</div>
-        <n-image lazy width="650" :src="firstArticle.coverImage" />
-        <div class="article-title els">{{ firstArticle.title }}</div>
-        <div class="article-text-content">{{ firstArticle.content }}</div>
-      </template>
+      <n-carousel show-arrow autoplay>
+        <div v-for="item in top3Article" :key="item.id" class="article-item posr">
+          <img class="carousel-img" :src="item.coverImage" />
+          <div class="article-title-wrapper">
+            <span class="article-title">
+              {{ item.title }}
+            </span>
+          </div>
+        </div>
+        <template #dots="{ total, currentIndex, to }">
+          <ul class="custom-dots">
+            <li v-for="index of total" :key="index" :class="{ ['is-active']: currentIndex === index - 1 }" @click="to(index - 1)" />
+          </ul>
+        </template>
+      </n-carousel>
     </div>
-    <div class="article-list"></div>
+    <div class="article-list ovf">
+      <div v-for="item in rightArticleList" :key="item.id" class="article-list-item flex-row align-center ovf justify-between pointer">
+        <div class="article-title els">
+          {{ item.title }}
+        </div>
+        <div class="release-time">{{ dayjs(item.updateTime).format('YYYY-MM-DD') }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { searchPage } from '@/apis';
 import type { Menu, Page } from '@/types';
+import dayjs from 'dayjs';
 type Props = {
   menuList: Menu[];
   subMenuId?: number;
 };
 const props = defineProps<Props>();
 
-const firstArticle = ref<Page | null>(null);
 const articleList = ref<Page[]>([]);
+const top3Article = ref<Page[]>([]);
+const rightArticleList = ref<Page[]>([]);
 
 const getArticleList = () => {
   const params = {
     page: 1,
     size: 10,
-    menuId: props.subMenuId || props.menuList[1].children[0].id,
+    menuId: props.subMenuId || props.menuList?.[1]?.children?.[0]?.id,
   };
   searchPage(params).then((res) => {
     if (res.code === 0) {
       articleList.value = res.data?.records || [];
       if (articleList.value.length) {
-        firstArticle.value = articleList.value[0];
+        top3Article.value = articleList.value.slice(0, 3);
+        rightArticleList.value = articleList.value.slice(3);
       }
     }
   });
@@ -55,6 +74,7 @@ watch(
   () => {
     getArticleList();
   },
+  { immediate: true },
 );
 onMounted(() => {});
 </script>
@@ -62,13 +82,14 @@ onMounted(() => {});
 <style scoped lang="scss">
 .article-content {
   width: 1200px;
-  margin: 16px auto;
   gap: 20px;
+  margin: 20px auto 0;
+  padding-bottom: 20px;
 }
 .main-article {
   width: 650px;
+  flex-shrink: 0;
   .sub-menu-title {
-    width: 100px;
     font-size: 18px;
     height: 20px;
     line-height: 20px;
@@ -88,23 +109,108 @@ onMounted(() => {});
       background-color: #18a058;
     }
   }
-  .article-title {
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    margin-top: 6px;
-    color: #18a058;
-  }
-  .article-text-content {
-    cursor: pointer;
-    margin-top: 12px;
-    height: 40px;
-    text-indent: 2em;
-    font-size: 12px;
-    color: #878787;
+  .article-item {
+    .article-title-wrapper {
+      width: 300px;
+      background-color: #fff;
+      padding: 12px 16px;
+      position: absolute;
+      min-height: 90px;
+      left: 12px;
+      bottom: 12px;
+      .article-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 6px;
+        color: #18a058;
+      }
+    }
+    .carousel-img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
   }
 }
 .article-list {
   flex: 1;
+  .article-list-item {
+    gap: 16px;
+    border-bottom: 1px solid #e5e5e5;
+    &:hover {
+      .article-title {
+        color: #18a058;
+      }
+    }
+    .article-title {
+      padding: 14px 0;
+      color: #1a1a1a;
+      font-size: 16px;
+    }
+    .release-time {
+      font-size: 12px;
+      color: #999;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.custom-dots {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  li {
+    display: inline-block;
+    width: 12px;
+    height: 4px;
+    margin: 0 3px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition:
+      width 0.3s,
+      background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    &.is-active {
+      width: 40px;
+      background: #18a058;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .article-content {
+    width: 100%;
+    padding: 0 20px 20px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .main-article {
+    width: 550px;
+  }
+}
+@media (max-width: 900px) {
+  .main-article {
+    width: 500px;
+  }
+}
+@media (max-width: 800px) {
+  .main-article {
+    width: 100%;
+  }
+  .article-content {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media (max-width: 430px) {
+  .main-article .article-item .carousel-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
 }
 </style>

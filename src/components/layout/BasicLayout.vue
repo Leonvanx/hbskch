@@ -2,7 +2,7 @@
 import { RouterLink } from 'vue-router';
 import { routes } from '@/router';
 import { h } from 'vue';
-import type { MenuOption, FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui';
+import type { FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui';
 import { updatePassword } from '@/apis';
 const router = useRouter();
 const { width } = useWindowSize();
@@ -76,12 +76,14 @@ const exit = () => {
 };
 // 根据 routes 生成 menuOptions
 // @ts-expect-error no-error
-const menuOptions: MenuOption[] = routes
+const menuOptions: RouterOptions[] = routes
   .filter((route) => route.path === '/admin' && route.children)
   .flatMap((route) => route.children!)
   .map((route) => {
+    // @ts-expect-error no-error
     const iconComponent = route.meta?.iconName
-      ? () => h('img', { src: `/src/assets/icons/${route.meta.iconName}.svg`, width: 20, height: 20 })
+      ? // @ts-expect-error no-error
+        () => h('img', { src: `/src/assets/icons/${route.meta.iconName}.svg`, width: 20, height: 20 })
       : null;
 
     return {
@@ -91,6 +93,7 @@ const menuOptions: MenuOption[] = routes
           {
             to: { name: route.name },
           },
+          // @ts-expect-error no-error
           { default: () => route.meta?.label || '' },
         ),
       key: `/admin/${route.path}`,

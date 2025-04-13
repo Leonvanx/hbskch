@@ -46,9 +46,9 @@
         <n-form-item path="menuType" label="菜单类型">
           <n-select v-model:value="editTarget.menuType" :options="menuTypeOptions" placeholder="请选择父级菜单" />
         </n-form-item>
-        <template v-if="editTarget.menuType == 'sub'">
+        <template v-if="editTarget?.menuType == 'sub'">
           <n-form-item path="parentId" label="父级菜单">
-            <n-select v-model:value="editTarget.parentId" :options="parentMenuList" placeholder="请选择父级菜单" />
+            <n-select v-model:value="editTarget.parentId" label-field="name" value-field="id" :options="menuList" placeholder="请选择父级菜单" />
           </n-form-item>
         </template>
         <n-form-item path="orderNum" label="展示排序">
@@ -64,12 +64,6 @@ import type { FormRules, FormInst } from 'naive-ui';
 import type { Menu } from '@/types';
 import { searchMenu, deleteMenu, saveMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
-const parentMenuList = computed(() => {
-  return menuList.value.map((menu: Menu) => ({
-    label: menu.name,
-    value: menu.id,
-  }));
-});
 const columns = [
   {
     title: '菜单名称',
@@ -104,7 +98,13 @@ const drawerVisible = ref<boolean>(false);
 
 const editFormRef = ref<FormInst | null>(null);
 const editRules: FormRules = {};
-const editTarget = ref<Menu>({});
+const editTarget = ref<Menu>({
+  // @ts-expect-error 此处忽略类型检查，新增不用
+  id: null,
+  name: '',
+  menuType: 'main',
+  parentId: 0,
+});
 const message = useMessage();
 const dialog = useDialog();
 const editMenu = (menu: Menu) => {
@@ -112,7 +112,7 @@ const editMenu = (menu: Menu) => {
   editTarget.value = JSON.parse(JSON.stringify(menu));
 };
 const add = () => {
-  editTarget.value = {};
+  editTarget.value = undefined as unknown as Menu;
   drawerVisible.value = true;
 };
 const delMenu = ({ id }: Menu) => {
@@ -149,14 +149,14 @@ const submit = () => {
   const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
   saveMenu(params).then((data) => {
     if (data.code === 0) {
-      message.success(editTarget.value.id ? '修改成功' : '新增菜单成功');
+      message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
       drawerVisible.value = false;
       searchData();
     }
   });
 };
 const closed = () => {
-  editTarget.value = {};
+  editTarget.value = {} as Menu;
 };
 searchData();
 </script>
