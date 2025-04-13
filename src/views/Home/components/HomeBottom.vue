@@ -1,7 +1,7 @@
 <!--
   功能：首页底部
-  作者：xulf
-  邮箱：lvin_xu@outlook.com
+  作者：lvds
+  邮箱：disonlv@outlook.com
   时间：2025年04月13日 14:46:24
   版本：v1.0
   修改记录：
@@ -10,9 +10,221 @@
   修改时间：
 -->
 <template>
-  <div></div>
+  <div class="home-bottom">
+    <!-- 三部分，友情链接，二维码，详细信息，底部说明 -->
+    <div class="contain">
+      <div class="footer-cont">
+        <ul class="footer-links">
+          <!-- 友情链接 -->
+          <li v-for="(item, index) in footerLinks" :key="index" class="link-one">
+            <a :href="item.url" target="_blank">{{ item.name }}</a>
+          </li>
+        </ul>
+        <div class="footer-info">
+          <!--二维码，注册信息，联系方式 -->
+          <div class="footer-pic">
+            <!-- 二维码 -->
+            <img src="@/assets/imgs/qrcode.png" alt="二维码" title="联系我们" />
+          </div>
+          <div class="footer-connect">
+            <!-- 联系方式 -->
+            <div class="connect-left">
+              <p class="connect-one">
+                <span class="connect-title">联系人：</span>
+                <span class="connect-value">{{ connectInfo.name }}</span>
+              </p>
+              <p class="connect-one">
+                <span class="connect-title">联系电话：</span>
+                <span class="connect-value">{{ connectInfo.phone }}</span>
+              </p>
+              <p class="connect-one">
+                <span class="connect-title">联系地址：</span>
+                <span class="connect-value">{{ connectInfo.address }}</span>
+              </p>
+            </div>
+            <div class="connect-right">
+              <p class="connect-one">
+                <span class="connect-title">邮箱：</span>
+                <span class="connect-value">{{ connectInfo.email }}</span>
+              </p>
+              <p class="connect-one">
+                <span class="connect-title">QQ：</span>
+                <span class="connect-value">{{ connectInfo.qq }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="footer-zc">
+            <!-- 注册信息 -->
+            <div class="info-one">湖北省科技进步促进会 主办</div>
+            <div class="info-one">技术支持：百度</div>
+            <div class="info-one">备案号：苏ICP备140093143号-2</div>
+          </div>
+        </div>
+        <div class="footer-tips">
+          <span>为确保最佳浏览效果，建议您使用最新版Edge浏览器或者Google Chrome浏览器。</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const footerLinks = ref([
+  {
+    id: 1,
+    name: '中国科学技术协会',
+    orderNum: 0,
+    url: 'www.cast.org.cn',
+    createTime: '2025-04-13T14:04:35',
+    updateTime: '2025-04-13T14:04:35',
+  },
+  {
+    id: 2,
+    name: '湖北省科学技术协会',
+    orderNum: 0,
+    url: 'www.hbkx.org.cn',
+    createTime: '2025-04-13T14:04:35',
+    updateTime: '2025-04-13T14:04:35',
+  },
+  {
+    id: 3,
+    name: '湖北学会服务网',
+    orderNum: 0,
+    url: 'www.hbstcc.com.cn',
+    createTime: '2025-04-13T14:04:35',
+    updateTime: '2025-04-13T14:04:35',
+  },
+  {
+    id: 4,
+    name: '湖北学会服务网1',
+    orderNum: 0,
+    url: 'www.hbstcc.com.cn',
+    createTime: '2025-04-13T14:04:35',
+    updateTime: '2025-04-13T14:04:35',
+  },
+  {
+    id: 5,
+    name: '湖北学会服务网2',
+    orderNum: 0,
+    url: 'www.hbstcc.com.cn',
+    createTime: '2025-04-13T14:04:35',
+    updateTime: '2025-04-13T14:04:35',
+  },
+  {
+    id: 6,
+    name: '湖北学会服务网3',
+    orderNum: 0,
+    url: 'www.hbstcc.com.cn',
+    createTime: '2025-04-13T14:04:35',
+    updateTime: '2025-04-13T14:04:35',
+  },
+]);
+const connectInfo = ref({
+  phone: '13545341627',
+  name: '张怿',
+  email: 'sfjd600@126.com',
+  address: '武汉市武昌区洪山路2号科教大厦A座602',
+  qq: '126951900',
+});
+</script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.home-bottom {
+  background: #f2f2f2;
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.contain {
+  padding: 0 15px;
+  margin: 0 auto;
+}
+.footer-cont {
+  padding: 30px 0 48px 0;
+}
+.footer-links {
+  margin: 0 -16px;
+  padding-left: 0;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  flex-wrap: wrap;
+
+  .link-one {
+    margin: 0 16px;
+    a {
+      color: #000000;
+      white-space: nowrap;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  }
+}
+.footer-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  justify-content: flex-start;
+  gap: 100px;
+  .footer-pic {
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+}
+.footer-connect {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-content: space-around;
+  max-width: 500px;
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  p {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.8);
+  }
+}
+.footer-zc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.8);
+}
+.footer-tips {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.8);
+  margin-top: 20px;
+  span {
+    padding: 10px 0;
+  }
+}
+@media (min-width: 768px) {
+  .contain {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .contain {
+    width: 970px;
+  }
+}
+@media (min-width: 1196px) {
+  .contain {
+    width: 1166px;
+  }
+}
+</style>

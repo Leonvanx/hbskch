@@ -20,6 +20,7 @@
     <template v-else>
       <RouterView />
     </template>
+    <HomeBottom />
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import HomeHeader from './components/Header.vue';
 import NavMenu from './components/NavMenu.vue';
 import ArticleSearch from './components/ArticleSearch.vue';
 import ArticleContent from './components/ArticleContent.vue';
+import HomeBottom from './components/HomeBottom.vue';
 import { useRoute } from 'vue-router';
 import type { Menu } from '@/types';
 import { searchMenu } from '@/apis';
