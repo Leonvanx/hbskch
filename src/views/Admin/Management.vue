@@ -15,7 +15,7 @@
       <!-- 加上搜索功能/分类 -->
       <n-form ref="searchFormRef" class="search-form" label-placement="left" inline :label-width="80" :model="searchTarget" :rules="searchRules">
         <n-form-item path="title" label="标题">
-          <n-input v-model:value="searchTarget.searchWord" style="width: 150px" placeholder="请输入标题" />
+          <n-input v-model:value="searchTarget.searchWord" clearable style="width: 150px" placeholder="请输入标题" />
         </n-form-item>
         <n-form-item path="menuId" label="子菜单">
           <n-select v-model:value="searchTarget.menuId" clearable style="width: 150px" :options="subMenuList" placeholder="请选择子菜单" />
@@ -42,10 +42,10 @@
           </template>
         </template>
         <template #status="{ row }">
-          <n-switch v-model:value="row.status" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus(row)" />
+          <n-switch v-model:value="row.status" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus('status', row)" />
         </template>
         <template #summary="{ row }">
-          <n-switch v-model:value="row.summary" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus(row)" />
+          <n-switch v-model:value="row.summary" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus('summary', row)" />
         </template>
         <template #actions="{ row }">
           <n-space>
@@ -87,10 +87,10 @@
           <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
         </n-form-item>
         <n-form-item path="summary" label="是否展示在首页">
-          <n-switch v-model:value="editTarget.summary" :checked-value="1" :unchecked-value="0" />
+          <n-switch v-model:value="editTarget.summary" :checked-value="1" :unchecked-value="0" @change="changeEditSummary" />
         </n-form-item>
         <n-form-item path="status" label="是否展示在子菜单">
-          <n-switch v-model:value="editTarget.status" :checked-value="1" :unchecked-value="0" />
+          <n-switch v-model:value="editTarget.status" :checked-value="1" :unchecked-value="0" @change="changeEditStatus" />
         </n-form-item>
         <n-form-item label="内容编辑">
           <RichTextEditor ref="editRef" :content="editTarget.content"></RichTextEditor>
@@ -117,7 +117,20 @@ const pages = ref({
 });
 
 // 编辑部分的变量
-const editRules: FormRules = {};
+const editRules: FormRules = {
+  title: [
+    {
+      required: true,
+      message: '请输入文章标题',
+    },
+  ],
+  menuId: [
+    {
+      required: true,
+      message: '请选择子菜单',
+    },
+  ],
+};
 const editFormRef = ref<FormInst | null>(null);
 const editTarget = ref<Page>({});
 const drawerVisible = ref<boolean>(false);
@@ -210,25 +223,49 @@ const add = () => {
 };
 const submit = () => {
   editTarget.value.content = editRef.value.getContent();
-  console.log('submit', editTarget.value);
-  //添加新增内容接口
-  savePage(editTarget.value).then((data) => {
-    if (data.code === 0) {
-      message.success('保存成功！');
-      // 如果是新增则返回到第一页
-      if (editTarget.value.id) {
-        pageChange(pages.value.page);
-      } else {
-        pageChange(1);
-      }
+
+  editFormRef.value?.validate((errors) => {
+    if (!errors) {
+      console.log('submit', editTarget.value);
+      //添加新增内容接口
+      savePage(editTarget.value).then((data) => {
+        if (data.code === 0) {
+          message.success('保存成功！');
+          // 如果是新增则返回到第一页
+          if (editTarget.value.id) {
+            pageChange(pages.value.page);
+          } else {
+            pageChange(1);
+          }
+        }
+      });
+      closed();
     }
   });
-  closed();
 };
-const changeShowStatus = (row: Page) => {
-  const params = {
-    ...row,
-  };
+const changeEditStatus = () => {
+  if (!editTarget.value.status) {
+    editTarget.value.summary = 0;
+  }
+};
+const changeEditSummary = () => {
+  if (editTarget.value.summary) {
+    editTarget.value.status = 1;
+  }
+};
+const changeShowStatus = (type: string, row: Page) => {
+  let { summary, status } = row;
+  if (type === 'summary') {
+    if (summary) {
+      status = 1;
+    }
+  } else {
+    if (!status) {
+      summary = 0;
+    }
+  }
+
+  const params = Object.assign({}, row, { status, summary });
   savePage(params).then((data) => {
     if (data.code === 0) {
       message.success('修改成功！');
