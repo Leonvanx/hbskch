@@ -126,7 +126,7 @@ const clickSubMenu = (id: number, name?: string) => {
       border-radius: 8px;
 
       .sub-menu-item {
-        color: #333;
+        color: #1a1a1a;
         padding: 8px 12px;
         text-align: center;
 
