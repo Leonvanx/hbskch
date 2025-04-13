@@ -35,6 +35,7 @@ const searchArticle = () => {
       searchWord: searchValue.value,
     },
   });
+  searchValue.value = '';
 };
 </script>
 
