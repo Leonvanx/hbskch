@@ -22,7 +22,11 @@ const model = ref<ModelType>({
   confirmPassword: '',
 });
 const validatePasswordStartWith = (rule: FormItemRule, value: string): boolean => {
-  return !!model.value.newPassword && model.value.newPassword.startsWith(value) && model.value.newPassword.length >= value.length;
+  return (
+    !!model.value.newPassword &&
+    model.value.newPassword.startsWith(value) &&
+    model.value.newPassword.length >= value.length
+  );
 };
 const validatePasswordSame = (rule: FormItemRule, value: string): boolean => {
   return value === model.value.newPassword;
@@ -82,8 +86,13 @@ const menuOptions: RouterOptions[] = routes
   .map((route) => {
     // @ts-expect-error no-error
     const iconComponent = route.meta?.iconName
-      ? // @ts-expect-error no-error
-        () => h('img', { src: `/src/assets/icons/${route.meta.iconName}.svg`, width: 20, height: 20 })
+      ? () =>
+          h('img', {
+            // @ts-expect-error no-error
+            src: `/src/assets/icons/${route.meta.iconName}.svg`,
+            width: 20,
+            height: 20,
+          })
       : null;
 
     return {
@@ -142,14 +151,31 @@ const submitPassword = () => {
 <template>
   <n-layout has-sider>
     <!-- 桌面端侧边栏 -->
-    <n-layout-sider v-if="!isMobile" bordered collapse-mode="width" :collapsed-width="64" :width="240" :native-scrollbar="false" show-trigger>
-      <n-menu v-model:value="activeKey" :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions" />
+    <n-layout-sider
+      v-if="!isMobile"
+      bordered
+      collapse-mode="width"
+      :collapsed-width="64"
+      :width="240"
+      :native-scrollbar="false"
+      show-trigger
+    >
+      <n-menu
+        v-model:value="activeKey"
+        :collapsed-width="64"
+        :collapsed-icon-size="22"
+        :options="menuOptions"
+      />
     </n-layout-sider>
 
     <!-- 移动端抽屉式导航 -->
     <n-drawer v-model:show="showDrawer" placement="left" :width="240">
       <n-drawer-content>
-        <n-menu v-model:value="activeKey" :options="menuOptions" @update:value="showDrawer = false" />
+        <n-menu
+          v-model:value="activeKey"
+          :options="menuOptions"
+          @update:value="showDrawer = false"
+        />
       </n-drawer-content>
     </n-drawer>
 
@@ -187,10 +213,23 @@ const submitPassword = () => {
     </n-layout-content>
   </n-layout>
   <n-modal v-model:show="modalVisible" @mask-click="cancel">
-    <n-card style="width: 600px" title="修改密码" :bordered="false" size="huge" role="dialog" aria-modal="true">
+    <n-card
+      style="width: 600px"
+      title="修改密码"
+      :bordered="false"
+      size="huge"
+      role="dialog"
+      aria-modal="true"
+    >
       <n-form ref="formRef" :model="model" :rules="rules">
         <n-form-item path="oldPassword" label="旧密码">
-          <n-input v-model:value="model.oldPassword" type="password" :maxlength="16" placeholder="请输入旧密码" @keydown.enter.prevent />
+          <n-input
+            v-model:value="model.oldPassword"
+            type="password"
+            :maxlength="16"
+            placeholder="请输入旧密码"
+            @keydown.enter.prevent
+          />
         </n-form-item>
         <n-form-item path="newPassword" label="新密码">
           <n-input

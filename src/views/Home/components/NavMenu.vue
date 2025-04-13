@@ -13,14 +13,28 @@
   <div class="nav-menu-wrapper">
     <div class="nav-menu flex-row justify-between">
       <!-- 主菜单 -->
-      <div v-for="item in props.menuList" :key="item.id" class="nav-menu-item" @mouseenter="showSubMenu(item.id)" @mouseleave="hideSubMenu(item.id)">
+      <div
+        v-for="item in props.menuList"
+        :key="item.id"
+        class="nav-menu-item"
+        @mouseenter="showSubMenu(item.id)"
+        @mouseleave="hideSubMenu(item.id)"
+      >
         <div :class="{ 'menu-name': item.name !== '首页' }" @click="clickMainMenu(item.name)">
           {{ item.name }}
         </div>
         <!-- 使用 transition 组件添加淡入淡出动画 -->
         <transition name="sub-menu-fade">
-          <div v-if="showingSubMenus[item.id] && item.children && item.children.length > 0" class="sub-menu">
-            <div v-for="subItem in item.children" :key="subItem.id" class="sub-menu-item" v-on:click="clickSubMenu(subItem.id, subItem.name)">
+          <div
+            v-if="showingSubMenus[item.id] && item.children && item.children.length > 0"
+            class="sub-menu"
+          >
+            <div
+              v-for="subItem in item.children"
+              :key="subItem.id"
+              class="sub-menu-item"
+              v-on:click="clickSubMenu(subItem.id, subItem.name)"
+            >
               {{ subItem.name }}
             </div>
           </div>

@@ -15,13 +15,23 @@
       {{ route.query.name }}
     </div>
     <div class="list">
-      <div v-for="item in listData" :key="item.id" class="list-item flex-row align-center justify-between pointer posr">
+      <div
+        v-for="item in listData"
+        :key="item.id"
+        class="list-item flex-row align-center justify-between pointer posr"
+      >
         <span class="article-title" @click="chooseAricle(item.id)">{{ item.title }}</span>
         <span class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
       </div>
     </div>
     <div class="article-pagination">
-      <n-pagination v-model:page="pages.page" :item-count="pages.total" :page-size="pages.size" :page-slot="7" @update:page="pageChange" />
+      <n-pagination
+        v-model:page="pages.page"
+        :item-count="pages.total"
+        :page-size="pages.size"
+        :page-slot="7"
+        @update:page="pageChange"
+      />
     </div>
   </div>
 </template>
