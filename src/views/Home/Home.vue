@@ -10,26 +10,41 @@
   修改时间：
 -->
 <template>
-  <n-space vertical size="large">
-    <n-layout>
-      <n-layout-header>
-        <NButton v-on:click="getContent(6)">1</NButton>
-        <NButton v-on:click="getContent(7)">2</NButton>
-      </n-layout-header>
-      <n-layout-content content-style="padding: 24px;">
-        <ChildPage :id="contentId"></ChildPage>
-      </n-layout-content>
-      <n-layout-footer>成府路</n-layout-footer>
-    </n-layout>
-  </n-space>
+  <div class="home-page flex-column">
+    <HomeHeader />
+    <NavMenu :menu-list="menuList" />
+    <ArticleSearch />
+    <ArticleContent :menu-list="menuList" />
+  </div>
 </template>
 
 <script setup lang="ts">
-const contentId = ref<number>(9);
-const getContent = (id: number) => {
-  console.log();
-  contentId.value = id;
+import HomeHeader from './components/Header.vue';
+import NavMenu from './components/NavMenu.vue';
+import ArticleSearch from './components/ArticleSearch.vue';
+import ArticleContent from './components/ArticleContent.vue';
+import type { Menu } from '@/types';
+import { searchMenu } from '@/apis';
+
+const menuList = ref<Menu[]>([]);
+const searchMenuList = async () => {
+  const res = await searchMenu();
+  if (res.code === 0) {
+    menuList.value = res.data || [];
+  }
 };
+onMounted(() => {
+  searchMenuList();
+});
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.home-page {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  .page-content {
+    min-height: 600px;
+  }
+}
+</style>

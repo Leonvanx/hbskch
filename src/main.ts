@@ -6,6 +6,7 @@ import pinia from './stores/index';
 
 import 'normalize.css';
 import './design/base.css';
+import './design/common.scss';
 
 const app = createApp(App);
 
