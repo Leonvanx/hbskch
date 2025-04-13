@@ -10,18 +10,50 @@
   修改时间：
 -->
 <template>
-  <n-flex vertical>
+  <n-flex vertical style="width: 100%; height: 100%">
     <n-flex>
       <n-card>
         <template #header>美术资源</template>
-        <CommonUpload :max="1"></CommonUpload>
+        <n-space>
+          <n-card style="width: fit-content">
+            <CommonUpload :max="1"></CommonUpload>
+            <template #footer>LOGO</template>
+          </n-card>
+          <n-card style="width: fit-content">
+            <CommonUpload :max="1"></CommonUpload>
+            <template #footer>顶部背景图</template>
+          </n-card>
+          <n-card style="width: fit-content">
+            <CommonUpload :max="1"></CommonUpload>
+            <template #footer>搜索框背景图(PC)</template>
+          </n-card>
+          <n-card style="width: fit-content">
+            <CommonUpload :max="1"></CommonUpload>
+            <template #footer>搜索框背景图(移动端)</template>
+          </n-card>
+          <n-card style="width: fit-content">
+            <CommonUpload :max="1"></CommonUpload>
+            <template #footer>底部背景图</template>
+          </n-card>
+        </n-space>
+        <n-form inline style="margin-top: 20px">
+          <n-form-item label="顶部中文名" style="width: 33%">
+            <n-input placeholder="请输入中文名"></n-input>
+          </n-form-item>
+          <n-form-item label="顶部英文名" style="width: 33%">
+            <n-input placeholder="请输入英文名"></n-input>
+          </n-form-item>
+          <n-form-item label="顶部描述" style="width: 33%">
+            <n-input placeholder="请输入描述"></n-input>
+          </n-form-item>
+        </n-form>
       </n-card>
     </n-flex>
-    <n-card title="友情链接" style="min-height: 300px">
+    <n-card title="友情链接" style="flex: 1">
       <template #header-extra>
         <n-button type="primary" @click="() => addLink()">添加</n-button>
       </template>
-      <CTable :flexHeight="false" :columns="linkColumns" :table-data="linkList">
+      <CTable :columns="linkColumns" :table-data="linkList">
         <template #actions="{ row }">
           <n-space>
             <n-button strong tertiary size="small" type="primary" @click="addLink(row)">修改</n-button>
@@ -68,7 +100,10 @@ const dialog = useDialog();
 // const getResourceListByCode = async (code: string) => {
 //   const res = await searchResource(code);
 //   if (res.code === 0) {
-//     resourceMap.value.set(code, res.data);
+//     res.data?.map((item) => {
+
+//     })
+//     // resourceMap.value.set(code, res.data);
 //   }
 // };
 const getLinkList = async () => {
