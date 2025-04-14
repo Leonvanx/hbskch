@@ -13,7 +13,12 @@
   <div class="article-content flex-row">
     <div class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
-        <div v-for="item in top3Article" :key="item.id" class="article-item posr pointer" @click="clickArticle(item.id)">
+        <div
+          v-for="item in top3Article"
+          :key="item.id"
+          class="article-item posr pointer"
+          @click="clickArticle(item.id)"
+        >
           <img class="carousel-img" :src="item.coverImage" />
           <div class="article-title-wrapper">
             <span class="article-title">
@@ -23,7 +28,12 @@
         </div>
         <template #dots="{ total, currentIndex, to }">
           <ul class="custom-dots">
-            <li v-for="index of total" :key="index" :class="{ ['is-active']: currentIndex === index - 1 }" @click="to(index - 1)" />
+            <li
+              v-for="index of total"
+              :key="index"
+              :class="{ ['is-active']: currentIndex === index - 1 }"
+              @click="to(index - 1)"
+            />
           </ul>
         </template>
       </n-carousel>
@@ -38,7 +48,7 @@
         <div class="article-title els">
           {{ item.title }}
         </div>
-        <div class="release-time">{{ dayjs(item.updateTime).format('YYYY-MM-DD') }}</div>
+        <div class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</div>
       </div>
     </div>
   </div>

@@ -9,6 +9,7 @@ export interface Page {
   status?: number;
   summary?: number;
   updateTime?: string;
+  createTime?: string;
   title?: string;
 }
 export interface PageOptions {

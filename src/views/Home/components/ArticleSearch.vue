@@ -12,7 +12,13 @@
 <template>
   <div class="search-input-bg flex-column" :style="{ backgroundImage: `url(${navMenuBgImgUrl})` }">
     <div class="flex1 flex-center search-input-wrapper">
-      <n-input v-model:value="searchValue" class="search-input" size="large" placeholder="找不到你想了解的内容？" @keydown.enter="searchArticle()">
+      <n-input
+        v-model:value="searchValue"
+        class="search-input"
+        size="large"
+        placeholder="找不到你想了解的内容？"
+        @keydown.enter="searchArticle()"
+      >
         <template #suffix>
           <span class="search-suffix-btn" @click="searchArticle()">搜一下</span>
         </template>
@@ -35,6 +41,7 @@ const searchArticle = () => {
       searchWord: searchValue.value,
     },
   });
+  searchValue.value = '';
 };
 </script>
 

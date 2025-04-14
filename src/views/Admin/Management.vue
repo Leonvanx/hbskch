@@ -13,12 +13,31 @@
   <n-flex vertical class="common-page">
     <n-card class="search-part">
       <!-- 加上搜索功能/分类 -->
-      <n-form ref="searchFormRef" class="search-form" label-placement="left" inline :label-width="80" :model="searchTarget" :rules="searchRules">
+      <n-form
+        ref="searchFormRef"
+        class="search-form"
+        label-placement="left"
+        inline
+        :label-width="80"
+        :model="searchTarget"
+        :rules="searchRules"
+      >
         <n-form-item path="title" label="标题">
-          <n-input v-model:value="searchTarget.searchWord" clearable style="width: 150px" placeholder="请输入标题" />
+          <n-input
+            v-model:value="searchTarget.searchWord"
+            clearable
+            style="width: 150px"
+            placeholder="请输入标题"
+          />
         </n-form-item>
         <n-form-item path="menuId" label="子菜单">
-          <n-select v-model:value="searchTarget.menuId" clearable style="width: 150px" :options="subMenuList" placeholder="请选择子菜单" />
+          <n-select
+            v-model:value="searchTarget.menuId"
+            clearable
+            style="width: 150px"
+            :options="subMenuList"
+            placeholder="请选择子菜单"
+          />
         </n-form-item>
         <n-form-item :show-label="false">
           <n-space>
@@ -42,10 +61,20 @@
           </template>
         </template>
         <template #status="{ row }">
-          <n-switch v-model:value="row.status" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus('status', row)" />
+          <n-switch
+            v-model:value="row.status"
+            :checked-value="1"
+            :unchecked-value="0"
+            @change="() => changeShowStatus('status', row)"
+          />
         </template>
         <template #summary="{ row }">
-          <n-switch v-model:value="row.summary" :checked-value="1" :unchecked-value="0" @change="() => changeShowStatus('summary', row)" />
+          <n-switch
+            v-model:value="row.summary"
+            :checked-value="1"
+            :unchecked-value="0"
+            @change="() => changeShowStatus('summary', row)"
+          />
         </template>
         <template #actions="{ row }">
           <n-space>
@@ -57,12 +86,24 @@
     </n-card>
     <n-card class="pagination-part">
       <n-flex justify="end">
-        <n-pagination v-model:page="pages.page" :item-count="pages.total" :page-size="pages.size" :page-slot="7" @update:page="pageChange" />
+        <n-pagination
+          v-model:page="pages.page"
+          :item-count="pages.total"
+          :page-size="pages.size"
+          :page-slot="7"
+          @update:page="pageChange"
+        />
       </n-flex>
     </n-card>
   </n-flex>
   <!-- 加一个侧边drawer -->
-  <n-drawer v-model:show="drawerVisible" width="90%" placement="right" :on-esc="closed" :on-mask-click="() => closed()">
+  <n-drawer
+    v-model:show="drawerVisible"
+    width="90%"
+    placement="right"
+    :on-esc="closed"
+    :on-mask-click="() => closed()"
+  >
     <n-drawer-content>
       <template #header>
         {{ editTarget?.id ? '编辑文章' : '新增文章' }}
@@ -81,16 +122,30 @@
           <CommonUpload v-model:fileUrl="editTarget.coverImage" :max="1"></CommonUpload>
         </n-form-item>
         <n-form-item path="menuId" label="子菜单">
-          <n-select v-model:value="editTarget.menuId" :options="subMenuList" placeholder="请选择子菜单" />
+          <n-select
+            v-model:value="editTarget.menuId"
+            :options="subMenuList"
+            placeholder="请选择子菜单"
+          />
         </n-form-item>
         <n-form-item path="orderNum" label="展示排序">
           <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
         </n-form-item>
         <n-form-item path="summary" label="是否展示在首页">
-          <n-switch v-model:value="editTarget.summary" :checked-value="1" :unchecked-value="0" @change="changeEditSummary" />
+          <n-switch
+            v-model:value="editTarget.summary"
+            :checked-value="1"
+            :unchecked-value="0"
+            @change="changeEditSummary"
+          />
         </n-form-item>
         <n-form-item path="status" label="是否展示在子菜单">
-          <n-switch v-model:value="editTarget.status" :checked-value="1" :unchecked-value="0" @change="changeEditStatus" />
+          <n-switch
+            v-model:value="editTarget.status"
+            :checked-value="1"
+            :unchecked-value="0"
+            @change="changeEditStatus"
+          />
         </n-form-item>
         <n-form-item label="内容编辑">
           <RichTextEditor ref="editRef" :content="editTarget.content"></RichTextEditor>

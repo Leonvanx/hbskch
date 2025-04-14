@@ -56,7 +56,9 @@
       <CTable :columns="linkColumns" :table-data="linkList">
         <template #actions="{ row }">
           <n-space>
-            <n-button strong tertiary size="small" type="primary" @click="addLink(row)">修改</n-button>
+            <n-button strong tertiary size="small" type="primary" @click="addLink(row)"
+              >修改</n-button
+            >
             <n-button strong tertiary size="small" @click="delLink(row)">删除</n-button>
           </n-space>
         </template>
@@ -64,7 +66,14 @@
     </n-card>
   </n-flex>
   <n-modal v-model:show="modalVisible" @mask-click="cancel">
-    <n-card style="width: 600px" title="修改密码" :bordered="false" size="huge" role="dialog" aria-modal="true">
+    <n-card
+      style="width: 600px"
+      title="修改密码"
+      :bordered="false"
+      size="huge"
+      role="dialog"
+      aria-modal="true"
+    >
       <n-form ref="linkFormRef" :model="urlForm" :rules="rules" label-width="100px">
         <n-form-item label="链接名称" path="name">
           <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>

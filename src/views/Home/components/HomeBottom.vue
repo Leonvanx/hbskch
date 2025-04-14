@@ -136,7 +136,7 @@ const connectInfo = ref({
   line-height: 1.5;
 }
 .contain {
-  padding: 0 15px;
+  padding: 0 20px;
   margin: 0 auto;
 }
 .footer-cont {

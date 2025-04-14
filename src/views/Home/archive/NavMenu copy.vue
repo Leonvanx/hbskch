@@ -14,7 +14,13 @@
     <div class="nav-menu-content">
       <div class="nav-menu-wrapper flex-row justify-between">
         <!-- 主菜单 -->
-        <div v-for="item in menuList" :key="item.id" class="nav-menu-item" @mouseenter="showSubMenu(item.id)" @mouseleave="hideSubMenu(item.id)">
+        <div
+          v-for="item in menuList"
+          :key="item.id"
+          class="nav-menu-item"
+          @mouseenter="showSubMenu(item.id)"
+          @mouseleave="hideSubMenu(item.id)"
+        >
           {{ item.name }}
           <!-- 使用 transition 组件添加淡入淡出动画 -->
           <transition name="sub-menu-fade">

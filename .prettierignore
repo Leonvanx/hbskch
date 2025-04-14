@@ -1,0 +1,16 @@
+# 忽略目录
+dist/
+dist-ssr/
+coverage/
+node_modules/
+src/apis/*
+
+# 忽略特定文件类型
+*.log
+*.md
+*.svg
+*.html
+
+# 忽略配置文件
+.eslintrc.js
+.prettierrc.js

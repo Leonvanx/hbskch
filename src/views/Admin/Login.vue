@@ -17,7 +17,13 @@
           <n-input v-model:value="formValue.username" placeholder="请输入账号" clearable />
         </n-form-item>
         <n-form-item label="密码" path="password">
-          <n-input v-model:value="formValue.password" type="password" placeholder="请输入密码" show-password-on="click" clearable />
+          <n-input
+            v-model:value="formValue.password"
+            type="password"
+            placeholder="请输入密码"
+            show-password-on="click"
+            clearable
+          />
         </n-form-item>
         <div class="login-button">
           <n-button type="primary" block @click="handleLogin">登录</n-button>
