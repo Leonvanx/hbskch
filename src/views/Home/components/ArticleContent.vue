@@ -107,8 +107,8 @@ onMounted(() => {});
 <style scoped lang="scss">
 .article-content {
   width: 1200px;
-  gap: 20px;
-  margin: 20px auto 0;
+  gap: 40px;
+  margin: 40px auto 0;
   padding-bottom: 20px;
 }
 
@@ -161,7 +161,7 @@ onMounted(() => {});
 
     .carousel-img {
       width: 100%;
-      height: 400px;
+      height: 382px;
       object-fit: cover;
     }
   }
@@ -169,11 +169,13 @@ onMounted(() => {});
 
 .article-list {
   flex: 1;
-
+  padding: 3px;
   .article-list-item {
     gap: 16px;
-    border-bottom: 1px solid #e5e5e5;
-
+    padding: 0 15px;
+    & + .article-list-item {
+      border-top: 1px solid #eaeaea;
+    }
     &:hover {
       .article-title {
         color: #18a058;
@@ -183,7 +185,7 @@ onMounted(() => {});
     .article-title {
       padding: 14px 0;
       color: #1a1a1a;
-      font-size: 16px;
+      font-size: 14px;
     }
 
     .release-time {

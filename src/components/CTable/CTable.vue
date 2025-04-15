@@ -20,7 +20,7 @@
     :loading="props.loading"
     :show-header="props.showHeader"
     :row-selection="props.rowSelection"
-    :flex-height="props.flexHeight"
+    :flex-height="false"
     style="height: 100%"
   >
     <!-- 遍历所有插槽，将插槽内容插入到对应的列中 -->

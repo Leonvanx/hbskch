@@ -39,7 +39,7 @@ export const updatePassword = (params: { oldPassword: string; newPassword: strin
 };
 // 获取资源列表
 export const searchResource = (codes?: string, config?: AxiosRequestConfig) => {
-  return request.post<ResultSuccess<Resource[]>>('/tech/resource/list', [codes], config);
+  return request.post<ResultSuccess<Resource[]>>('/tech/resource/list', codes?[codes]:null, config);
 };
 //修改资源
 export const updateResource = (params: Resource, config?: AxiosRequestConfig) => {

@@ -11,7 +11,6 @@
 -->
 <template>
   <n-upload
-    action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
     :default-file-list="previewFileList"
     :custom-request="handleCustomRequest"
     list-type="image-card"
@@ -55,6 +54,7 @@ const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
       },
     ];
     emit('update:fileUrl', data.url);
+    emit('uploadSuccess', data.url);
   }
 };
 // 已上传图片列表
@@ -83,7 +83,7 @@ watch(
 const getFileList = () => {
   return previewFileList.value;
 };
-const emit = defineEmits(['update:fileUrl']);
+const emit = defineEmits(['update:fileUrl', 'uploadSuccess']);
 defineExpose({
   getFileList,
 });
