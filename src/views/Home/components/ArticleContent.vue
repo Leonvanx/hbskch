@@ -13,15 +13,10 @@
   <div class="article-content flex-row">
     <div class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
-        <div
-          v-for="item in top3Article"
-          :key="item.id"
-          class="article-item posr pointer"
-          @click="clickArticle(item.id)"
-        >
+        <div v-for="item in top3Article" :key="item.id" class="article-item posr">
           <img class="carousel-img" :src="item.coverImage" />
           <div class="article-title-wrapper">
-            <span class="article-title">
+            <span class="article-title pointer" @click="clickArticle(item.id)">
               {{ item.title }}
             </span>
           </div>
@@ -71,7 +66,7 @@ const top3Article = ref<Page[]>([]);
 const rightArticleList = ref<Page[]>([]);
 const clickArticle = (id?: number) => {
   router.push({
-    name: 'ArticleDetail',
+    name: 'articleDetail',
     query: {
       id: id,
     },
