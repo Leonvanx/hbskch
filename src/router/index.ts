@@ -13,13 +13,13 @@ const routes = [
     component: () => import('@/views/Home/Home.vue'),
     children: [
       {
-        path: '/home/SubMenuArticleList',
-        name: 'SubMenuArticleList',
+        path: '/home/subMenuArticleList',
+        name: 'subMenuArticleList',
         component: () => import('@/views/Home/SubMenuArticleList.vue'),
       },
       {
-        path: '/home/ArticleDetail',
-        name: 'ArticleDetail',
+        path: '/home/articleDetail',
+        name: 'articleDetail',
         component: () => import('@/views/Home/ArticleDetail.vue'),
       },
     ],

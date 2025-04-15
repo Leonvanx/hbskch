@@ -13,10 +13,10 @@
   <div class="home-page flex-column">
     <HomeHeader />
     <NavMenu :menu-list="menuList" />
-    <ArticleSearch />
-    <ArticleContent v-show="route.path === '/home'" :menu-list="menuList" />
+    <ArticleSearch v-if="isHomePage || isSubmenuPage" />
+    <ArticleContent v-if="isHomePage" :menu-list="menuList" />
     <KeepAlive>
-      <RouterView v-show="route.path !== '/home'" />
+      <RouterView v-if="!isHomePage" />
     </KeepAlive>
     <HomeBottom />
   </div>
@@ -40,6 +40,14 @@ const searchMenuList = async () => {
     menuList.value = res.data || [];
   }
 };
+
+const isHomePage = computed(() => {
+  return route.name === 'home';
+});
+const isSubmenuPage = computed(() => {
+  return route.name === 'subMenuArticleList';
+});
+
 onMounted(() => {
   searchMenuList();
 });

@@ -80,7 +80,7 @@ const searchData = () => {
 };
 const chooseAricle = (id?: number) => {
   router.push({
-    name: 'ArticleDetail',
+    name: 'articleDetail',
     query: {
       id: id,
     },

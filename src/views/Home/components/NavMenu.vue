@@ -80,7 +80,7 @@ const clickMainMenu = (name?: string) => {
 // 点击子菜单
 const clickSubMenu = (id: number, name?: string) => {
   router.push({
-    name: 'SubMenuArticleList',
+    name: 'subMenuArticleList',
     query: {
       name: name,
       menuId: id,
