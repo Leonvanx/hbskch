@@ -12,7 +12,7 @@
 <template>
   <div class="article-list flex-column">
     <div class="title">
-      {{ route.query.name }}
+      {{ route.query.searchWord || route.query.name || '文章列表' }}
     </div>
     <div class="list">
       <div
@@ -51,11 +51,6 @@ const pages = ref({
 });
 const listData = ref<Page[]>([]);
 onMounted(() => {
-  searchOption.value.menuId = Number(route.query.menuId);
-  searchOption.value.searchWord = String(route.query.searchWord);
-  searchData();
-});
-watch(route, () => {
   searchOption.value.menuId = Number(route.query.menuId);
   searchOption.value.searchWord = String(route.query.searchWord);
   searchData();
@@ -110,8 +105,9 @@ const chooseAricle = (id?: number) => {
 .list {
   margin-top: 20px;
   .list-item {
-    padding: 16px 0;
+    padding: 16px 8px;
     gap: 16px;
+    border-bottom: 1px solid #eaeaea;
     align-items: baseline;
     &::before {
       content: '';
