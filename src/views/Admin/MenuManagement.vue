@@ -65,9 +65,9 @@
             />
           </n-form-item>
         </template>
-        <n-form-item path="orderNum" label="展示排序">
+        <!-- <n-form-item path="orderNum" label="展示排序">
           <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
-        </n-form-item>
+        </n-form-item> -->
       </n-form>
     </n-drawer-content>
   </n-drawer>
@@ -88,10 +88,10 @@ const columns = [
     title: '菜单类型',
     key: 'menuType',
   },
-  {
-    title: '展示顺序',
-    key: 'orderNum',
-  },
+  // {
+  //   title: '展示顺序',
+  //   key: 'orderNum',
+  // },
   {
     title: '操作',
     key: 'actions',

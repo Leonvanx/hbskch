@@ -128,9 +128,9 @@
             placeholder="请选择子菜单"
           />
         </n-form-item>
-        <n-form-item path="orderNum" label="展示排序">
+        <!-- <n-form-item path="orderNum" label="展示排序">
           <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
-        </n-form-item>
+        </n-form-item> -->
         <n-form-item path="summary" label="是否展示在首页">
           <n-switch
             v-model:value="editTarget.summary"

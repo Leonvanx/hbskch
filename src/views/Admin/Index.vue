@@ -60,6 +60,15 @@
             ></CommonUpload>
             <template #footer>底部背景图</template>
           </n-card>
+          <n-card style="width: fit-content">
+            <CommonUpload
+              :key="resourceObj.qrcode"
+              v-model:fileUrl="resourceObj.qrcode"
+              :max="1"
+              @uploadSuccess="(url: string) => updateData(url, 'qrcode')"
+            ></CommonUpload>
+            <template #footer>底部二维码</template>
+          </n-card>
         </n-space>
         <n-form inline style="margin-top: 20px">
           <n-form-item label="顶部中文名" style="width: 33%">
@@ -157,6 +166,7 @@ const resourceObj = ref({
   zhTitle: '',
   enTitle: '',
   desc: '',
+  qrcode: '',
 });
 const getAllResourceList = async () => {
   const res = await searchResource();
@@ -169,13 +179,14 @@ const getAllResourceList = async () => {
     resourceObj.value.zhTitle = res.data?.find((item) => item.code === 'zhTitle')?.name || '';
     resourceObj.value.enTitle = res.data?.find((item) => item.code === 'enTitle')?.name || '';
     resourceObj.value.desc = res.data?.find((item) => item.code === 'desc')?.name || '';
+    resourceObj.value.qrcode = res.data?.find((item) => item.code === 'qrcode')?.url || '';
   }
 };
 const updateData = async (value: string, code: string) => {
   // 存储对应code的url到数据库中
   const res = await updateResource({
-    name: value,
-    url: code,
+    name: code,
+    url: value,
     code,
   });
   if (res.code === 0) {
