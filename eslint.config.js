@@ -65,7 +65,7 @@ export default defineConfigWithVueTs([
         'error',
         {
           singleline: {
-            max: 1,
+            max: 4,
           },
           multiline: {
             max: 1,
