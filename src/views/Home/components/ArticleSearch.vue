@@ -35,7 +35,7 @@ const searchValue = ref('');
 const navMenuBgImgUrl = ref(navMenuBgImg);
 const searchArticle = () => {
   router.push({
-    name: 'SubMenuArticleList',
+    name: 'subMenuArticleList',
     query: {
       meunId: 0,
       searchWord: searchValue.value,
