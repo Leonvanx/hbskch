@@ -179,7 +179,7 @@ const submitPassword = () => {
       </n-drawer-content>
     </n-drawer>
 
-    <n-layout-content position="absolute">
+    <n-layout-content style="height: 100vh">
       <!-- 移动端菜单按钮 -->
       <div v-if="isMobile" class="mobile-menu-btn" @click="showDrawer = true">
         <n-icon size="24">
@@ -188,8 +188,8 @@ const submitPassword = () => {
           </svg>
         </n-icon>
       </div>
-      <n-flex vertical style="height: 100%">
-        <n-card>
+      <div class="right-part">
+        <n-card style="width: 100%; position: sticky; top: 0; z-index: 2">
           <n-flex align="center">
             <span style="font-size: 20px; font-weight: 500">
               {{ route.meta.label }}
@@ -209,7 +209,7 @@ const submitPassword = () => {
         <div class="router-view">
           <RouterView />
         </div>
-      </n-flex>
+      </div>
     </n-layout-content>
   </n-layout>
   <n-modal v-model:show="modalVisible" @mask-click="cancel">
@@ -284,8 +284,12 @@ const submitPassword = () => {
   cursor: pointer;
 }
 .router-view {
-  height: calc(100% - 76px - 8px);
+  padding-top: 8px;
+  min-height: calc(100% - 76px - 8px);
   overflow: auto;
+}
+.right-part {
+  height: 100%;
 }
 @media (min-width: 768px) {
   .mobile-menu-btn {
