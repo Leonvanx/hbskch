@@ -29,13 +29,6 @@ const queryArticleContent = (id: number) => {
   searchPageById(id).then((data) => {
     if (data.code === 0) {
       articleContent.value = data.data ? data.data : {};
-      nextTick(() => {
-        const imgs = document.querySelectorAll('.rich-text img');
-        imgs.forEach((img) => {
-          (img as HTMLImageElement).style.maxWidth = '100%';
-          (img as HTMLImageElement).style.height = 'auto';
-        });
-      });
     }
   });
 };
@@ -62,9 +55,6 @@ onMounted(() => {
   }
   .rich-text {
     margin-top: 26px;
-    img {
-      max-width: 100%;
-    }
   }
 }
 @media screen and (max-width: 1000px) {
@@ -76,7 +66,7 @@ onMounted(() => {
 
 @media screen and (max-width: 768px) {
   .rich-text {
-    img {
+    :deep(img) {
       max-width: 100% !important;
       height: auto !important;
       display: block;
