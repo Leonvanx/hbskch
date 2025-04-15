@@ -32,7 +32,7 @@ const routes = [
       {
         path: 'admin',
         name: 'admin',
-        meta: { label: '首页管理', iconName: 'menu' },
+        meta: { label: '首页管理', iconName: 'admin' },
         component: () => import('@/views/Admin/Index.vue'),
       },
       {
