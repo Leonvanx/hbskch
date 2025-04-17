@@ -46,7 +46,6 @@ const props = withDefaults(defineProps<Props>(), {
   // background-color: rgba(0, 0, 0, 0.8);
   .left {
     height: 100%;
-    flex-shrink: 0;
     .logo {
       height: 100%;
       width: auto;
@@ -65,6 +64,14 @@ const props = withDefaults(defineProps<Props>(), {
         font-weight: 400;
       }
     }
+  }
+}
+@media (max-width: 768px) {
+  .home-header .left .web-title .web-title-cn {
+    font-size: 16px;
+  }
+  .home-header.left.web-title.web-title-en {
+    font-size: 10px;
   }
 }
 </style>

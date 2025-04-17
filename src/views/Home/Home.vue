@@ -14,9 +14,7 @@
     <HomeHeader />
     <ArticleSearch v-if="isHomePage || isSubmenuPage" />
     <ArticleContent v-if="isHomePage" :sub-menu-id="menuList?.[1]?.children?.[0]?.id" />
-    <KeepAlive>
-      <RouterView v-if="!isHomePage" />
-    </KeepAlive>
+    <RouterView v-if="!isHomePage" />
     <HomeBottom />
   </div>
 </template>
