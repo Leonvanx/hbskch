@@ -75,21 +75,21 @@
             <n-input
               v-model:value="resourceObj.zhTitle"
               placeholder="请输入中文名"
-              @change="(val) => updateData(val, 'zhTitle')"
+              @change="(val: string) => updateData(val, 'zhTitle')"
             ></n-input>
           </n-form-item>
           <n-form-item label="顶部英文名" style="width: 33%">
             <n-input
               v-model:value="resourceObj.enTitle"
               placeholder="请输入英文名"
-              @change="(val) => updateData(val, 'enTitle')"
+              @change="(val: string) => updateData(val, 'enTitle')"
             ></n-input>
           </n-form-item>
           <n-form-item label="顶部描述" style="width: 33%">
             <n-input
               v-model:value="resourceObj.desc"
               placeholder="请输入描述"
-              @change="(val) => updateData(val, 'desc')"
+              @change="(val: string) => updateData(val, 'desc')"
             ></n-input>
           </n-form-item>
         </n-form>
@@ -102,9 +102,7 @@
       <CTable :columns="linkColumns" :table-data="linkList" :flex-height="false">
         <template #actions="{ row }">
           <n-space>
-            <n-button strong tertiary size="small" type="primary" @click="addLink(row)"
-              >修改</n-button
-            >
+            <n-button strong tertiary size="small" type="primary" @click="addLink(row)">修改 </n-button>
             <n-button strong tertiary size="small" @click="delLink(row)">删除</n-button>
           </n-space>
         </template>
