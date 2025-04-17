@@ -11,65 +11,60 @@
 -->
 <template>
   <div class="home-header flex-row align-center">
-    <img class="logo" :src="props.webLogo" alt="" />
-    <div class="web-title flex-column justify-center">
-      <div class="web-title-cn">{{ props.webTitle }}</div>
-      <div class="web-title-en">{{ props.webTitleEn }}</div>
+    <div class="left flex-row align-center">
+      <img class="logo" :src="props.webLogo" alt="" />
+      <div class="web-title flex-column justify-center">
+        <div class="web-title-cn">{{ props.webTitle }}</div>
+        <div class="web-title-en">{{ props.webTitleEn }}</div>
+      </div>
     </div>
-    <div v-if="isShowLogin" class="login-btn" @click="emit('login')">登录</div>
+    <NavMenu class="flex1" />
   </div>
 </template>
 
 <script setup lang="ts">
 import headerIcon from '@/assets/icons/science-color.svg';
+import NavMenu from './NavMenu.vue';
 type Props = {
   webTitle?: string;
   webTitleEn?: string;
   webLogo?: string;
-  isShowLogin?: boolean;
 };
 const props = withDefaults(defineProps<Props>(), {
   webTitle: '湖北省科技进步促进会',
   webTitleEn: 'Hubei Science and Technology Progress Association',
   webLogo: headerIcon,
-  isShowLogin: false,
 });
-
-const emit = defineEmits(['login']);
 </script>
 
 <style scoped lang="scss">
 .home-header {
-  box-sizing: content-box;
-  height: 60px;
+  height: 80px;
   padding: 14px 20px;
-  .logo {
+  background-color: #fff;
+  z-index: 1;
+  // background-color: rgba(0, 0, 0, 0.8);
+  .left {
     height: 100%;
-    width: auto;
-  }
-  .web-title {
-    margin-left: 10px;
-    gap: 6px;
+    flex-shrink: 0;
+    .logo {
+      height: 100%;
+      width: auto;
+    }
     .web-title {
-      font-size: 20px;
-      color: #333333;
-      font-weight: 600;
+      margin-left: 10px;
+      gap: 6px;
+      .web-title-cn {
+        font-size: 20px;
+        color: #333333;
+        font-weight: 600;
+      }
+      .web-title-en {
+        font-size: 12px;
+        color: #999999;
+        font-weight: 400;
+      }
     }
-    .web-title-en {
-      font-size: 12px;
-      color: #999999;
-      font-weight: 400;
-    }
-  }
-
-  .login-btn {
-    margin-left: auto;
-    border: 1px solid #18a058;
-    border-radius: 15px;
-    padding: 4px 12px;
-    font-size: 14px;
-    color: #18a058;
-    cursor: pointer;
   }
 }
 </style>

@@ -12,9 +12,8 @@
 <template>
   <div class="home-page flex-column">
     <HomeHeader />
-    <NavMenu :menu-list="menuList" />
     <ArticleSearch v-if="isHomePage || isSubmenuPage" />
-    <ArticleContent v-if="isHomePage" :menu-list="menuList" />
+    <ArticleContent v-if="isHomePage" :sub-menu-id="menuList?.[1]?.children?.[0]?.id" />
     <KeepAlive>
       <RouterView v-if="!isHomePage" />
     </KeepAlive>
@@ -24,7 +23,6 @@
 
 <script setup lang="ts">
 import HomeHeader from './components/Header.vue';
-import NavMenu from './components/NavMenu.vue';
 import ArticleSearch from './components/ArticleSearch.vue';
 import ArticleContent from './components/ArticleContent.vue';
 import HomeBottom from './components/HomeBottom.vue';

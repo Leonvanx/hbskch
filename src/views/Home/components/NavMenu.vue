@@ -10,52 +10,54 @@
   修改时间：
 -->
 <template>
-  <div class="nav-menu-wrapper">
-    <div class="nav-menu flex-row justify-between">
-      <!-- 主菜单 -->
-      <div
-        v-for="item in props.menuList"
-        :key="item.id"
-        class="nav-menu-item"
-        @mouseenter="showSubMenu(item.id)"
-        @mouseleave="hideSubMenu(item.id)"
-      >
-        <div :class="{ 'menu-name': item.name !== '首页' }" @click="clickMainMenu(item.name)">
-          {{ item.name }}
-        </div>
-        <!-- 使用 transition 组件添加淡入淡出动画 -->
-        <transition name="sub-menu-fade">
-          <div
-            v-if="showingSubMenus[item.id] && item.children && item.children.length > 0"
-            class="sub-menu"
-          >
-            <div
-              v-for="subItem in item.children"
-              :key="subItem.id"
-              class="sub-menu-item"
-              v-on:click="clickSubMenu(subItem.id, subItem.name)"
-            >
-              {{ subItem.name }}
-            </div>
-          </div>
-        </transition>
+  <div class="nav-menu-wrapper flex-row">
+    <!-- 主菜单 -->
+    <div
+      v-for="item in menuList"
+      :key="item.id"
+      class="nav-menu-item"
+      @mouseenter="showSubMenu(item.id)"
+      @mouseleave="hideSubMenu(item.id)"
+    >
+      <div :class="{ 'menu-name': item.name !== '首页' }" @click="clickMainMenu(item.name)">
+        {{ item.name }}
       </div>
+      <!-- 使用 transition 组件添加淡入淡出动画 -->
+      <transition name="sub-menu-fade">
+        <div
+          v-if="showingSubMenus[item.id] && item.children && item.children.length > 0"
+          class="sub-menu"
+        >
+          <div
+            v-for="subItem in item.children"
+            :key="subItem.id"
+            class="sub-menu-item"
+            v-on:click="clickSubMenu(subItem.id, subItem.name)"
+          >
+            {{ subItem.name }}
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { searchMenu } from '@/apis';
 import type { Menu } from '@/types';
 import { useRouter } from 'vue-router';
-type Props = {
-  menuList: Menu[];
-  navMenuBgColor?: string;
-};
-const props = withDefaults(defineProps<Props>(), {
-  menuList: () => [] as Menu[],
-  navMenuBgColor: '#18a058',
-});
+
 const router = useRouter();
+
+type NewType = Menu;
+
+const menuList = ref<NewType[]>([]);
+const searchMenuList = async () => {
+  const res = await searchMenu();
+  if (res.code === 0) {
+    menuList.value = res.data || [];
+  }
+};
 
 // 用于记录每个主菜单对应的子菜单是否显示
 const showingSubMenus = ref<Record<number, boolean>>({});
@@ -88,37 +90,25 @@ const clickSubMenu = (id: number, name?: string) => {
     },
   });
 };
+onMounted(() => {
+  searchMenuList();
+});
 </script>
 
 <style scoped lang="scss">
 .nav-menu-wrapper {
-  width: 100%;
   background-size: 100% 100%;
-  flex-shrink: 0;
-  background-color: v-bind(navMenuBgColor);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  transition: box-shadow 0.3s ease;
-
-  &.sticky {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .nav-menu {
-    padding: 14px 0;
-    width: 1200px;
-    margin: auto;
-  }
+  justify-content: flex-end;
+  padding-right: 50px;
+  gap: 30px;
 
   .nav-menu-item {
     position: relative;
-    color: #fff;
+    color: #1a1a1a;
     font-size: 15px;
     height: 24px;
     line-height: 24px;
     cursor: pointer;
-
     // &:hover {
     //   font-weight: 600;
     // }
@@ -147,7 +137,7 @@ const clickSubMenu = (id: number, name?: string) => {
       min-width: 150px;
       z-index: 1000;
       border-radius: 8px;
-
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       .sub-menu-item {
         color: #1a1a1a;
         padding: 8px 12px;
@@ -162,15 +152,15 @@ const clickSubMenu = (id: number, name?: string) => {
   }
 }
 
-@media (max-width: 1310px) {
-  // 最后一个子菜单的位置改为屏幕最右侧
-  .nav-menu-wrapper .nav-menu-item:last-child .sub-menu {
-    position: absolute;
-    right: -10px;
-    left: auto;
-    transform: translateY(10px);
-  }
-}
+// @media (max-width: 768px) {
+//   // 最后一个子菜单的位置改为屏幕最右侧
+//   .nav-menu-wrapper .nav-menu-item:last-child .sub-menu {
+//     position: absolute;
+//     right: -10px;
+//     left: auto;
+//     transform: translateY(10px);
+//   }
+// }
 
 @media (max-width: 1200px) {
   .nav-menu-wrapper {
