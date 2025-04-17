@@ -24,7 +24,7 @@
           <!--二维码，注册信息，联系方式 -->
           <div class="footer-pic">
             <!-- 二维码 -->
-            <img src="@/assets/imgs/qrcode.png" alt="二维码" title="联系我们" />
+            <img :src="qrCode" alt="二维码" title="联系我们" />
           </div>
           <div class="footer-connect">
             <!-- 联系方式 -->
@@ -69,56 +69,11 @@
 </template>
 
 <script setup lang="ts">
-const footerLinks = ref([
-  {
-    id: 1,
-    name: '中国科学技术协会',
-    orderNum: 0,
-    url: 'http://www.cast.org.cn',
-    createTime: '2025-04-13T14:04:35',
-    updateTime: '2025-04-13T14:04:35',
-  },
-  {
-    id: 2,
-    name: '湖北省科学技术协会',
-    orderNum: 0,
-    url: 'www.hbkx.org.cn',
-    createTime: '2025-04-13T14:04:35',
-    updateTime: '2025-04-13T14:04:35',
-  },
-  {
-    id: 3,
-    name: '湖北学会服务网',
-    orderNum: 0,
-    url: 'www.hbstcc.com.cn',
-    createTime: '2025-04-13T14:04:35',
-    updateTime: '2025-04-13T14:04:35',
-  },
-  {
-    id: 4,
-    name: '湖北学会服务网1',
-    orderNum: 0,
-    url: 'www.hbstcc.com.cn',
-    createTime: '2025-04-13T14:04:35',
-    updateTime: '2025-04-13T14:04:35',
-  },
-  {
-    id: 5,
-    name: '湖北学会服务网2',
-    orderNum: 0,
-    url: 'www.hbstcc.com.cn',
-    createTime: '2025-04-13T14:04:35',
-    updateTime: '2025-04-13T14:04:35',
-  },
-  {
-    id: 6,
-    name: '湖北学会服务网3',
-    orderNum: 0,
-    url: 'www.hbstcc.com.cn',
-    createTime: '2025-04-13T14:04:35',
-    updateTime: '2025-04-13T14:04:35',
-  },
-]);
+import type { Link } from '@/types';
+import { searchFriendLink, searchResource } from '@/apis/admin';
+
+const footerLinks = ref<Link[]>([]);
+const qrCode = ref('');
 const connectInfo = ref({
   phone: '13545341627',
   name: '张怿',
@@ -126,6 +81,20 @@ const connectInfo = ref({
   address: '武汉市武昌区洪山路2号科教大厦A座602',
   qq: '126951900',
 });
+const getLinkList = async () => {
+  const res = await searchFriendLink();
+  if (res.code === 0) {
+    footerLinks.value = res.data || [];
+  }
+};
+const searchQRcode = async () => {
+  const res = await searchResource('qrCode');
+  if (res.code === 0) {
+    qrCode.value = res.data?.[0]?.url || '';
+  }
+};
+getLinkList();
+searchQRcode();
 </script>
 
 <style scoped lang="scss">

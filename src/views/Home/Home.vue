@@ -58,7 +58,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-
+  background-color: #ebedf0;
   .page-content {
     min-height: 600px;
   }
