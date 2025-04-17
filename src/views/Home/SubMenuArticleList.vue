@@ -11,28 +11,35 @@
 -->
 <template>
   <div class="article-list flex-column">
-    <div class="title">
-      {{ route.query.searchWord || route.query.name || '文章列表' }}
-    </div>
-    <div class="list">
-      <div
-        v-for="item in listData"
-        :key="item.id"
-        class="list-item flex-row align-center justify-between pointer posr"
-      >
-        <span class="article-title" @click="chooseAricle(item.id)">{{ item.title }}</span>
-        <span class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
+    <template v-if="pages.total">
+      <div class="title">
+        {{ `${'首页'}/${route.query.searchWord || route.query.name || '文章列表'}` }}
       </div>
-    </div>
-    <div class="article-pagination">
-      <n-pagination
-        v-model:page="pages.page"
-        :item-count="pages.total"
-        :page-size="pages.size"
-        :page-slot="7"
-        @update:page="pageChange"
-      />
-    </div>
+      <div class="list">
+        <div
+          v-for="item in listData"
+          :key="item.id"
+          class="list-item flex-row align-center justify-between pointer posr"
+        >
+          <span class="article-title" @click="chooseAricle(item.id)">{{ item.title }}</span>
+          <span class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
+        </div>
+      </div>
+      <div v-if="pages.total > pages.size" class="article-pagination">
+        <n-pagination
+          v-model:page="pages.page"
+          :item-count="pages.total"
+          :page-size="pages.size"
+          :page-slot="7"
+          @update:page="pageChange"
+        />
+      </div>
+    </template>
+    <template v-else>
+      <div class="no-data">
+        <span>暂无文章</span>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -91,6 +98,8 @@ const chooseAricle = (id?: number) => {
   font-size: 18px;
   color: #1a1a1a;
   font-weight: 600;
+  border-bottom: 1px solid #afadad;
+  padding: 27px 5px;
   &::after {
     content: '';
     display: block;
@@ -103,11 +112,11 @@ const chooseAricle = (id?: number) => {
   }
 }
 .list {
-  margin-top: 20px;
+  min-height: 400px;
   .list-item {
-    padding: 16px 8px;
+    padding: 27px 8px;
     gap: 16px;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid #dddddd;
     align-items: baseline;
     &::before {
       content: '';
@@ -116,7 +125,8 @@ const chooseAricle = (id?: number) => {
       display: block;
       position: absolute;
       background-color: #18a058;
-      top: 21px;
+      top: 50%;
+      transform: translateY(-50%);
     }
     .article-title {
       color: #1a1a1a;
@@ -136,7 +146,31 @@ const chooseAricle = (id?: number) => {
     }
   }
 }
-
+.no-data {
+  height: 500px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  span {
+    position: relative;
+    padding-top: 80px;
+    font-size: 14px;
+    color: #999;
+    &::after {
+      width: 60px;
+      height: 60px;
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      background: url('@/assets/icons/empty.svg') no-repeat;
+      background-size: 100%;
+    }
+  }
+}
 .article-pagination {
   margin: 16px auto;
 }
