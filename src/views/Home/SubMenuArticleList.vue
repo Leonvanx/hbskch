@@ -11,17 +11,22 @@
 -->
 <template>
   <div class="article-list flex-column">
+    <div class="title">
+      {{ `${'当前位置：'}${route.query.searchWord || route.query.name || '文章列表'}` }}
+    </div>
     <template v-if="pages.total">
-      <div class="title">
-        {{ `${'首页'}/${route.query.searchWord || route.query.name || '文章列表'}` }}
-      </div>
       <div class="list">
         <div
           v-for="item in listData"
           :key="item.id"
           class="list-item flex-row align-center justify-between pointer posr"
         >
-          <span class="article-title" @click="chooseAricle(item.id)">{{ item.title }}</span>
+          <span class="article-title" @click="chooseAricle(item.id)">
+            <n-highlight
+              :text="item.title"
+              :patterns="searchOption.searchWord ? [searchOption.searchWord] : undefined" />
+            {{
+          }}</span>
           <span class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
         </div>
       </div>
@@ -57,11 +62,7 @@ const pages = ref({
   total: 0,
 });
 const listData = ref<Page[]>([]);
-onMounted(() => {
-  searchOption.value.menuId = Number(route.query.menuId);
-  searchOption.value.searchWord = String(route.query.searchWord);
-  searchData();
-});
+
 const pageChange = (page: number) => {
   pages.value.page = page;
   searchData();
@@ -88,6 +89,11 @@ const chooseAricle = (id?: number) => {
     },
   });
 };
+onMounted(() => {
+  searchOption.value.menuId = Number(route.query.menuId);
+  searchOption.value.searchWord = String(route.query.searchWord);
+  searchData();
+});
 </script>
 <style scoped lang="scss">
 .article-list {
@@ -98,7 +104,7 @@ const chooseAricle = (id?: number) => {
   font-size: 18px;
   color: #1a1a1a;
   font-weight: 600;
-  border-bottom: 1px solid #afadad;
+  // border-bottom: 1px solid #afadad;
   padding: 27px 5px;
   &::after {
     content: '';
