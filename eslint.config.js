@@ -61,17 +61,17 @@ export default defineConfigWithVueTs([
       'vue/no-template-shadow': 'error', // 禁止模板中的变量名与作用域变量冲突
       'vue/no-reserved-component-names': 'error', // 禁止使用保留的组件名
       // 只对 Vue 模板启用属性换行
-      'vue/max-attributes-per-line': [
-        'error',
-        {
-          singleline: {
-            max: 5,
-          },
-          multiline: {
-            max: 1,
-          },
-        },
-      ],
+      // 'vue/max-attributes-per-line': [
+      //   'warn',
+      //   {
+      //     singleline: {
+      //       max: 4,
+      //     },
+      //     multiline: {
+      //       max: 1,
+      //     },
+      //   },
+      // ],
       'vue/first-attribute-linebreak': [
         'error',
         {

@@ -102,7 +102,9 @@
       <CTable :columns="linkColumns" :table-data="linkList" :flex-height="false">
         <template #actions="{ row }">
           <n-space>
-            <n-button strong tertiary size="small" type="primary" @click="addLink(row)">修改 </n-button>
+            <n-button strong tertiary size="small" type="primary" @click="addLink(row)"
+              >修改
+            </n-button>
             <n-button strong tertiary size="small" @click="delLink(row)">删除</n-button>
           </n-space>
         </template>
