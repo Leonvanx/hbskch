@@ -1,7 +1,7 @@
 export interface Menu {
   fixed?: number;
   id: number;
-  name?: string;
+  name: string;
   orderNum?: number;
   parentId?: number;
   status?: number;

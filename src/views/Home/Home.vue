@@ -30,13 +30,23 @@ import { searchMenu } from '@/apis';
 
 const route = useRoute();
 const menuList = ref<Menu[]>([]);
+const subMenuList = ref<{ label: string; value: number }[]>([]);
 const searchMenuList = async () => {
   const res = await searchMenu();
   if (res.code === 0) {
     menuList.value = res.data || [];
+    resolveMenu(menuList.value);
   }
 };
-
+const resolveMenu = (menuList: Menu[]) => {
+  menuList.map((menu) => {
+    if (menu.children && menu.children.length > 0) {
+      resolveMenu(menu.children);
+    } else {
+      if (menu.menuType === 'sub') subMenuList.value.push({ value: menu.id, label: menu.name });
+    }
+  });
+};
 const isHomePage = computed(() => {
   return route.name === 'home';
 });
@@ -44,8 +54,8 @@ const isSubmenuPage = computed(() => {
   return route.name === 'subMenuArticleList';
 });
 
-onMounted(() => {
-  searchMenuList();
+onBeforeMount(async () => {
+  await searchMenuList();
 });
 </script>
 
@@ -54,7 +64,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  background-color: #ebedf0;
+  background-color: #fff;
   .page-content {
     min-height: 600px;
   }
