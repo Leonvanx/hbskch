@@ -12,23 +12,15 @@
 <template>
   <div class="home-page flex-column">
     <HomeHeader />
-    <NavMenu :menu-list="menuList" />
     <ArticleSearch v-if="isHomePage || isSubmenuPage" />
-    <template v-if="isHomePage">
-      <!-- <ArticleContent v-for="(menu,index) in subMenuList" :key="index" :menu="menu" /> -->
-      <ArticleContent :menu="subMenuList[0]" />
-    </template>
-
-    <KeepAlive>
-      <RouterView v-if="!isHomePage" :key="route.fullPath" />
-    </KeepAlive>
+    <ArticleContent v-if="isHomePage" :sub-menu-id="menuList?.[1]?.children?.[0]?.id" />
+    <RouterView v-if="!isHomePage" />
     <HomeBottom />
   </div>
 </template>
 
 <script setup lang="ts">
 import HomeHeader from './components/Header.vue';
-import NavMenu from './components/NavMenu.vue';
 import ArticleSearch from './components/ArticleSearch.vue';
 import ArticleContent from './components/ArticleContent.vue';
 import HomeBottom from './components/HomeBottom.vue';

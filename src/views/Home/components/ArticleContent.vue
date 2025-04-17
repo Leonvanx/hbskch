@@ -55,7 +55,6 @@ import type { Page } from '@/types';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 type Props = {
-  menu: { label: string; value: number };
   subMenuId?: number;
 };
 const router = useRouter();
@@ -76,7 +75,7 @@ const getArticleList = () => {
   const params = {
     page: 1,
     size: 10,
-    menuId: props.subMenuId || props.menu?.value,
+    menuId: props.subMenuId,
     summary: 1,
   };
   searchPage(params).then((res) => {
@@ -90,7 +89,7 @@ const getArticleList = () => {
   });
 };
 watch(
-  () => [props.subMenuId, props.menuList],
+  () => [props.subMenuId],
   () => {
     getArticleList();
   },
