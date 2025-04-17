@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import navMenuBgImg from '@/assets/imgs/nav-menu-bg.png';
+import navMenuBgImg from '@/assets/imgs/nav-menu-bg.jpg';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const searchValue = ref('');
@@ -43,7 +43,7 @@ const searchArticle = () => {
   });
 };
 </script>
-
+<style></style>
 <style scoped lang="scss">
 .search-input-bg {
   width: 100%;
