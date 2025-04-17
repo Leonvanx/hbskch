@@ -10,8 +10,8 @@
   修改时间：
 -->
 <template>
-  <div class="article-content flex-row">
-    <div class="main-article flex-column ovf">
+  <div v-if="articleList.length > 0" class="article-content flex-row">
+    <div v-if="top3Article.length > 0" class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
         <div v-for="item in top3Article" :key="item.id" class="article-item posr">
           <img class="carousel-img" :src="item.coverImage" />
@@ -33,7 +33,7 @@
         </template>
       </n-carousel>
     </div>
-    <div class="article-list ovf">
+    <div v-if="rightArticleList.length > 0" class="article-list ovf">
       <div
         v-for="item in rightArticleList"
         :key="item.id"
@@ -51,11 +51,11 @@
 
 <script setup lang="ts">
 import { searchPage } from '@/apis';
-import type { Menu, Page } from '@/types';
+import type { Page } from '@/types';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 type Props = {
-  menuList: Menu[];
+  menu: { label: string; value: number };
   subMenuId?: number;
 };
 const router = useRouter();
@@ -76,7 +76,7 @@ const getArticleList = () => {
   const params = {
     page: 1,
     size: 10,
-    menuId: props.subMenuId || props.menuList?.[1]?.children?.[0]?.id,
+    menuId: props.subMenuId || props.menu?.value,
     summary: 1,
   };
   searchPage(params).then((res) => {
@@ -103,7 +103,7 @@ onMounted(() => {});
 .article-content {
   width: 1200px;
   gap: 40px;
-  margin: 40px auto 0;
+  margin: 40px auto;
   padding-bottom: 20px;
 }
 
@@ -136,21 +136,21 @@ onMounted(() => {});
   .article-item {
     .article-title-wrapper {
       width: 300px;
-      background-color: #fff;
+      background-color: #ffffff90;
       padding: 12px 16px;
       position: absolute;
       min-height: 90px;
       left: 12px;
       bottom: 12px;
-
+      transition: all 0.3s;
       .article-title {
         font-size: 14px;
         font-weight: 600;
         margin-top: 6px;
-        color: #18a058;
+        color: #1a1a1a;
       }
       .article-title:hover {
-        text-decoration: underline;
+        // text-decoration: underline;
       }
     }
 
@@ -158,6 +158,15 @@ onMounted(() => {});
       width: 100%;
       height: 382px;
       object-fit: cover;
+      transition: all 0.3s;
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+    &:hover {
+      .article-title-wrapper {
+        background-color: #ffffff;
+      }
     }
   }
 }
@@ -168,9 +177,7 @@ onMounted(() => {});
   .article-list-item {
     gap: 16px;
     padding: 0 15px;
-    & + .article-list-item {
-      border-top: 1px solid #eaeaea;
-    }
+    border-bottom: 1px solid #eeeeee;
     &:hover {
       .article-title {
         color: #18a058;

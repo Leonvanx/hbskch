@@ -10,7 +10,7 @@
   修改时间：
 -->
 <template>
-  <div class="search-input-bg flex-column" :style="{ backgroundImage: `url(${navMenuBgImgUrl})` }">
+  <div class="search-input-bg flex-column" :style="{ backgroundImage: `url(${searchPC})` }">
     <div class="flex1 flex-center search-input-wrapper">
       <n-input
         v-model:value="searchValue"
@@ -28,11 +28,25 @@
 </template>
 
 <script setup lang="ts">
-import navMenuBgImg from '@/assets/imgs/nav-menu-bg.jpg';
 import { useRouter } from 'vue-router';
+import { searchResource } from '@/apis/admin';
+
+const searchPC = ref('');
+const searchH5 = ref('');
+const searchPCImg = async () => {
+  const res = await searchResource('searchPC');
+  if (res.code === 0) {
+    searchPC.value = res.data?.[0]?.url || '';
+  }
+};
+const searchH5Img = async () => {
+  const res = await searchResource('searchH5');
+  if (res.code === 0) {
+    searchH5.value = res.data?.[0]?.url || '';
+  }
+};
 const router = useRouter();
 const searchValue = ref('');
-const navMenuBgImgUrl = ref(navMenuBgImg);
 const searchArticle = () => {
   router.push({
     name: 'subMenuArticleList',
@@ -42,14 +56,18 @@ const searchArticle = () => {
     },
   });
 };
+searchPCImg();
+searchH5Img();
 </script>
 <style></style>
 <style scoped lang="scss">
 .search-input-bg {
   width: 100%;
   height: 400px;
-  background-size: 100% 100%;
   flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .search-input-wrapper {

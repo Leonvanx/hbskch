@@ -127,6 +127,9 @@ searchQRcode();
       white-space: nowrap;
       text-decoration: none;
       font-size: 14px;
+      &:hover {
+        color: #18a058;
+      }
     }
   }
 }
