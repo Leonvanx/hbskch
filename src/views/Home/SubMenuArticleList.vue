@@ -89,6 +89,9 @@ const chooseAricle = (id?: number) => {
     },
   });
 };
+onMounted(() => {
+  searchData();
+});
 watch(route, () => {
   searchOption.value.menuId = Number(route.query.menuId);
   searchOption.value.searchWord = String(route.query.searchWord);
