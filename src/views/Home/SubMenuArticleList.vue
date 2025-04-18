@@ -68,11 +68,13 @@ const pageChange = (page: number) => {
   searchData();
 };
 const searchData = () => {
+  const searchWord = route.query.searchWord + '';
+  const menuId = Number(route.query.menuId);
   const params = {
     page: pages.value.page,
     size: pages.value.size,
-    menuId: searchOption.value.menuId,
-    searchWord: searchOption.value.searchWord,
+    menuId: menuId,
+    searchWord: searchWord,
   };
   searchPage(params).then((data) => {
     if (data.code === 0) {
@@ -93,9 +95,6 @@ onMounted(() => {
   searchData();
 });
 watch(route, () => {
-  searchOption.value.menuId = Number(route.query.menuId);
-  searchOption.value.searchWord = String(route.query.searchWord);
-  pages.value.page = 1;
   searchData();
 });
 </script>
