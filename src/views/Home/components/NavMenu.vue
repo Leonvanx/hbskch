@@ -11,7 +11,7 @@
 -->
 <template>
   <!-- 桌面端菜单 -->
-  <div v-if="!isMobile" class="nav-menu-wrapper flex-row">
+  <div v-if="!isMobile" class="nav-menu-wrapper flex-row align-center">
     <div
       v-for="item in menuList"
       :key="item.id"
@@ -39,17 +39,29 @@
         </div>
       </transition>
     </div>
-    <n-input
-      v-model:value="searchValue"
-      class="search-input"
-      size="large"
-      placeholder="找不到你想了解的内容？"
-      @keydown.enter="searchArticle()"
-    >
-      <template #suffix>
-        <span class="search-suffix-btn" @click="searchArticle()">搜一下</span>
-      </template>
-    </n-input>
+    <div class="search-wrapper flex-row align-center">
+      <transition name="search-slide">
+        <n-input
+          v-if="showSearchInput"
+          ref="target"
+          v-model:value="searchValue"
+          class="search-input"
+          size="large"
+          placeholder="找不到你想了解的内容？"
+          @keydown.enter="searchArticle()"
+        >
+          <template #suffix>
+            <span class="search-suffix-btn" @click="searchArticle()">搜一下</span>
+          </template>
+        </n-input>
+      </transition>
+      <img
+        class="search-icon pointer"
+        src="@/assets/icons/search.svg"
+        alt=""
+        @click="toggleSearchInput"
+      />
+    </div>
   </div>
   <template v-else>
     <div v-if="isMobile" class="mobile-menu-btn">
@@ -121,6 +133,14 @@ const searchMenuList = async () => {
 };
 
 const searchValue = ref('');
+
+const showSearchInput = ref(false);
+const toggleSearchInput = () => {
+  showSearchInput.value = true;
+};
+const target = useTemplateRef<HTMLElement>('target');
+onClickOutside(target, () => (showSearchInput.value = false));
+
 const searchArticle = () => {
   router.push({
     name: 'subMenuArticleList',
@@ -230,16 +250,22 @@ onMounted(() => {
       }
     }
   }
-
-  .search-input {
+  .search-wrapper {
     position: absolute;
     right: 60px;
-    width: 260px;
-    border-radius: 6px;
-    background-color: rgba(255, 255, 255, 0.1);
-    .search-suffix-btn {
-      cursor: pointer;
-      color: #fff;
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+    }
+    .search-input {
+      width: 260px;
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 1);
+      .search-suffix-btn {
+        cursor: pointer;
+        color: #fff;
+      }
     }
   }
 }
@@ -292,6 +318,22 @@ onMounted(() => {
 
 .sub-menu-fade-enter-from,
 .sub-menu-fade-leave-to {
+  opacity: 0;
+}
+
+/* 定义搜索框滑动动画 */
+.search-slide-enter-active,
+.search-slide-leave-active {
+  transition: all 300ms ease;
+}
+
+.search-slide-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.search-slide-leave-to {
+  transform: translateX(100%);
   opacity: 0;
 }
 

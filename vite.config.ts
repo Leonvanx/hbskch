@@ -8,6 +8,9 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
+
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -20,7 +23,7 @@ export default defineConfig({
       dirs: ['src/components'], // 自动导入的目录
       extensions: ['vue'], // 文件扩展名
       deep: true, // 是否搜索子目录
-      resolvers: [NaiveUiResolver()],
+      resolvers: [NaiveUiResolver(), IconsResolver()],
       // 自定义组件前缀(默认空)
       // 例如: 设置为'El'则ElButton会被解析为element-plus的Button
       // prefix: 'El',
@@ -39,6 +42,9 @@ export default defineConfig({
       eslintrc: {
         enabled: true, // 生成eslint配置
       },
+    }),
+    Icons({
+      autoInstall: true,
     }),
   ],
   resolve: {
