@@ -86,13 +86,18 @@ const menuOptions: RouterOptions[] = routes
   .map((route) => {
     // @ts-expect-error no-error
     const iconComponent = route.meta?.iconName
-      ? () =>
-          h('img', {
-            // @ts-expect-error no-error
-            src: `/src/assets/icons/${route.meta.iconName}.svg`,
+      ? () => {
+          // @ts-expect-error no-error
+          const iconPath = `../../assets/icons/${route.meta.iconName}.svg`;
+          const iconModule = import.meta.glob('../../assets/icons/*.svg', { eager: true });
+          // @ts-expect-error no-error
+          const iconUrl = iconModule[iconPath]?.default;
+          return h('img', {
+            src: iconUrl,
             width: 20,
             height: 20,
-          })
+          });
+        }
       : null;
 
     return {

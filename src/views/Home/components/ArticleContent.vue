@@ -10,7 +10,11 @@
   修改时间：
 -->
 <template>
-  <div v-if="articleList.length > 0" class="article-content flex-row">
+  <div
+    v-if="articleList.length > 0"
+    class="article-content flex-row"
+    :class="{ 'reverse-row': props.isRowReverse }"
+  >
     <div v-if="top3Article.length > 0" class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
         <div v-for="item in top3Article" :key="item.id" class="article-item posr">
@@ -56,6 +60,7 @@ import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 type Props = {
   subMenuId?: number;
+  isRowReverse?: boolean;
 };
 const router = useRouter();
 const props = defineProps<Props>();
@@ -104,6 +109,9 @@ onMounted(() => {});
   gap: 40px;
   margin: 40px auto;
   padding-bottom: 20px;
+  &.reverse-row {
+    flex-direction: row-reverse;
+  }
 }
 
 .main-article {
