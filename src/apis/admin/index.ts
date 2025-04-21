@@ -57,3 +57,7 @@ export const updateFriendLink = (params: Link, config?: AxiosRequestConfig) => {
 export const deleteFriendLink = (id: number, config?: AxiosRequestConfig) => {
   return request.delete<ResultSuccess<{ code: number; message: string }>>(`/tech/resource/${id}`, {}, config);
 };
+// 对资源管理部分排序
+export const sortFriendLink = (params: {id?:number,orderNum?:number}[], config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/resource/order`, params, config);
+}
