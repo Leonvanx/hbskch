@@ -117,7 +117,7 @@
   <n-modal v-model:show="modalVisible" @mask-click="cancel">
     <n-card
       style="width: 600px"
-      title="修改密码"
+      title="新增链接"
       :bordered="false"
       size="huge"
       role="dialog"
