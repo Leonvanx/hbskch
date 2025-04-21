@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UploadFileParams } from '@/types';
 import axios from 'axios';
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig,
+} from 'axios';
 
 type ResultSuccess<T = any> = {
   code: number;
@@ -99,6 +105,23 @@ class DefAxios {
      * 2. 响应拦截器
      * 3. 响应拦截器错误处理
      */
+    // 请求拦截器
+    this.axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+    // 响应拦截器
+    this.axiosInstance.interceptors.response.use(
+      (response: AxiosResponse) => {
+        return response;
+      },
+      (error: AxiosError) => {
+        useMessage().error(error.message);
+      },
+    );
   }
 }
 
