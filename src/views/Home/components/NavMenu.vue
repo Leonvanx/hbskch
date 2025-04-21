@@ -39,6 +39,17 @@
         </div>
       </transition>
     </div>
+    <n-input
+      v-model:value="searchValue"
+      class="search-input"
+      size="large"
+      placeholder="找不到你想了解的内容？"
+      @keydown.enter="searchArticle()"
+    >
+      <template #suffix>
+        <span class="search-suffix-btn" @click="searchArticle()">搜一下</span>
+      </template>
+    </n-input>
   </div>
   <template v-else>
     <div v-if="isMobile" class="mobile-menu-btn">
@@ -46,7 +57,7 @@
     </div>
     <n-drawer v-model:show="showDrawer" placement="top">
       <n-drawer-content>
-        <div class="home-menu flex-row align-center">
+        <div class="mobile-menu flex-row align-center">
           <n-icon size="18">
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -109,6 +120,17 @@ const searchMenuList = async () => {
   }
 };
 
+const searchValue = ref('');
+const searchArticle = () => {
+  router.push({
+    name: 'subMenuArticleList',
+    query: {
+      meunId: 0,
+      searchWord: searchValue.value,
+    },
+  });
+};
+
 // 用于记录每个主菜单对应的子菜单是否显示
 const showingSubMenus = ref<Record<number, boolean>>({});
 
@@ -152,17 +174,20 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .nav-menu-wrapper {
+  width: 100%;
+  padding: 10px 60px;
   background-size: 100% 100%;
-  justify-content: flex-end;
-  padding-right: 50px;
-  gap: 30px;
-
+  gap: 80px;
+  background-color: #5273c5;
+  justify-content: center;
+  position: relative;
   .nav-menu-item {
     position: relative;
     color: #1a1a1a;
-    font-size: 15px;
-    height: 24px;
-    line-height: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 40px;
     cursor: pointer;
     // &:hover {
     //   font-weight: 600;
@@ -197,7 +222,7 @@ onMounted(() => {
         color: #1a1a1a;
         padding: 8px 12px;
         text-align: center;
-
+        font-weight: 400;
         &:hover {
           border-radius: 8px;
           background-color: #f8f8f8;
@@ -205,17 +230,19 @@ onMounted(() => {
       }
     }
   }
-}
 
-// @media (max-width: 768px) {
-//   // 最后一个子菜单的位置改为屏幕最右侧
-//   .nav-menu-wrapper .nav-menu-item:last-child .sub-menu {
-//     position: absolute;
-//     right: -10px;
-//     left: auto;
-//     transform: translateY(10px);
-//   }
-// }
+  .search-input {
+    position: absolute;
+    right: 60px;
+    width: 260px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    .search-suffix-btn {
+      cursor: pointer;
+      color: #fff;
+    }
+  }
+}
 
 .mobile-menu-btn {
   position: absolute;
@@ -228,11 +255,11 @@ onMounted(() => {
     height: 35px;
   }
 }
-.home-menu {
+.mobile-menu {
   padding-bottom: 16px;
   margin-bottom: 16px;
   border-bottom: 1px solid #efeff5;
-  .home-menu-svg {
+  .mobile-menu-svg {
     width: 18px;
     height: 18px;
   }

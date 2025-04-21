@@ -12,8 +12,13 @@
 <template>
   <div class="home-page flex-column">
     <HomeHeader />
-    <ArticleSearch v-if="isHomePage || isSubmenuPage" />
+    <NavMenu />
     <ArticleContent v-if="isHomePage" :sub-menu-id="menuList?.[1]?.children?.[0]?.id" />
+    <ArticleContent
+      v-if="isHomePage"
+      :sub-menu-id="menuList?.[2]?.children?.[0]?.id"
+      :is-row-reverse="true"
+    />
     <RouterView v-if="!isHomePage" />
     <HomeBottom />
   </div>
@@ -21,12 +26,12 @@
 
 <script setup lang="ts">
 import HomeHeader from './components/Header.vue';
-import ArticleSearch from './components/ArticleSearch.vue';
 import ArticleContent from './components/ArticleContent.vue';
 import HomeBottom from './components/HomeBottom.vue';
 import { useRoute } from 'vue-router';
 import type { Menu } from '@/types';
 import { searchMenu } from '@/apis';
+import NavMenu from './components/NavMenu.vue';
 
 const route = useRoute();
 const menuList = ref<Menu[]>([]);
@@ -49,9 +54,6 @@ const resolveMenu = (menuList: Menu[]) => {
 };
 const isHomePage = computed(() => {
   return route.name === 'home';
-});
-const isSubmenuPage = computed(() => {
-  return route.name === 'subMenuArticleList';
 });
 
 onBeforeMount(async () => {
