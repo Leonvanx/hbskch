@@ -160,8 +160,6 @@ const add = () => {
   editTarget.value = {
     name: '',
     menuType: 'main',
-    // @ts-expect-error 此处忽略类型检查，新增不用id
-    parentId: null,
     orderNum: 0,
     // @ts-expect-error 此处忽略类型检查，新增不用id
     id: null,

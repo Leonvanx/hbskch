@@ -97,7 +97,10 @@
     </n-flex>
     <n-card title="友情链接" style="flex: 1">
       <template #header-extra>
-        <n-button type="primary" @click="() => addLink()">添加</n-button>
+        <n-space>
+          <n-button type="primary" @click="() => sortLink()">排序</n-button>
+          <n-button type="primary" @click="() => addLink()">添加</n-button>
+        </n-space>
       </template>
       <CTable :columns="linkColumns" :table-data="linkList" :flex-height="false">
         <template #actions="{ row }">
@@ -127,14 +130,66 @@
         <n-form-item label="链接地址" path="url">
           <n-input v-model:value="urlForm.url" placeholder="请输入链接地址"></n-input>
         </n-form-item>
-        <!-- <n-form-item label="显示顺序" path="orderNum">
-          <n-input-number v-model:value="urlForm.orderNum" clearable placeholder="请输入显示顺序"></n-input-number>
-        </n-form-item> -->
       </n-form>
       <template #footer>
         <n-flex justify="end">
           <n-button type="primary" @click="submit">确定</n-button>
           <n-button @click="modalVisible = false">取消</n-button>
+        </n-flex>
+      </template>
+    </n-card>
+  </n-modal>
+  <n-modal v-model:show="sortVisible">
+    <n-card
+      style="width: 80%"
+      title="排序"
+      :bordered="false"
+      size="huge"
+      role="dialog"
+      aria-modal="true"
+    >
+      <CTable :columns="linkColumns" :table-data="sortList" :flex-height="false">
+        <template #actions="{ row }">
+          <n-space>
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[0].id"
+              @click="toTop(row)"
+              >置顶
+            </n-button>
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[0].id"
+              @click="upSort(row)"
+              >上移</n-button
+            >
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[sortList.length - 1].id"
+              @click="downSort(row)"
+              >下移</n-button
+            >
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[sortList.length - 1].id"
+              @click="toBottom(row)"
+              >置底</n-button
+            >
+          </n-space>
+        </template>
+      </CTable>
+      <template #footer>
+        <n-flex justify="end">
+          <n-button type="primary" @click="submitSort">确定</n-button>
+          <n-button @click="sortVisible = false">取消</n-button>
         </n-flex>
       </template>
     </n-card>
@@ -148,10 +203,12 @@ import {
   searchFriendLink,
   updateFriendLink,
   deleteFriendLink,
+  sortFriendLink,
   searchResource,
   updateResource,
 } from '@/apis/admin';
 const linkList = ref<Link[]>([]);
+const sortList = ref<Link[]>([]);
 const modalVisible = ref(false);
 const linkFormRef = ref<FormInst | null>();
 const urlForm = ref<Link>({ name: '', url: '', orderNum: 1 });
@@ -168,6 +225,7 @@ const resourceObj = ref({
   desc: '',
   qrcode: '',
 });
+const sortVisible = ref(false);
 const getAllResourceList = async () => {
   const res = await searchResource();
   if (res.code === 0) {
@@ -219,6 +277,10 @@ const delLink = ({ id }: Link) => {
   });
 };
 const cancel = () => {};
+const sortLink = () => {
+  sortList.value = JSON.parse(JSON.stringify(linkList.value));
+  sortVisible.value = true;
+};
 const rules: FormRules = {
   name: {
     required: true,
@@ -246,6 +308,18 @@ const submit = async () => {
     }
   });
 };
+const submitSort = async () => {
+  const params = sortList.value.map(({ id }, index) => ({
+    id,
+    orderNum: index,
+  }));
+  const res = await sortFriendLink(params);
+  if (res.code === 0) {
+    message.success('修改排序成功！');
+    sortVisible.value = false;
+    getLinkList();
+  }
+};
 const addLink = (row?: Link) => {
   if (row) {
     const { name, url, orderNum, id } = row;
@@ -269,6 +343,30 @@ const linkColumns = [
     key: 'actions',
   },
 ];
+const toTop = (row: Link) => {
+  //匹配到当前列并将当前列移动到数据列表的最顶端
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.unshift(row);
+};
+const toBottom = (row: Link) => {
+  //匹配到当前列并将当前列移动到数据列表的最底端
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.push(row);
+};
+const upSort = (row: Link) => {
+  //匹配到当前列并将当前列向上移动一列
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.splice(index - 1, 0, row);
+};
+const downSort = (row: Link) => {
+  //匹配到当前列并将当前列向下移动一列
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.splice(index + 1, 0, row);
+};
 getAllResourceList();
 getLinkList();
 </script>
