@@ -61,3 +61,7 @@ export const deleteFriendLink = (id: number, config?: AxiosRequestConfig) => {
 export const sortFriendLink = (params: {id?:number,orderNum?:number}[], config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/resource/order`, params, config);
 }
+// 对主菜单排序
+export const sortMenu = (params: {id?:number,orderNum?:number}[], config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/menu/order`, params, config);
+}
