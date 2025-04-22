@@ -12,7 +12,10 @@
 <template>
   <n-flex vertical style="height: 100%">
     <n-card class="add-menu">
-      <n-button type="primary" @click="add">新增菜单</n-button>
+      <n-space justify="space-between">
+        <n-button type="primary" @click="add">新增菜单</n-button>
+        <n-button style="margin-left: auto" type="primary" @click="() => sortLink()">排序</n-button>
+      </n-space>
     </n-card>
     <n-card class="menu-tree">
       <CTable :columns="columns" :table-data="menuList" :row-key="(row) => row.id">
@@ -71,12 +74,67 @@
       </n-form>
     </n-drawer-content>
   </n-drawer>
+  <n-modal v-model:show="sortVisible">
+    <n-card
+      style="width: 1000px"
+      title="排序"
+      :bordered="false"
+      size="huge"
+      role="dialog"
+      aria-modal="true"
+    >
+      <CTable :columns="columns" :table-data="sortList" :flex-height="false">
+        <template #actions="{ row }">
+          <n-space>
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[0].id"
+              @click="toTop(row)"
+              >置顶
+            </n-button>
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[0].id"
+              @click="upSort(row)"
+              >上移</n-button
+            >
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[sortList.length - 1].id"
+              @click="downSort(row)"
+              >下移</n-button
+            >
+            <n-button
+              strong
+              tertiary
+              size="small"
+              :disabled="row.id === sortList[sortList.length - 1].id"
+              @click="toBottom(row)"
+              >置底</n-button
+            >
+          </n-space>
+        </template>
+      </CTable>
+      <template #footer>
+        <n-flex justify="end">
+          <n-button type="primary" @click="submitSort">确定</n-button>
+          <n-button @click="sortVisible = false">取消</n-button>
+        </n-flex>
+      </template>
+    </n-card>
+  </n-modal>
 </template>
 
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Menu } from '@/types';
-import { searchMenu, deleteMenu, saveMenu } from '@/apis/admin';
+import { searchMenu, deleteMenu, saveMenu, sortMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
 const parendMenuOptions = ref<{ label: string; value: number }[]>();
 const columns = [
@@ -184,6 +242,48 @@ const delMenu = ({ id }: Menu) => {
   });
 };
 
+const sortVisible = ref(false);
+const sortList = ref<Menu[]>([]);
+const sortLink = () => {
+  sortList.value = JSON.parse(JSON.stringify(menuList.value));
+  sortVisible.value = true;
+};
+const toTop = (row: Menu) => {
+  //匹配到当前列并将当前列移动到数据列表的最顶端
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.unshift(row);
+};
+const toBottom = (row: Menu) => {
+  //匹配到当前列并将当前列移动到数据列表的最底端
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.push(row);
+};
+const upSort = (row: Menu) => {
+  //匹配到当前列并将当前列向上移动一列
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.splice(index - 1, 0, row);
+};
+const downSort = (row: Menu) => {
+  //匹配到当前列并将当前列向下移动一列
+  const index = sortList.value.findIndex((item) => item.id === row.id);
+  sortList.value.splice(index, 1);
+  sortList.value.splice(index + 1, 0, row);
+};
+const submitSort = async () => {
+  const params = sortList.value.map(({ id }, index) => ({
+    id,
+    orderNum: index,
+  }));
+  const res = await sortMenu(params);
+  if (res.code === 0) {
+    message.success('修改排序成功！');
+    sortVisible.value = false;
+    searchData();
+  }
+};
 const searchData = () => {
   searchMenu().then((data) => {
     if (data.code === 0) {
