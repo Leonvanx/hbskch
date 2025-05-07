@@ -139,6 +139,13 @@
             @change="changeEditSummary"
           />
         </n-form-item>
+        <n-form-item v-if="editTarget.summary" path="showType" label="展示版块">
+          <n-select
+            v-model:value="editTarget.showType"
+            :options="showTypeList"
+            placeholder="请选择展示的版块"
+          />
+        </n-form-item>
         <n-form-item path="status" label="是否展示在子菜单">
           <n-switch
             v-model:value="editTarget.status"
@@ -337,7 +344,10 @@ const closed = () => {
   editTarget.value = {};
 };
 const subMenuList = ref<{ value?: number; label?: string }[]>([]);
-
+const showTypeList = ref<{ value?: number; label?: string }[]>([
+  { value: 1, label: '首版' },
+  { value: 2, label: '二版' },
+]);
 const resolveMenu = (menuList: Menu[]) => {
   menuList.map((menu) => {
     if (menu.children && menu.children.length > 0) {
