@@ -11,7 +11,11 @@
 -->
 <template>
   <div class="home-page flex-column">
-    <HomeHeader :webTitle="resourceObj.webTitle" :web-title-en="resourceObj.webTitleEn" />
+    <HomeHeader
+      :webTitle="resourceObj.webTitle"
+      :web-title-en="resourceObj.webTitleEn"
+      :web-logo="resourceObj.webLogo"
+    />
     <NavMenu />
     <ArticleContent
       v-if="isHomePage"
@@ -53,6 +57,7 @@ const isHomePage = computed(() => {
 const resourceObj = ref({
   webTitle: '',
   webTitleEn: '',
+  webLogo: '',
 });
 
 const queryResources = () => {
@@ -60,6 +65,7 @@ const queryResources = () => {
     if (res.data) {
       resourceObj.value.webTitle = res.data.filter((it) => it.code === 'zhTitle')[0].name;
       resourceObj.value.webTitleEn = res.data.filter((it) => it.code === 'enTitle')[0].name;
+      resourceObj.value.webLogo = res.data.filter((it) => it.code === 'logo')[0].url;
     }
   });
 };
