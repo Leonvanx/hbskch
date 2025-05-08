@@ -32,7 +32,7 @@
             v-for="subItem in item.children"
             :key="subItem.id"
             class="sub-menu-item"
-            v-on:click="clickSubMenu(subItem.id, subItem.name)"
+            v-on:click="clickSubMenu(subItem.id, subItem.name, item.name)"
           >
             {{ subItem.name }}
           </div>
@@ -40,27 +40,26 @@
       </transition>
     </div>
     <div class="search-wrapper flex-row align-center">
-      <transition name="search-slide">
-        <n-input
-          v-if="showSearchInput"
-          ref="target"
-          v-model:value="searchValue"
-          class="search-input"
-          size="large"
-          placeholder="找不到你想了解的内容？"
-          @keydown.enter="searchArticle()"
-        >
-          <template #suffix>
-            <span class="search-suffix-btn" @click="searchArticle()">搜一下</span>
-          </template>
-        </n-input>
-      </transition>
-      <img
-        class="search-icon pointer"
-        src="@/assets/icons/search.svg"
-        alt=""
-        @click="toggleSearchInput"
-      />
+      <!-- <transition name="search-slide"> -->
+      <n-input
+        ref="target"
+        v-model:value="searchValue"
+        round
+        class="search-input"
+        size="large"
+        placeholder="请输入关键字"
+        @keydown.enter="searchArticle()"
+      >
+        <template #suffix>
+          <i-mdi-search
+            class="pointer"
+            style="font-size: 1.5rem; color: #fff; margin-left: 8px"
+            @click="toggleSearchInput"
+          />
+          <!-- <span class="search-suffix-btn" @click="searchArticle()">搜一下</span> -->
+        </template>
+      </n-input>
+      <!-- </transition> -->
     </div>
   </div>
   <template v-else>
@@ -176,11 +175,12 @@ const clickMainMenu = (name?: string) => {
   }
 };
 // 点击子菜单
-const clickSubMenu = (id: number, name?: string) => {
+const clickSubMenu = (id: number, name?: string, parentMenuName?: string) => {
   showDrawer.value = false;
   router.push({
     name: 'subMenuArticleList',
     query: {
+      parentMenuName: parentMenuName,
       name: name,
       menuId: id,
       searchWord: '',
@@ -198,14 +198,13 @@ onMounted(() => {
   padding: 10px 60px;
   background-size: 100% 100%;
   gap: 80px;
-  background-color: #5273c5;
-  justify-content: center;
+  background-color: #1f4d83;
   position: relative;
   .nav-menu-item {
     position: relative;
-    color: #1a1a1a;
+    color: #fff;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     height: 40px;
     line-height: 40px;
     cursor: pointer;
@@ -227,7 +226,6 @@ onMounted(() => {
     }
 
     .sub-menu {
-      padding: 8px 12px;
       box-sizing: content-box;
       position: absolute;
       top: 100%;
@@ -238,15 +236,19 @@ onMounted(() => {
       z-index: 1000;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      .sub-menu-item {
-        color: #1a1a1a;
-        padding: 8px 12px;
-        text-align: center;
-        font-weight: 400;
-        &:hover {
-          border-radius: 8px;
-          background-color: #f8f8f8;
-        }
+    }
+    &:first-child .sub-menu {
+      left: 60%;
+    }
+
+    .sub-menu-item {
+      color: #1a1a1a;
+      padding: 8px 12px;
+      text-align: center;
+      font-weight: 400;
+      &:hover {
+        border-radius: 8px;
+        background-color: #f8f8f8;
       }
     }
   }
@@ -260,10 +262,15 @@ onMounted(() => {
     }
     .search-input {
       width: 260px;
-      border-radius: 6px;
-      background-color: rgba(255, 255, 255, 1);
+      background-color: #4c719c;
       .search-suffix-btn {
         cursor: pointer;
+        color: #fff;
+      }
+      :deep(.n-input__placeholder) {
+        color: #fff;
+      }
+      :deep(.n-input__input-el) {
         color: #fff;
       }
     }

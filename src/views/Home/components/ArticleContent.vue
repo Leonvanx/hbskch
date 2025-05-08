@@ -10,14 +10,10 @@
   修改时间：
 -->
 <template>
-  <div
-    v-if="articleList.length > 0"
-    class="article-content flex-row"
-    :class="{ 'reverse-row': props.isRowReverse }"
-  >
-    <div v-if="top3Article.length > 0" class="main-article flex-column ovf">
+  <div class="article-content flex-row" :class="{ 'reverse-row': props.isRowReverse }">
+    <div v-if="carouselArticles.length > 0" class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
-        <div v-for="item in top3Article" :key="item.id" class="article-item posr">
+        <div v-for="item in carouselArticles" :key="item.id" class="article-item posr">
           <img class="carousel-img" :src="item.coverImage" />
           <div class="article-title-wrapper">
             <span class="article-title pointer" @click="clickArticle(item.id)">
@@ -37,9 +33,9 @@
         </template>
       </n-carousel>
     </div>
-    <div v-if="rightArticleList.length > 0" class="article-list ovf">
+    <div v-if="rightArticles.length > 0" class="article-list ovf">
       <div
-        v-for="item in rightArticleList"
+        v-for="item in rightArticles"
         :key="item.id"
         class="article-list-item flex-row align-center ovf justify-between pointer"
         @click="clickArticle(item.id)"
@@ -54,20 +50,17 @@
 </template>
 
 <script setup lang="ts">
-import { searchPage } from '@/apis';
 import type { Page } from '@/types';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 type Props = {
-  subMenuId?: number;
   isRowReverse?: boolean;
+  carouselArticles: Page[];
+  rightArticles: Page[];
 };
 const router = useRouter();
 const props = defineProps<Props>();
 
-const articleList = ref<Page[]>([]);
-const top3Article = ref<Page[]>([]);
-const rightArticleList = ref<Page[]>([]);
 const clickArticle = (id?: number) => {
   router.push({
     name: 'articleDetail',
@@ -76,30 +69,6 @@ const clickArticle = (id?: number) => {
     },
   });
 };
-const getArticleList = () => {
-  const params = {
-    page: 1,
-    size: 10,
-    menuId: props.subMenuId,
-    summary: 1,
-  };
-  searchPage(params).then((res) => {
-    if (res.code === 0) {
-      articleList.value = res.data?.records || [];
-      if (articleList.value.length) {
-        top3Article.value = articleList.value.slice(0, 3);
-        rightArticleList.value = articleList.value.slice(3);
-      }
-    }
-  });
-};
-watch(
-  () => [props.subMenuId],
-  () => {
-    getArticleList();
-  },
-  { immediate: true },
-);
 onMounted(() => {});
 </script>
 

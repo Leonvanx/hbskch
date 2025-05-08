@@ -11,6 +11,9 @@
 -->
 <template>
   <div class="article-content flex-column">
+    <div class="title els">
+      {{ `${route.query.parentMenuName} - ${route.query.subMenuName}` }}
+    </div>
     <div class="article-title">{{ articleContent.title }}</div>
     <div class="publish-time">{{ dayjs(articleContent.createTime).format('YYYY-MM-DD') }}</div>
     <div class="rich-text" v-html="articleContent.content"></div>
@@ -44,6 +47,14 @@ onMounted(() => {
 .article-content {
   width: 1000px;
   margin: 36px auto;
+  .title {
+    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: 600;
+    // border-bottom: 1px solid #afadad;
+    padding: 27px 5px;
+    text-align: right;
+  }
   .article-title {
     font-size: 28px;
     color: #1a1a1a;
