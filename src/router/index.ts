@@ -27,7 +27,7 @@ const routes = [
   {
     path: '/admin',
     component: BasicLayout,
-    redirect: '/admin/menuManagement',
+    redirect: '/admin/admin',
     children: [
       {
         path: 'admin',
