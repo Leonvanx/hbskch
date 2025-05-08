@@ -8,6 +8,7 @@ import type {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
+import { useMessage } from 'naive-ui';
 
 type ResultSuccess<T = any> = {
   code: number;
@@ -116,6 +117,9 @@ class DefAxios {
     // 响应拦截器
     this.axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => {
+        if (response.data.code === -1) {
+          useMessage().error(response.data.msg);
+        }
         return response;
       },
       (error: AxiosError) => {

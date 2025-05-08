@@ -13,7 +13,7 @@
   <div class="home-header flex-row align-center">
     <img class="logo pointer" :src="props.webLogo" alt="" @click="goHome" />
     <div class="web-title flex-column justify-center">
-      <div class="web-title-cn">{{ props.webTitle }}</div>
+      <h1 class="web-title-cn">{{ props.webTitle }}</h1>
       <div class="web-title-en">{{ props.webTitleEn }}</div>
     </div>
   </div>
@@ -41,7 +41,7 @@ const goHome = () => {
 
 <style scoped lang="scss">
 .home-header {
-  padding: 20px 60px;
+  padding: 50px 60px 70px;
   background-color: #fff;
   z-index: 1;
   // background-color: rgba(0, 0, 0, 0.8);
@@ -52,7 +52,7 @@ const goHome = () => {
   .web-title {
     margin-left: 30px;
     .web-title-cn {
-      font-size: 36px;
+      font-size: 40px;
       color: #333333;
       font-weight: 800;
     }
