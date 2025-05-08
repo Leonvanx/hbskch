@@ -15,6 +15,7 @@
       :webTitle="resourceObj.webTitle"
       :web-title-en="resourceObj.webTitleEn"
       :web-logo="resourceObj.webLogo"
+      :bg-img="resourceObj.bgImg"
     />
     <NavMenu />
     <ArticleContent
@@ -58,6 +59,7 @@ const resourceObj = ref({
   webTitle: '',
   webTitleEn: '',
   webLogo: '',
+  bgImg: '',
 });
 
 const queryResources = () => {
@@ -66,6 +68,7 @@ const queryResources = () => {
       resourceObj.value.webTitle = res.data.filter((it) => it.code === 'zhTitle')[0].name;
       resourceObj.value.webTitleEn = res.data.filter((it) => it.code === 'enTitle')[0].name;
       resourceObj.value.webLogo = res.data.filter((it) => it.code === 'logo')[0].url;
+      resourceObj.value.bgImg = res.data.filter((it) => it.code === 'topbg')[0].url;
     }
   });
 };

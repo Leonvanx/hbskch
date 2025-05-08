@@ -10,7 +10,7 @@
   修改时间：
 -->
 <template>
-  <div class="home-header flex-row align-center">
+  <div id="home-header" class="home-header flex-row align-center">
     <img class="logo pointer" :src="props.webLogo" alt="" @click="goHome" />
     <div class="web-title flex-column justify-center">
       <h1 class="web-title-cn">{{ props.webTitle }}</h1>
@@ -26,12 +26,24 @@ type Props = {
   webTitle?: string;
   webTitleEn?: string;
   webLogo?: string;
+  bgImg?: string;
 };
 const props = withDefaults(defineProps<Props>(), {
   webTitle: '湖北省科技进步促进会',
   webTitleEn: 'Hubei Association for Promoting the Progress of Science and Technology',
   webLogo: headerIcon,
 });
+watch(
+  () => props.bgImg,
+  (val) => {
+    if (val) {
+      const element = document.getElementById('home-header');
+      if (element) {
+        element.style.backgroundImage = `url(${val})`;
+      }
+    }
+  },
+);
 const goHome = () => {
   router.replace({
     name: 'home',
