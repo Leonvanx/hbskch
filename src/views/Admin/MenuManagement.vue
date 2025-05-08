@@ -83,14 +83,19 @@
       role="dialog"
       aria-modal="true"
     >
-      <CTable :columns="columns" :table-data="sortList" :flex-height="false">
+      <CTable
+        :columns="columns"
+        :table-data="sortList"
+        :flex-height="false"
+        :row-key="(row) => row.id"
+      >
         <template #actions="{ row }">
           <n-space>
             <n-button
               strong
               tertiary
               size="small"
-              :disabled="row.id === sortList[0].id"
+              :disabled="row.id === sortList[0].id || isDisable(row, 'up')"
               @click="toTop(row)"
               >置顶
             </n-button>
@@ -98,7 +103,7 @@
               strong
               tertiary
               size="small"
-              :disabled="row.id === sortList[0].id"
+              :disabled="row.id === sortList[0].id || isDisable(row, 'up')"
               @click="upSort(row)"
               >上移</n-button
             >
@@ -106,7 +111,7 @@
               strong
               tertiary
               size="small"
-              :disabled="row.id === sortList[sortList.length - 1].id"
+              :disabled="row.id === sortList[sortList.length - 1].id || isDisable(row, 'down')"
               @click="downSort(row)"
               >下移</n-button
             >
@@ -114,7 +119,7 @@
               strong
               tertiary
               size="small"
-              :disabled="row.id === sortList[sortList.length - 1].id"
+              :disabled="row.id === sortList[sortList.length - 1].id || isDisable(row, 'down')"
               @click="toBottom(row)"
               >置底</n-button
             >
@@ -250,33 +255,100 @@ const sortLink = () => {
 };
 const toTop = (row: Menu) => {
   //匹配到当前列并将当前列移动到数据列表的最顶端
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.unshift(row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.unshift(row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      sortList.value[indexRow].children.splice(index, 1);
+      sortList.value[indexRow].children.unshift(row);
+    }
+  }
 };
 const toBottom = (row: Menu) => {
   //匹配到当前列并将当前列移动到数据列表的最底端
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.push(row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.push(row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      sortList.value[indexRow].children.splice(index, 1);
+      sortList.value[indexRow].children.push(row);
+    }
+  }
 };
 const upSort = (row: Menu) => {
   //匹配到当前列并将当前列向上移动一列
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.splice(index - 1, 0, row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.splice(index - 1, 0, row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      if (index !== 0) {
+        sortList.value[indexRow].children.splice(index, 1);
+        sortList.value[indexRow].children.splice(index - 1, 0, row);
+      }
+    }
+  }
 };
 const downSort = (row: Menu) => {
   //匹配到当前列并将当前列向下移动一列
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.splice(index + 1, 0, row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.splice(index + 1, 0, row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      sortList.value[indexRow].children.splice(index, 1);
+      sortList.value[indexRow].children.splice(index + 1, 0, row);
+    }
+  }
+};
+// 寻找对应父级
+const findParentMain = (row: Menu) => {
+  const index = sortList.value.findIndex((item) =>
+    item.children ? item.children[0].parentId === row.parentId : -1,
+  );
+  return index;
+};
+// 判断children是否禁用
+const isDisable = (row: Menu, flag: string) => {
+  if (row.menuType === 'sub') {
+    const index = sortList.value.findIndex((item) => item.id === row.parentId);
+    return flag === 'up'
+      ? sortList.value[index].children![0].id === row.id
+      : sortList.value[index].children![sortList.value[index].children!.length - 1].id === row.id;
+  } else {
+    return false;
+  }
 };
 const submitSort = async () => {
-  const params = sortList.value.map(({ id }, index) => ({
-    id,
-    orderNum: index,
-  }));
+  const params = [];
+  for (let i = 0; i < sortList.value.length; i++) {
+    params.push({ id: sortList.value[i].id, orderNum: i });
+    if (sortList.value[i].children) {
+      for (let l = 0; l < sortList.value[i].children!.length; l++) {
+        if (sortList.value[i].children) {
+          params.push({ id: sortList.value[i].children![l].id, orderNum: l });
+        }
+      }
+    }
+  }
+  // const params = sortList.value.map(({ id }, index) => ({
+  //   id,
+  //   orderNum: index,
+  // }));
   const res = await sortMenu(params);
   if (res.code === 0) {
     message.success('修改排序成功！');
