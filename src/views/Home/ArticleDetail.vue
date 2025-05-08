@@ -11,9 +11,6 @@
 -->
 <template>
   <div class="article-content flex-column">
-    <div class="title els">
-      {{ `${route.query.parentMenuName} - ${route.query.subMenuName}` }}
-    </div>
     <div class="article-title">{{ articleContent.title }}</div>
     <div class="publish-time">{{ dayjs(articleContent.createTime).format('YYYY-MM-DD') }}</div>
     <div class="rich-text" v-html="articleContent.content"></div>
