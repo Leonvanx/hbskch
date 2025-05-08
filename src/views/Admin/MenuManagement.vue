@@ -250,33 +250,88 @@ const sortLink = () => {
 };
 const toTop = (row: Menu) => {
   //匹配到当前列并将当前列移动到数据列表的最顶端
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.unshift(row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.unshift(row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      sortList.value[indexRow].children.splice(index, 1);
+      sortList.value[indexRow].children.unshift(row);
+    }
+  }
 };
 const toBottom = (row: Menu) => {
   //匹配到当前列并将当前列移动到数据列表的最底端
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.push(row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.push(row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      sortList.value[indexRow].children.splice(index, 1);
+      sortList.value[indexRow].children.push(row);
+    }
+  }
 };
 const upSort = (row: Menu) => {
   //匹配到当前列并将当前列向上移动一列
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.splice(index - 1, 0, row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.splice(index - 1, 0, row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      if (index !== 0) {
+        sortList.value[indexRow].children.splice(index, 1);
+        sortList.value[indexRow].children.splice(index - 1, 0, row);
+      }
+    }
+  }
 };
 const downSort = (row: Menu) => {
   //匹配到当前列并将当前列向下移动一列
-  const index = sortList.value.findIndex((item) => item.id === row.id);
-  sortList.value.splice(index, 1);
-  sortList.value.splice(index + 1, 0, row);
+  if (row.menuType === 'main') {
+    const index = sortList.value.findIndex((item) => item.id === row.id);
+    sortList.value.splice(index, 1);
+    sortList.value.splice(index + 1, 0, row);
+  } else {
+    const indexRow = findParentMain(row);
+    if (sortList.value[indexRow].children) {
+      const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
+      sortList.value[indexRow].children.splice(index, 1);
+      sortList.value[indexRow].children.splice(index + 1, 0, row);
+    }
+  }
+};
+const findParentMain = (row: Menu) => {
+  const index = sortList.value.findIndex((item) =>
+    item.children ? item.children[0].parentId === row.parentId : -1,
+  );
+  return index;
 };
 const submitSort = async () => {
-  const params = sortList.value.map(({ id }, index) => ({
-    id,
-    orderNum: index,
-  }));
+  const params = [];
+  for (let i = 0; i < sortList.value.length; i++) {
+    params.push({ id: sortList.value[i].id, orderNum: i });
+    if (sortList.value[i].children) {
+      for (let l = 0; l < sortList.value[i].children!.length; l++) {
+        if (sortList.value[i].children) {
+          params.push({ id: sortList.value[i].children![l].id, orderNum: l });
+        }
+      }
+    }
+  }
+  // const params = sortList.value.map(({ id }, index) => ({
+  //   id,
+  //   orderNum: index,
+  // }));
   const res = await sortMenu(params);
   if (res.code === 0) {
     message.success('修改排序成功！');
