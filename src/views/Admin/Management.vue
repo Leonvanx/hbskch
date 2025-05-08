@@ -68,6 +68,11 @@
             @change="() => changeShowStatus('status', row)"
           />
         </template>
+        <template #showType="{ row }">
+          <template v-if="row.summary && row.showType">
+            {{ showTypeList.find((item) => item.value == row.showType)?.label }}
+          </template>
+        </template>
         <template #summary="{ row }">
           <n-switch
             v-model:value="row.summary"
@@ -217,6 +222,11 @@ const columns = [
     key: 'summary',
   },
   {
+    title: '展示位置',
+    key: 'showType',
+    width: '150px',
+  },
+  {
     title: '子菜单展示',
     key: 'status',
   },
@@ -238,7 +248,8 @@ const pageChange = (page: number) => {
   searchData();
 };
 const editRow = (row: Page) => {
-  editTarget.value = { ...row };
+  const showType = row.showType ? row.showType : null;
+  editTarget.value = { ...row, showType };
   drawerVisible.value = true;
 };
 const delRow = (row: Page) => {
@@ -300,8 +311,8 @@ const submit = () => {
             pageChange(1);
           }
         }
+        closed();
       });
-      closed();
     }
   });
 };
@@ -313,21 +324,26 @@ const changeEditStatus = () => {
 const changeEditSummary = () => {
   if (editTarget.value.summary) {
     editTarget.value.status = 1;
+  } else {
+    editTarget.value.showType = null;
   }
 };
 const changeShowStatus = (type: string, row: Page) => {
-  let { summary, status } = row;
+  let { summary, status, showType } = row;
   if (type === 'summary') {
     if (summary) {
       status = 1;
+    } else {
+      showType = null;
     }
   } else {
     if (!status) {
       summary = 0;
+      showType = null;
     }
   }
 
-  const params = Object.assign({}, row, { status, summary });
+  const params = Object.assign({}, row, { status, summary, showType });
   savePage(params).then((data) => {
     if (data.code === 0) {
       message.success('修改成功！');
@@ -345,8 +361,10 @@ const closed = () => {
 };
 const subMenuList = ref<{ value?: number; label?: string }[]>([]);
 const showTypeList = ref<{ value?: number; label?: string }[]>([
-  { value: 1, label: '首版' },
-  { value: 2, label: '二版' },
+  { value: 1, label: '首版Banner图' },
+  { value: 2, label: '首版列表' },
+  { value: 3, label: '二版Banner图' },
+  { value: 4, label: '二版列表' },
 ]);
 const resolveMenu = (menuList: Menu[]) => {
   menuList.map((menu) => {

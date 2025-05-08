@@ -12,7 +12,7 @@
 <template>
   <div class="article-list flex-column">
     <div class="title">
-      {{ `${'当前位置：'}${route.query.searchWord || route.query.name || '文章列表'}` }}
+      {{ `${route.query.searchWord || route.query.name || '文章列表'}` }}
     </div>
     <template v-if="pages.total">
       <div class="list">
@@ -88,6 +88,8 @@ const chooseAricle = (id?: number) => {
     name: 'articleDetail',
     query: {
       id: id,
+      parentMenuName: route.query.parentMenuName,
+      subMenuName: route.query.name,
     },
   });
 };
@@ -109,16 +111,7 @@ watch(route, () => {
   font-weight: 600;
   // border-bottom: 1px solid #afadad;
   padding: 27px 5px;
-  &::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 8px;
-    background: linear-gradient(90deg, rgb(24, 160, 82) 0%, rgba(24, 160, 82, 0.05) 100%);
-    border-radius: 4px 4px 4px 4px;
-    position: relative;
-    top: -10px;
-  }
+  text-align: right;
 }
 .list {
   min-height: 400px;

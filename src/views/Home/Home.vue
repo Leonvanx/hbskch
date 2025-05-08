@@ -11,13 +11,23 @@
 -->
 <template>
   <div class="home-page flex-column">
-    <HomeHeader />
+    <HomeHeader
+      :webTitle="resourceObj.webTitle"
+      :web-title-en="resourceObj.webTitleEn"
+      :web-logo="resourceObj.webLogo"
+      :bg-img="resourceObj.bgImg"
+    />
     <NavMenu />
-    <ArticleContent v-if="isHomePage" :sub-menu-id="menuList?.[1]?.children?.[0]?.id" />
     <ArticleContent
       v-if="isHomePage"
-      :sub-menu-id="menuList?.[2]?.children?.[0]?.id"
-      :is-row-reverse="true"
+      :carousel-articles="articleList.first"
+      :right-articles="articleList.second"
+    />
+    <ArticleContent
+      v-if="isHomePage"
+      :carousel-articles="articleList.third"
+      :right-articles="articleList.fourth"
+      is-row-reverse
     />
     <RouterView v-if="!isHomePage" />
     <HomeBottom />
@@ -29,34 +39,70 @@ import HomeHeader from './components/Header.vue';
 import ArticleContent from './components/ArticleContent.vue';
 import HomeBottom from './components/HomeBottom.vue';
 import { useRoute } from 'vue-router';
-import type { Menu } from '@/types';
-import { searchMenu } from '@/apis';
+import type { Menu, Page } from '@/types';
+import { searchMenu, searchResource, searchPage } from '@/apis';
 import NavMenu from './components/NavMenu.vue';
 
 const route = useRoute();
 const menuList = ref<Menu[]>([]);
-const subMenuList = ref<{ label: string; value: number }[]>([]);
 const searchMenuList = async () => {
   const res = await searchMenu();
   if (res.code === 0) {
     menuList.value = res.data || [];
-    resolveMenu(menuList.value);
   }
 };
-const resolveMenu = (menuList: Menu[]) => {
-  menuList.map((menu) => {
-    if (menu.children && menu.children.length > 0) {
-      resolveMenu(menu.children);
-    } else {
-      if (menu.menuType === 'sub') subMenuList.value.push({ value: menu.id, label: menu.name });
-    }
-  });
-};
+
 const isHomePage = computed(() => {
   return route.name === 'home';
 });
+const resourceObj = ref({
+  webTitle: '',
+  webTitleEn: '',
+  webLogo: '',
+  bgImg: '',
+});
+
+const queryResources = () => {
+  searchResource().then((res) => {
+    if (res.data) {
+      resourceObj.value.webTitle = res.data.filter((it) => it.code === 'zhTitle')[0].name;
+      resourceObj.value.webTitleEn = res.data.filter((it) => it.code === 'enTitle')[0].name;
+      resourceObj.value.webLogo = res.data.filter((it) => it.code === 'logo')[0].url;
+      resourceObj.value.bgImg = res.data.filter((it) => it.code === 'topbg')[0].url;
+    }
+  });
+};
+
+const articleList = ref<{
+  first: Page[];
+  second: Page[];
+  third: Page[];
+  fourth: Page[];
+}>({
+  first: [],
+  second: [],
+  third: [],
+  fourth: [],
+});
+const getArticles = () => {
+  const params = {
+    page: 1,
+    size: 100,
+    summary: 1,
+  };
+  searchPage(params).then((res) => {
+    if (res.data) {
+      articleList.value.first = res.data.records.filter((it) => it.showType === 1);
+      articleList.value.second = res.data.records.filter((it) => it.showType === 2);
+      articleList.value.third = res.data.records.filter((it) => it.showType === 3);
+      articleList.value.fourth = res.data.records.filter((it) => it.showType === 4);
+    }
+  });
+};
 
 onBeforeMount(async () => {
+  getArticles();
+  queryResources();
   await searchMenuList();
 });
 </script>

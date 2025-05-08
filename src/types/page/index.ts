@@ -11,7 +11,7 @@ export interface Page {
   updateTime?: string;
   createTime?: string;
   title?: string;
-  showType?: number;
+  showType?: number | null;
 }
 export interface PageOptions {
   searchWord?: string;

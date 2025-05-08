@@ -44,6 +44,14 @@ onMounted(() => {
 .article-content {
   width: 1000px;
   margin: 36px auto;
+  .title {
+    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: 600;
+    // border-bottom: 1px solid #afadad;
+    padding: 27px 5px;
+    text-align: right;
+  }
   .article-title {
     font-size: 28px;
     color: #1a1a1a;
