@@ -41,8 +41,22 @@
         </n-form-item>
         <n-form-item :show-label="false">
           <n-space>
-            <n-button type="primary" @click="search">搜索</n-button>
-            <n-button type="primary" @click="add">新增</n-button>
+            <n-button type="primary" @click="search">
+              <template #icon>
+                <n-icon>
+                  <i-mdi-search style="font-size: 1.1rem; color: #fff" />
+                </n-icon>
+              </template>
+              搜索</n-button
+            >
+            <n-button type="primary" @click="add">
+              <template #icon>
+                <n-icon>
+                  <i-mdi-add style="font-size: 1.1rem; color: #fff" />
+                </n-icon>
+              </template>
+              新增</n-button
+            >
           </n-space>
         </n-form-item>
       </n-form>
@@ -83,8 +97,18 @@
         </template>
         <template #actions="{ row }">
           <n-space>
-            <n-button strong tertiary size="small" @click="editRow(row)">编辑</n-button>
-            <n-button strong tertiary size="small" @click="delRow(row)">删除</n-button>
+            <n-button title="编辑" strong tertiary size="small" @click="editRow(row)">
+              <template #icon>
+                <n-icon>
+                  <i-iconoir-edit style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
+            <n-button strong tertiary size="small" title="删除" @click="delRow(row)"
+              ><template #icon>
+                <n-icon>
+                  <i-material-symbols-light-delete style="font-size: 1.2rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
           </n-space>
         </template>
       </CTable>

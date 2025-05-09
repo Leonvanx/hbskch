@@ -13,16 +13,41 @@
   <n-flex vertical style="height: 100%">
     <n-card class="add-menu">
       <n-space justify="space-between">
-        <n-button type="primary" @click="add">新增菜单</n-button>
-        <n-button style="margin-left: auto" type="primary" @click="() => sortLink()">排序</n-button>
+        <n-button type="primary" @click="add">
+          <template #icon>
+            <n-icon>
+              <i-mdi-add style="font-size: 1.1rem; color: #fff" />
+            </n-icon>
+          </template>
+          新增</n-button
+        >
+        <n-button style="margin-left: auto" type="primary" @click="() => sortLink()"
+          ><template #icon>
+            <n-icon>
+              <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
+            </n-icon> </template
+          >排序</n-button
+        >
       </n-space>
     </n-card>
     <n-card class="menu-tree">
       <CTable :columns="columns" :table-data="menuList" :row-key="(row) => row.id">
         <template #actions="{ row }">
           <n-space>
-            <n-button strong tertiary size="small" @click="editMenu(row)">编辑</n-button>
-            <n-button strong tertiary size="small" @click="delMenu(row)">删除</n-button>
+            <n-button strong tertiary size="small" title="编辑" @click="editMenu(row)">
+              <template #icon>
+                <n-icon>
+                  <i-iconoir-edit style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button strong tertiary size="small" title="删除" @click="delMenu(row)">
+              <template #icon>
+                <n-icon>
+                  <i-material-symbols-light-delete style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
           </n-space>
         </template>
         <template #menuType="{ row }">
@@ -89,40 +114,60 @@
         :flex-height="false"
         :row-key="(row) => row.id"
       >
+        <template #menuType="{ row }">
+          {{ menuTypeOptions.find((menu) => menu.value === row.menuType)?.label }}
+        </template>
         <template #actions="{ row }">
           <n-space>
             <n-button
               strong
               tertiary
+              title="在当前层级置顶"
               size="small"
               :disabled="row.id === sortList[0].id || isDisable(row, 'up')"
               @click="toTop(row)"
-              >置顶
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-fast-arrow-up style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
             </n-button>
             <n-button
               strong
               tertiary
+              title="在当前层级上移"
               size="small"
               :disabled="row.id === sortList[0].id || isDisable(row, 'up')"
               @click="upSort(row)"
-              >上移</n-button
-            >
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-arrow-up style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
             <n-button
               strong
               tertiary
+              title="在当前层级下移"
               size="small"
               :disabled="row.id === sortList[sortList.length - 1].id || isDisable(row, 'down')"
               @click="downSort(row)"
-              >下移</n-button
-            >
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-arrow-down style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
             <n-button
               strong
               tertiary
+              title="在当前层级置底"
               size="small"
               :disabled="row.id === sortList[sortList.length - 1].id || isDisable(row, 'down')"
               @click="toBottom(row)"
-              >置底</n-button
-            >
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-fast-arrow-down style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
           </n-space>
         </template>
       </CTable>

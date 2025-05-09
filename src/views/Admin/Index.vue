@@ -33,7 +33,7 @@
             ></CommonUpload>
             <template #footer>顶部背景图</template>
           </n-card>
-          <n-card style="width: fit-content">
+          <!-- <n-card style="width: fit-content">
             <CommonUpload
               :key="resourceObj.searchPC"
               v-model:fileUrl="resourceObj.searchPC"
@@ -41,7 +41,7 @@
               @uploadSuccess="(url: string) => updateData(url, 'searchPC')"
             ></CommonUpload>
             <template #footer>搜索框背景图(PC)</template>
-          </n-card>
+          </n-card> -->
           <n-card style="width: fit-content">
             <CommonUpload
               :key="resourceObj.searchH5"
@@ -49,8 +49,9 @@
               :max="1"
               @uploadSuccess="(url: string) => updateData(url, 'searchH5')"
             ></CommonUpload>
-            <template #footer>搜索框背景图(移动端)</template>
+            <template #footer>中间窗帘</template>
           </n-card>
+
           <n-card style="width: fit-content">
             <CommonUpload
               :key="resourceObj.searchBt"
@@ -98,17 +99,40 @@
     <n-card title="友情链接" style="flex: 1">
       <template #header-extra>
         <n-space>
-          <n-button type="primary" @click="() => sortLink()">排序</n-button>
-          <n-button type="primary" @click="() => addLink()">添加</n-button>
+          <n-button type="primary" @click="() => sortLink()"
+            ><template #icon>
+              <n-icon>
+                <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
+              </n-icon>
+            </template>
+            排序</n-button
+          >
+          <n-button type="primary" @click="() => addLink()"
+            ><template #icon>
+              <n-icon>
+                <i-mdi-add style="font-size: 1.1rem; color: #fff" />
+              </n-icon> </template
+            >添加</n-button
+          >
         </n-space>
       </template>
       <CTable :columns="linkColumns" :table-data="linkList" :flex-height="false">
         <template #actions="{ row }">
           <n-space>
-            <n-button strong tertiary size="small" type="primary" @click="addLink(row)"
-              >修改
+            <n-button title="修改" strong tertiary size="small" @click="addLink(row)"
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-edit style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
             </n-button>
-            <n-button strong tertiary size="small" @click="delLink(row)">删除</n-button>
+            <n-button title="删除" strong tertiary size="small" @click="delLink(row)">
+              <template #icon>
+                <n-icon>
+                  <i-material-symbols-light-delete style="font-size: 1.2rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
           </n-space>
         </template>
       </CTable>
@@ -155,34 +179,51 @@
               strong
               tertiary
               size="small"
+              title="置顶"
               :disabled="row.id === sortList[0].id"
               @click="toTop(row)"
-              >置顶
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-fast-arrow-up style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
             </n-button>
             <n-button
               strong
               tertiary
               size="small"
+              title="上移"
               :disabled="row.id === sortList[0].id"
               @click="upSort(row)"
-              >上移</n-button
-            >
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-arrow-up style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
             <n-button
               strong
               tertiary
               size="small"
+              title="下移"
               :disabled="row.id === sortList[sortList.length - 1].id"
               @click="downSort(row)"
-              >下移</n-button
-            >
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-arrow-down style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
             <n-button
               strong
               tertiary
+              title="置底"
               size="small"
               :disabled="row.id === sortList[sortList.length - 1].id"
               @click="toBottom(row)"
-              >置底</n-button
-            >
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-fast-arrow-down style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
           </n-space>
         </template>
       </CTable>
@@ -234,9 +275,9 @@ const getAllResourceList = async () => {
     resourceObj.value.searchPC = res.data?.find((item) => item.code === 'searchPC')?.url || '';
     resourceObj.value.searchH5 = res.data?.find((item) => item.code === 'searchH5')?.url || '';
     resourceObj.value.searchBt = res.data?.find((item) => item.code === 'searchBt')?.url || '';
-    resourceObj.value.zhTitle = res.data?.find((item) => item.code === 'zhTitle')?.name || '';
-    resourceObj.value.enTitle = res.data?.find((item) => item.code === 'enTitle')?.name || '';
-    resourceObj.value.desc = res.data?.find((item) => item.code === 'desc')?.name || '';
+    resourceObj.value.zhTitle = res.data?.find((item) => item.code === 'zhTitle')?.url || '';
+    resourceObj.value.enTitle = res.data?.find((item) => item.code === 'enTitle')?.url || '';
+    resourceObj.value.desc = res.data?.find((item) => item.code === 'desc')?.url || '';
     resourceObj.value.qrcode = res.data?.find((item) => item.code === 'qrcode')?.url || '';
   }
 };
