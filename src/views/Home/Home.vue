@@ -24,7 +24,7 @@
       :carousel-articles="articleList.first"
       :right-articles="articleList.second"
     />
-    <CenterSplit :center-page="resourceObj.centerPage"></CenterSplit>
+    <CenterSplit v-if="isHomePage" :center-page="resourceObj.centerPage"></CenterSplit>
     <ArticleContent
       v-if="isHomePage"
       :carousel-articles="articleList.third"
