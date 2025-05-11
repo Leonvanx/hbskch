@@ -61,12 +61,12 @@ const goHome = () => {
     margin-left: 30px;
     .web-title-cn {
       font-size: 40px;
-      color: #333333;
+      color: #ffffff;
       font-weight: 800;
     }
     .web-title-en {
       font-size: 14px;
-      color: #999999;
+      color: #dddddd;
       font-weight: 400;
     }
   }
