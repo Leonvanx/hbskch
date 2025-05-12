@@ -54,7 +54,7 @@
           <i-mdi-search
             class="pointer"
             style="font-size: 1.5rem; color: #fff; margin-left: 8px"
-            @click="toggleSearchInput"
+            @click="searchArticle()"
           />
           <!-- <span class="search-suffix-btn" @click="searchArticle()">搜一下</span> -->
         </template>
@@ -134,9 +134,7 @@ const searchMenuList = async () => {
 const searchValue = ref('');
 
 const showSearchInput = ref(false);
-const toggleSearchInput = () => {
-  showSearchInput.value = true;
-};
+
 const target = useTemplateRef<HTMLElement>('target');
 onClickOutside(target, () => (showSearchInput.value = false));
 

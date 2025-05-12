@@ -19,6 +19,7 @@
       <h1 class="web-title-cn">{{ props.webTitle }}</h1>
       <div class="web-title-en">{{ props.webTitleEn }}</div>
     </div>
+    <div class="web-desc">{{ props.webDesc }}</div>
   </div>
 </template>
 
@@ -30,6 +31,7 @@ type Props = {
   webTitleEn?: string;
   webLogo?: string;
   bgImg?: string;
+  webDesc?: string;
 };
 const props = withDefaults(defineProps<Props>(), {
   webTitle: '湖北省科技进步促进会',
@@ -49,6 +51,7 @@ const goHome = () => {
   padding: 50px 60px 70px;
   background-color: #fff;
   z-index: 1;
+  background-size: cover;
   // background-color: rgba(0, 0, 0, 0.8);
   .logo {
     height: 60px;
@@ -58,14 +61,19 @@ const goHome = () => {
     margin-left: 30px;
     .web-title-cn {
       font-size: 40px;
-      color: #333333;
+      color: #ffffff;
       font-weight: 800;
     }
     .web-title-en {
       font-size: 14px;
-      color: #999999;
+      color: #dddddd;
       font-weight: 400;
     }
+  }
+  .web-desc {
+    margin-left: 20px;
+    font-size: 18px;
+    color: #333333;
   }
 }
 @media (max-width: 768px) {

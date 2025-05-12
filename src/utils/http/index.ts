@@ -117,7 +117,7 @@ class DefAxios {
     // 响应拦截器
     this.axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => {
-        if (response.data.code !== 0) {
+        if (response.data.code && response.data.code !== 0) {
           msg.error(response.data.msg);
         }
         return response;

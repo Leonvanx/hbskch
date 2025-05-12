@@ -15,6 +15,7 @@
       :webTitle="resourceObj.webTitle"
       :web-title-en="resourceObj.webTitleEn"
       :web-logo="resourceObj.webLogo"
+      :web-desc="resourceObj.webDesc"
       :bg-img="resourceObj.bgImg"
     />
     <NavMenu />
@@ -23,6 +24,7 @@
       :carousel-articles="articleList.first"
       :right-articles="articleList.second"
     />
+    <CenterSplit v-if="isHomePage" :center-page="resourceObj.centerPage"></CenterSplit>
     <ArticleContent
       v-if="isHomePage"
       :carousel-articles="articleList.third"
@@ -38,6 +40,7 @@
 import HomeHeader from './components/Header.vue';
 import ArticleContent from './components/ArticleContent.vue';
 import HomeBottom from './components/HomeBottom.vue';
+import CenterSplit from './components/CenterSplit.vue';
 import { useRoute } from 'vue-router';
 import type { Menu, Page } from '@/types';
 import { searchMenu, searchResource, searchPage } from '@/apis';
@@ -60,15 +63,19 @@ const resourceObj = ref({
   webTitleEn: '',
   webLogo: '',
   bgImg: '',
+  webDesc: '',
+  centerPage: '',
 });
 
 const queryResources = () => {
   searchResource().then((res) => {
     if (res.data) {
-      resourceObj.value.webTitle = res.data.filter((it) => it.code === 'zhTitle')[0].name;
-      resourceObj.value.webTitleEn = res.data.filter((it) => it.code === 'enTitle')[0].name;
+      resourceObj.value.webTitle = res.data.filter((it) => it.code === 'zhTitle')[0].url;
+      resourceObj.value.webTitleEn = res.data.filter((it) => it.code === 'enTitle')[0].url;
       resourceObj.value.webLogo = res.data.filter((it) => it.code === 'logo')[0].url;
       resourceObj.value.bgImg = res.data.filter((it) => it.code === 'topbg')[0].url;
+      resourceObj.value.webDesc = res.data.filter((it) => it.code === 'desc')[0].url;
+      resourceObj.value.centerPage = res.data.filter((it) => it.code === 'searchH5')[0].url;
     }
   });
 };

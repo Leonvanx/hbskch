@@ -12,6 +12,7 @@
 <template>
   <div class="article-list flex-column">
     <div class="title">
+      <i-mdi-location></i-mdi-location>
       {{ `${route.query.searchWord || route.query.name || '文章列表'}` }}
     </div>
     <template v-if="pages.total">
@@ -24,7 +25,7 @@
           <span class="article-title" @click="chooseAricle(item.id)">
             <n-highlight
               :text="item.title"
-              :patterns="searchOption.searchWord ? [searchOption.searchWord] : undefined" />
+              :patterns="route.query.searchWord ? [route.query.searchWord as string] : undefined" />
             {{
           }}</span>
           <span class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
@@ -51,11 +52,10 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import { searchPage } from '@/apis';
-import type { Page, PageOptions } from '@/types';
+import type { Page } from '@/types';
 import dayjs from 'dayjs';
 const route = useRoute();
 const router = useRouter();
-const searchOption = ref<PageOptions>({});
 const pages = ref({
   page: 1,
   size: 10,
@@ -112,6 +112,10 @@ watch(route, () => {
   // border-bottom: 1px solid #afadad;
   padding: 27px 5px;
   text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
 }
 .list {
   min-height: 400px;
