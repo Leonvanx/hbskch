@@ -336,6 +336,7 @@ const upSort = (row: Menu) => {
     sortList.value.splice(index - 1, 0, row);
   } else {
     const indexRow = findParentMain(row);
+    debugger;
     if (sortList.value[indexRow].children) {
       const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
       if (index !== 0) {
@@ -363,7 +364,7 @@ const downSort = (row: Menu) => {
 // 寻找对应父级
 const findParentMain = (row: Menu) => {
   const index = sortList.value.findIndex((item) =>
-    item.children ? item.children[0].parentId === row.parentId : -1,
+    item.children && item.children.length > 0 ? item.children[0].parentId === row.parentId : false,
   );
   return index;
 };

@@ -52,36 +52,59 @@ const goHome = () => {
   background-color: #fff;
   z-index: 1;
   background-size: cover;
+
   // background-color: rgba(0, 0, 0, 0.8);
   .logo {
     height: 60px;
     width: auto;
   }
+
   .web-title {
     margin-left: 30px;
+
     .web-title-cn {
-      font-size: 40px;
+      white-space: nowrap;
       color: #ffffff;
       font-weight: 800;
     }
+
     .web-title-en {
-      font-size: 14px;
       color: #dddddd;
       font-weight: 400;
     }
+
+    @media (min-width: 768px) {
+      .web-title-cn {
+        font-size: 40px;
+      }
+
+      .web-title-en {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .web-title-cn {
+        font-size: 16px;
+      }
+
+      .web-title-en {
+        font-size: 10px;
+      }
+    }
   }
+
   .web-desc {
     margin-left: 20px;
-    font-size: 18px;
     color: #333333;
-  }
-}
-@media (max-width: 768px) {
-  .home-header .left .web-title .web-title-cn {
-    font-size: 16px;
-  }
-  .home-header.left.web-title.web-title-en {
-    font-size: 10px;
+
+    @media (min-width: 768px) {
+      font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+    }
   }
 }
 </style>
