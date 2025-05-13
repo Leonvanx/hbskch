@@ -184,7 +184,7 @@
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Menu } from '@/types';
-import { searchMenu, deleteMenu, saveMenu, sortMenu } from '@/apis/admin';
+import { searchMenu, deleteMenu, saveMenu, saveMainMenu, sortMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
 const parendMenuOptions = ref<{ label: string; value: number }[]>();
 const columns = [
@@ -420,14 +420,29 @@ const submit = () => {
     if (error) {
       return;
     }
-    const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
-    saveMenu(params).then((data) => {
-      if (data.code === 0) {
-        message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
-        drawerVisible.value = false;
-        searchData();
-      }
-    });
+    if (editTarget.value.menuType === 'main') {
+      const params = {
+        menuId: editTarget.value.id,
+      };
+      saveMainMenu(params, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      }).then((data) => {
+        if (data.code === 0) {
+          message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
+          drawerVisible.value = false;
+          searchData();
+        }
+      });
+    } else {
+      const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
+      saveMenu(params).then((data) => {
+        if (data.code === 0) {
+          message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
+          drawerVisible.value = false;
+          searchData();
+        }
+      });
+    }
   });
 };
 const closed = () => {
