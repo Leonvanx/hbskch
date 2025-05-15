@@ -11,7 +11,7 @@
 -->
 <template>
   <div
-    class="home-header flex-row align-center"
+    class="home-header flex-row align-center posr"
     :style="{ backgroundImage: props.bgImg ? `url(${props.bgImg})` : '' }"
   >
     <img class="logo pointer" :src="props.webLogo" alt="" @click="goHome" />
@@ -19,7 +19,13 @@
       <h1 class="web-title-cn">{{ props.webTitle }}</h1>
       <div class="web-title-en">{{ props.webTitleEn }}</div>
     </div>
-    <div class="web-desc">{{ props.webDesc }}</div>
+    <CTextRoll
+      v-if="isMobile && props.webDesc"
+      class="text-roll"
+      :text="props.webDesc"
+      :speed="15"
+    />
+    <div v-else class="web-desc">{{ props.webDesc }}</div>
   </div>
 </template>
 
@@ -32,11 +38,14 @@ type Props = {
   webLogo?: string;
   bgImg?: string;
   webDesc?: string;
+  isMobile?: boolean;
 };
 const props = withDefaults(defineProps<Props>(), {
   webTitle: '湖北省科技进步促进会',
   webTitleEn: 'Hubei Association for Promoting the Progress of Science and Technology',
   webLogo: headerIcon,
+  bgImg: '',
+  webDesc: '',
 });
 
 const goHome = () => {
@@ -51,8 +60,11 @@ const goHome = () => {
   padding: 50px 60px 70px;
   background-color: #fff;
   z-index: 1;
-  background-size: cover;
-
+  // background-size: cover;
+  background-size: 100% 100%;
+  @media (max-width: 768px) {
+    padding: 16px 20px 40px;
+  }
   // background-color: rgba(0, 0, 0, 0.8);
   .logo {
     height: 60px;
@@ -75,7 +87,7 @@ const goHome = () => {
 
     @media (min-width: 768px) {
       .web-title-cn {
-        font-size: 40px;
+        font-size: clamp(14px, 2vw, 72px);
       }
 
       .web-title-en {
@@ -97,14 +109,10 @@ const goHome = () => {
   .web-desc {
     margin-left: 20px;
     color: #333333;
-
-    @media (min-width: 768px) {
-      font-size: 18px;
-    }
-
-    @media (max-width: 768px) {
-      font-size: 14px;
-    }
+  }
+  .text-roll {
+    position: absolute;
+    bottom: 0px;
   }
 }
 </style>
