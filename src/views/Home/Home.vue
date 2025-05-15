@@ -17,6 +17,7 @@
       :web-logo="resourceObj.webLogo"
       :web-desc="resourceObj.webDesc"
       :bg-img="resourceObj.bgImg"
+      :isMobile="isMobile"
     />
     <NavMenu />
     <ArticleContent
@@ -29,7 +30,7 @@
       v-if="isHomePage"
       :carousel-articles="articleList.third"
       :right-articles="articleList.fourth"
-      is-row-reverse
+      :is-row-reverse="!isMobile"
     />
     <RouterView v-if="!isHomePage" />
     <HomeBottom />
@@ -54,6 +55,18 @@ const searchMenuList = async () => {
     menuList.value = res.data || [];
   }
 };
+
+const { width } = useWindowSize();
+const isMobile = computed(() => {
+  const userAgent = navigator.userAgent;
+  const mobileAgents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
+  for (let i = 0; i < mobileAgents.length; i++) {
+    if (userAgent.indexOf(mobileAgents[i]) > -1) {
+      return true;
+    }
+  }
+  return width.value < 768;
+});
 
 const isHomePage = computed(() => {
   return route.name === 'home';
