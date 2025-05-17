@@ -93,9 +93,13 @@
             />
           </n-form-item>
         </template>
-        <!-- <n-form-item path="orderNum" label="展示排序">
-          <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
-        </n-form-item> -->
+        <n-form-item path="showType" label="展示类型">
+          <n-select
+            v-model:value="editTarget.showType"
+            :options="showTypeOptions"
+            placeholder="请选择展示类型"
+          />
+        </n-form-item>
       </n-form>
     </n-drawer-content>
   </n-drawer>
@@ -187,6 +191,20 @@ import type { Menu } from '@/types';
 import { searchMenu, deleteMenu, saveMenu, saveMainMenu, sortMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
 const parendMenuOptions = ref<{ label: string; value: number }[]>();
+const showTypeOptions = [
+  {
+    label: '首页',
+    value: 0,
+  },
+  {
+    label: '文章列表',
+    value: 1,
+  },
+  {
+    label: '单独文章',
+    value: 2,
+  },
+];
 const columns = [
   {
     title: '菜单名称',
@@ -196,10 +214,10 @@ const columns = [
     title: '菜单类型',
     key: 'menuType',
   },
-  // {
-  //   title: '展示顺序',
-  //   key: 'orderNum',
-  // },
+  {
+    title: '展示类型',
+    key: 'showType',
+  },
   {
     title: '操作',
     key: 'actions',
@@ -224,12 +242,15 @@ const basicEditRules: FormRules = {
   name: {
     required: true,
     message: '请输入菜单名称',
-    trigger: 'blur',
   },
+
   menuType: {
     required: true,
     message: '请选择菜单类型',
-    trigger: 'blur',
+  },
+  showType: {
+    required: true,
+    message: '请选择菜单类型',
   },
 };
 const editRules = computed(() => {
@@ -239,7 +260,7 @@ const editRules = computed(() => {
         parentId: {
           required: true,
           message: '请选择父级菜单',
-          trigger: 'blur',
+          trigger: 'blur,change',
           validator: (rule, value: number) => {
             if (!value) {
               return new Error('请选择父级菜单');
@@ -257,6 +278,7 @@ const editTarget = ref<Menu>({
   menuType: 'main',
   // @ts-expect-error 此处忽略类型检查，新增不用id
   parentId: null,
+  showType: 1,
 });
 const message = useMessage();
 const dialog = useDialog();
@@ -336,7 +358,6 @@ const upSort = (row: Menu) => {
     sortList.value.splice(index - 1, 0, row);
   } else {
     const indexRow = findParentMain(row);
-    debugger;
     if (sortList.value[indexRow].children) {
       const index = sortList.value[indexRow].children.findIndex((item) => item.id === row.id);
       if (index !== 0) {

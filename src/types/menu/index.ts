@@ -7,6 +7,7 @@ export interface Menu {
   status?: number;
   children?: Menu[];
   menuType?: string;
+  showType?: number;
 }
 export interface MainMenu {
   menuId: number;
