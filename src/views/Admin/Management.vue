@@ -30,13 +30,15 @@
             placeholder="请输入标题"
           />
         </n-form-item>
-        <n-form-item path="menuId" label="子菜单">
-          <n-select
+        <n-form-item path="menuId" label="菜单">
+          <n-tree-select
             v-model:value="searchTarget.menuId"
+            key-field="id"
+            label-field="name"
             clearable
-            style="width: 150px"
-            :options="subMenuList"
-            placeholder="请选择子菜单"
+            style="width: 200px"
+            :options="menuList"
+            placeholder="请选择菜单"
           />
         </n-form-item>
         <n-form-item :show-label="false">
@@ -64,7 +66,9 @@
     <n-card class="table-part">
       <CTable :columns="columns" :table-data="tableData">
         <template #menuId="{ row }">
-          {{ subMenuList.find((menu) => menu.value === row.menuId)?.label }}
+          <!-- 从菜单里面找到对应的子菜单 -->
+
+          {{ serachMenuName(row) }}
         </template>
         <template #coverImage="{ row }">
           <template v-if="row.coverImage">
@@ -150,11 +154,14 @@
         <n-form-item path="coverImage" label="展示图">
           <CommonUpload v-model:fileUrl="editTarget.coverImage" :max="1"></CommonUpload>
         </n-form-item>
-        <n-form-item path="menuId" label="子菜单">
-          <n-select
+        <n-form-item path="menuId" label="展示菜单">
+          <n-tree-select
             v-model:value="editTarget.menuId"
-            :options="subMenuList"
-            placeholder="请选择子菜单"
+            key-field="id"
+            label-field="name"
+            clearable
+            :options="menuList"
+            placeholder="请选择菜单"
           />
         </n-form-item>
         <!-- <n-form-item path="orderNum" label="展示排序">
@@ -175,7 +182,7 @@
             placeholder="请选择展示的版块"
           />
         </n-form-item>
-        <n-form-item path="status" label="是否展示在子菜单">
+        <n-form-item path="status" label="是否展示在菜单">
           <n-switch
             v-model:value="editTarget.status"
             :checked-value="1"
@@ -232,14 +239,17 @@ const columns = [
   {
     title: '文章标题',
     key: 'title',
+    width: '200px',
   },
   {
-    title: '子菜单',
+    title: '菜单',
     key: 'menuId',
+    width: '100px',
   },
   {
     title: '展示图',
     key: 'coverImage',
+    width: '100px',
   },
   {
     title: '首页展示',
@@ -251,16 +261,19 @@ const columns = [
     width: '150px',
   },
   {
-    title: '子菜单展示',
+    title: '菜单展示',
     key: 'status',
   },
   {
     title: '更新时间',
     key: 'updateTime',
+    width: '200px',
   },
   {
     title: '操作',
     key: 'actions',
+    width: '150px',
+    fixed: 'right',
   },
 ];
 
@@ -383,6 +396,25 @@ const closed = () => {
   drawerVisible.value = false;
   editTarget.value = {};
 };
+const serachMenuName = (row) => {
+  // 从菜单内找到对应的
+  let targetMenuName: string;
+  const resolveMenu = (menus: Menu[]) => {
+    for (let i = 0; i < menus.length; i++) {
+      const menu = menus[i];
+      if (menu.id == row.menuId) {
+        targetMenuName = menu.name;
+        break;
+      } else {
+        if (menu.children && menu.children.length > 0) {
+          resolveMenu(menu.children);
+        }
+      }
+    }
+  };
+  resolveMenu(menuList.value);
+  return targetMenuName;
+};
 const subMenuList = ref<{ value?: number; label?: string }[]>([]);
 const showTypeList = ref<{ value?: number; label?: string }[]>([
   { value: 1, label: '首版Banner图' },
@@ -390,6 +422,7 @@ const showTypeList = ref<{ value?: number; label?: string }[]>([
   { value: 3, label: '二版Banner图' },
   { value: 4, label: '二版列表' },
 ]);
+const menuList = ref<Menu[]>([]);
 const resolveMenu = (menuList: Menu[]) => {
   menuList.map((menu) => {
     if (menu.children && menu.children.length > 0) {
@@ -401,6 +434,7 @@ const resolveMenu = (menuList: Menu[]) => {
 };
 const getAllSubMenu = async () => {
   const data = await searchMenu();
+  menuList.value = data.data!;
   resolveMenu(data.data!);
 };
 onMounted(async () => {

@@ -206,6 +206,7 @@ onMounted(() => {
     height: 40px;
     line-height: 40px;
     cursor: pointer;
+    flex-shrink: 0;
     // &:hover {
     //   font-weight: 600;
     // }
