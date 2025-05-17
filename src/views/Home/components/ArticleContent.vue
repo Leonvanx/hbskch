@@ -16,9 +16,9 @@
         <div v-for="item in carouselArticles" :key="item.id" class="article-item posr">
           <img class="carousel-img" :src="item.coverImage" />
           <div class="article-title-wrapper">
-            <span class="article-title pointer" @click="clickArticle(item.id)">
-              {{ item.title }}
-            </span>
+            <div class="article-title pointer" @click="clickArticle(item.id)">
+              <span>{{ item.title }}</span>
+            </div>
           </div>
         </div>
         <template #dots="{ total, currentIndex, to }">
@@ -41,7 +41,7 @@
         @click="clickArticle(item.id)"
       >
         <div class="article-title els">
-          {{ item.title }}
+          <span>{{ item.title }}</span>
         </div>
         <div class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</div>
       </div>
@@ -78,6 +78,7 @@ onMounted(() => {});
   gap: 40px;
   margin: 40px auto;
   padding-bottom: 20px;
+
   &.reverse-row {
     flex-direction: row-reverse;
   }
@@ -111,20 +112,27 @@ onMounted(() => {});
 
   .article-item {
     .article-title-wrapper {
-      width: 300px;
-      background-color: #ffffff90;
-      padding: 12px 16px;
+      width: 100%;
+      height: 50px;
+      background-color: #38383875;
+      padding: 12px 5%;
       position: absolute;
-      min-height: 90px;
-      left: 12px;
-      bottom: 12px;
+      // left: 12px;
+      bottom: 0px;
       transition: all 0.3s;
+      /* 显示省略号 */
       .article-title {
+        width: 500px;
+        white-space: nowrap;
+        /* 防止文本换行 */
+        overflow: hidden;
+        /* 隐藏溢出的文本 */
+        text-overflow: ellipsis;
         font-size: 14px;
         font-weight: 600;
-        margin-top: 6px;
-        color: #1a1a1a;
+        color: #f7f7f7;
       }
+
       .article-title:hover {
         // text-decoration: underline;
       }
@@ -135,13 +143,15 @@ onMounted(() => {});
       height: 382px;
       object-fit: cover;
       transition: all 0.3s;
+
       &:hover {
         transform: scale(1.1);
       }
     }
+
     &:hover {
       .article-title-wrapper {
-        background-color: #ffffff;
+        // background-color: #ffffff;
       }
     }
   }
@@ -150,10 +160,12 @@ onMounted(() => {});
 .article-list {
   flex: 1;
   padding: 3px;
+
   .article-list-item {
     gap: 16px;
     padding: 0 15px;
     border-bottom: 1px solid #eeeeee;
+
     &:hover {
       .article-title {
         color: #18a058;
@@ -179,8 +191,8 @@ onMounted(() => {});
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: 20px;
-  left: 24px;
+  bottom: 10px;
+  left: 32.5px;
 
   li {
     display: inline-block;
@@ -196,7 +208,7 @@ onMounted(() => {});
 
     &.is-active {
       width: 40px;
-      background: #18a058;
+      background: #ffffff;
     }
   }
 }
