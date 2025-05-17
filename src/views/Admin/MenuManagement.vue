@@ -53,6 +53,9 @@
         <template #menuType="{ row }">
           {{ menuTypeOptions.find((menu) => menu.value === row.menuType)?.label }}
         </template>
+        <template #showType="{ row }">
+          {{ showTypeOptions.find((menu) => menu.value === row.showType)?.label }}
+        </template>
       </CTable>
     </n-card>
   </n-flex>
@@ -120,6 +123,9 @@
       >
         <template #menuType="{ row }">
           {{ menuTypeOptions.find((menu) => menu.value === row.menuType)?.label }}
+        </template>
+        <template #showType="{ row }">
+          {{ showTypeOptions.find((menu) => menu.value === row.showType)?.label }}
         </template>
         <template #actions="{ row }">
           <n-space>
