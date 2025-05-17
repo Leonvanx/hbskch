@@ -24,8 +24,18 @@
       class="text-roll"
       :text="props.webDesc"
       :speed="15"
+      color="#f2f2f2"
     />
-    <div v-else class="web-desc">{{ props.webDesc }}</div>
+    <div v-else class="web-desc">
+      <CTextRoll
+        direction="vertical"
+        class="text-roll"
+        :text="props.webDesc"
+        :speed="15"
+        color="#f2f2f2"
+        show-height="100%"
+      />
+    </div>
   </div>
 </template>
 
@@ -87,7 +97,7 @@ const goHome = () => {
 
     @media (min-width: 768px) {
       .web-title-cn {
-        font-size: clamp(14px, 2vw, 72px);
+        font-size: clamp(14px, 3vw, 72px);
       }
 
       .web-title-en {
@@ -108,8 +118,14 @@ const goHome = () => {
 
   .web-desc {
     margin-left: 20px;
+    margin-top: 20px;
     color: #f2f2f2;
-    padding-top: 20px;
+    flex: 1;
+    position: relative;
+    height: 80px;
+    padding: 5px;
+    border: 1px dotted #f2f2f230;
+    border-radius: 3px;
   }
   .text-roll {
     position: absolute;

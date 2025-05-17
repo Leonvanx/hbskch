@@ -10,7 +10,7 @@
   修改时间：
 -->
 <template>
-  <div ref="containerRef" class="text-scroll-container">
+  <div ref="containerRef" class="text-scroll-container" :style="{ height: `${showHeight}` }">
     <div
       ref="contentRef"
       class="text-scroll-content"
@@ -34,6 +34,10 @@ export default defineComponent({
     text: {
       type: String,
       required: true,
+    },
+    showHeight: {
+      type: String,
+      default: '30px',
     },
     speed: {
       type: Number,
@@ -172,7 +176,6 @@ export default defineComponent({
     span {
       display: inline-block;
       margin-right: 20px; // 水平滚动时文字间距
-      color: #f2f2f2;
       .vertical-scroll & {
         display: block;
         margin-bottom: 20px; // 垂直滚动时文字间距
