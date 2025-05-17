@@ -11,33 +11,35 @@
 -->
 <template>
   <!-- 桌面端菜单 -->
-  <div v-if="!isMobile" class="nav-menu-wrapper flex-row align-center">
-    <div
-      v-for="item in menuList"
-      :key="item.id"
-      class="nav-menu-item"
-      @mouseenter="showSubMenu(item.id)"
-      @mouseleave="hideSubMenu(item.id)"
-    >
-      <div :class="{ 'menu-name': item.name !== '首页' }" @click="clickMainMenu(item.name)">
-        {{ item.name }}
-      </div>
-      <!-- 使用 transition 组件添加淡入淡出动画 -->
-      <transition name="sub-menu-fade">
-        <div
-          v-if="showingSubMenus[item.id] && item.children && item.children.length > 0"
-          class="sub-menu"
-        >
-          <div
-            v-for="subItem in item.children"
-            :key="subItem.id"
-            class="sub-menu-item"
-            v-on:click="clickSubMenu(subItem.id, subItem.name, item.name)"
-          >
-            {{ subItem.name }}
-          </div>
+  <div v-if="!isMobile" class="nav-menu-wrapper">
+    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0; overflow: auto">
+      <div
+        v-for="item in menuList"
+        :key="item.id"
+        class="nav-menu-item"
+        @mouseenter="showSubMenu(item.id)"
+        @mouseleave="hideSubMenu(item.id)"
+      >
+        <div :class="{ 'menu-name': item.name !== '首页' }" @click="clickMainMenu(item.name)">
+          {{ item.name }}
         </div>
-      </transition>
+        <!-- 使用 transition 组件添加淡入淡出动画 -->
+        <transition name="sub-menu-fade">
+          <div
+            v-if="showingSubMenus[item.id] && item.children && item.children.length > 0"
+            class="sub-menu"
+          >
+            <div
+              v-for="subItem in item.children"
+              :key="subItem.id"
+              class="sub-menu-item"
+              v-on:click="clickSubMenu(subItem.id, subItem.name, item.name)"
+            >
+              {{ subItem.name }}
+            </div>
+          </div>
+        </transition>
+      </div>
     </div>
     <div class="search-wrapper flex-row align-center">
       <!-- <transition name="search-slide"> -->
@@ -193,9 +195,8 @@ onMounted(() => {
 <style scoped lang="scss">
 .nav-menu-wrapper {
   width: 100%;
-  padding: 10px 60px;
+  padding: 10px 300px 10px 60px;
   background-size: 100% 100%;
-  gap: 30px;
   background-color: #1f4d83;
   position: relative;
   .nav-menu-item {
@@ -253,7 +254,8 @@ onMounted(() => {
   }
   .search-wrapper {
     position: absolute;
-    right: 60px;
+    right: 30px;
+    top: 10px;
     .search-icon {
       width: 20px;
       height: 20px;
