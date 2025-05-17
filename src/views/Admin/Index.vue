@@ -264,7 +264,7 @@ const linkList = ref<Link[]>([]);
 const sortList = ref<Link[]>([]);
 const modalVisible = ref(false);
 const linkFormRef = ref<FormInst | null>();
-const urlForm = ref<Link>({ name: '', url: '', orderNum: 1 });
+const urlForm = ref<Link>({ name: '', url: '', orderNum: 1, enName: '' });
 const message = useMessage();
 const dialog = useDialog();
 const resourceObj = ref({
@@ -377,10 +377,10 @@ const submitSort = async () => {
 };
 const addLink = (row?: Link) => {
   if (row) {
-    const { name, url, orderNum, id } = row;
-    urlForm.value = { name, url, orderNum, id };
+    const { name, url, orderNum, id, enName } = row;
+    urlForm.value = { name, url, orderNum, id, enName };
   } else {
-    urlForm.value = { name: '', url: '', orderNum: 1 };
+    urlForm.value = { name: '', url: '', orderNum: 1, enName: '' };
   }
   modalVisible.value = true;
 };
