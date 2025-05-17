@@ -10,7 +10,7 @@
   修改时间：
 -->
 <template>
-  <div class="home-bottom">
+  <div class="home-bottom" :style="{ backgroundImage: `url(${searchBt})` }">
     <!-- 三部分，友情链接，二维码，详细信息，底部说明 -->
     <div class="contain">
       <div class="footer-cont">
@@ -74,6 +74,7 @@ import { searchFriendLink, searchResource } from '@/apis/admin';
 
 const footerLinks = ref<Link[]>([]);
 const qrCode = ref('');
+const searchBt = ref('');
 const connectInfo = ref({
   phone: '13545341627',
   name: '张怿',
@@ -93,14 +94,22 @@ const searchQRcode = async () => {
     qrCode.value = res.data?.[0]?.url || '';
   }
 };
+const searchBottomPic = async () => {
+  const res = await searchResource('searchBt');
+  if (res.code === 0) {
+    searchBt.value = res.data?.[0]?.url || '';
+  }
+};
 getLinkList();
 searchQRcode();
+searchBottomPic();
 </script>
 
 <style scoped lang="scss">
 .home-bottom {
-  background: #f2f2f2;
+  background-color: #f2f2f2;
   flex-shrink: 0;
+  background-size: cover;
   font-size: 14px;
   line-height: 1.5;
 }
