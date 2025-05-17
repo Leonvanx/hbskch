@@ -12,6 +12,7 @@ export interface Link {
   url: string;
   orderNum?: number;
   delFlag?: number;
+  enName?: string;
   createTime?: string;
   updateTime?: string;
 }

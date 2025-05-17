@@ -23,7 +23,8 @@
             :style="{ backgroundImage: `url(${footerPic})` }"
             @click="jumpTo(item.url)"
           >
-            <div>{{ item.name }}</div>
+            <div class="cn-name">{{ item.name }}</div>
+            <div class="en-name">{{ item.enName }}</div>
           </li>
         </ul>
       </div>
@@ -89,11 +90,23 @@ searchLinkPic();
     background-size: cover;
     border-radius: 5px;
     font-size: 14px;
-    transition: all 0.3s;
     color: #fff;
+    .cn-name {
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .en-name {
+      transition: all 0.3s;
+      font-size: 10px;
+    }
     &:hover {
       cursor: pointer;
-      font-size: 16px;
+      .cn-name {
+        font-size: 16px;
+      }
+      .en-name {
+        font-size: 12px;
+      }
     }
   }
 }

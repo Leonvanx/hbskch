@@ -150,7 +150,7 @@
   <n-modal v-model:show="modalVisible" @mask-click="cancel">
     <n-card
       style="width: 600px"
-      title="新增链接"
+      :title="urlForm.id ? '编辑' : '新增链接'"
       :bordered="false"
       size="huge"
       role="dialog"
@@ -159,6 +159,9 @@
       <n-form ref="linkFormRef" :model="urlForm" :rules="rules" label-width="100px">
         <n-form-item label="链接名称" path="name">
           <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>
+        </n-form-item>
+        <n-form-item label="链接名称" path="enName">
+          <n-input v-model:value="urlForm.enName" placeholder="请输入链接英文名"></n-input>
         </n-form-item>
         <n-form-item label="链接地址" path="url">
           <n-input v-model:value="urlForm.url" placeholder="请输入链接地址"></n-input>
@@ -385,6 +388,10 @@ const linkColumns = [
   {
     title: '链接名称',
     key: 'name',
+  },
+  {
+    title: '链接英文名',
+    key: 'enName',
   },
   {
     title: '链接地址',
