@@ -63,6 +63,15 @@
           </n-card>
           <n-card style="width: fit-content">
             <CommonUpload
+              :key="resourceObj.footerPic"
+              v-model:fileUrl="resourceObj.footerPic"
+              :max="1"
+              @uploadSuccess="(url: string) => updateData(url, 'footerPic')"
+            ></CommonUpload>
+            <template #footer>友情链接背景</template>
+          </n-card>
+          <n-card style="width: fit-content">
+            <CommonUpload
               :key="resourceObj.qrcode"
               v-model:fileUrl="resourceObj.qrcode"
               :max="1"
@@ -265,6 +274,7 @@ const resourceObj = ref({
   enTitle: '',
   desc: '',
   qrcode: '',
+  footerPic: '',
 });
 const sortVisible = ref(false);
 const getAllResourceList = async () => {
@@ -279,6 +289,7 @@ const getAllResourceList = async () => {
     resourceObj.value.enTitle = res.data?.find((item) => item.code === 'enTitle')?.url || '';
     resourceObj.value.desc = res.data?.find((item) => item.code === 'desc')?.url || '';
     resourceObj.value.qrcode = res.data?.find((item) => item.code === 'qrcode')?.url || '';
+    resourceObj.value.footerPic = res.data?.find((item) => item.code === 'footerPic')?.url || '';
   }
 };
 const updateData = async (value: string, code: string) => {

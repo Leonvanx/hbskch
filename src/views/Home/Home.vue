@@ -33,6 +33,7 @@
       :is-row-reverse="!isMobile"
     />
     <RouterView v-if="!isHomePage" />
+    <FriendLink />
     <HomeBottom />
   </div>
 </template>
@@ -42,6 +43,7 @@ import HomeHeader from './components/Header.vue';
 import ArticleContent from './components/ArticleContent.vue';
 import HomeBottom from './components/HomeBottom.vue';
 import CenterSplit from './components/CenterSplit.vue';
+import FriendLink from './components/friendLink.vue';
 import { useRoute } from 'vue-router';
 import type { Menu, Page } from '@/types';
 import { searchMenu, searchResource, searchPage } from '@/apis';

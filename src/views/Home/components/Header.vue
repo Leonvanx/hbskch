@@ -108,11 +108,13 @@ const goHome = () => {
 
   .web-desc {
     margin-left: 20px;
-    color: #333333;
+    color: #f2f2f2;
+    padding-top: 20px;
   }
   .text-roll {
     position: absolute;
     bottom: 0px;
+    color: #f2f2f2;
   }
 }
 </style>

@@ -159,7 +159,6 @@ export default defineComponent({
   .text-scroll-content {
     position: absolute;
     white-space: nowrap;
-
     &.horizontal-scroll {
       display: flex;
       align-items: center;
@@ -173,7 +172,7 @@ export default defineComponent({
     span {
       display: inline-block;
       margin-right: 20px; // 水平滚动时文字间距
-
+      color: #f2f2f2;
       .vertical-scroll & {
         display: block;
         margin-bottom: 20px; // 垂直滚动时文字间距

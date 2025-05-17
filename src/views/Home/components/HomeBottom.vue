@@ -14,12 +14,6 @@
     <!-- 三部分，友情链接，二维码，详细信息，底部说明 -->
     <div class="contain">
       <div class="footer-cont">
-        <ul class="footer-links">
-          <!-- 友情链接 -->
-          <li v-for="(item, index) in footerLinks" :key="index" class="link-one">
-            <a :href="item.url" target="_blank">{{ item.name }}</a>
-          </li>
-        </ul>
         <div class="footer-info">
           <!--二维码，注册信息，联系方式 -->
           <div class="footer-pic">
@@ -69,10 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Link } from '@/types';
-import { searchFriendLink, searchResource } from '@/apis/admin';
+import { searchResource } from '@/apis/admin';
 
-const footerLinks = ref<Link[]>([]);
 const qrCode = ref('');
 const searchBt = ref('');
 const connectInfo = ref({
@@ -82,12 +74,7 @@ const connectInfo = ref({
   address: '武汉市武昌区洪山路2号科教大厦A座602',
   qq: '126951900',
 });
-const getLinkList = async () => {
-  const res = await searchFriendLink();
-  if (res.code === 0) {
-    footerLinks.value = res.data || [];
-  }
-};
+
 const searchQRcode = async () => {
   const res = await searchResource('qrCode');
   if (res.code === 0) {
@@ -100,7 +87,6 @@ const searchBottomPic = async () => {
     searchBt.value = res.data?.[0]?.url || '';
   }
 };
-getLinkList();
 searchQRcode();
 searchBottomPic();
 </script>
@@ -112,13 +98,14 @@ searchBottomPic();
   background-size: cover;
   font-size: 14px;
   line-height: 1.5;
+  padding-top: 30px;
 }
 .contain {
   padding: 0 20px;
   margin: 0 auto;
 }
 .footer-cont {
-  padding: 30px 0 48px 0;
+  padding: 0px 0 48px 0;
 }
 .footer-links {
   margin: 0 -16px;
@@ -130,9 +117,8 @@ searchBottomPic();
   flex-wrap: wrap;
 
   .link-one {
-    margin: 0 16px;
     a {
-      color: #000000;
+      color: #ffffff;
       white-space: nowrap;
       text-decoration: none;
       font-size: 14px;
@@ -173,7 +159,7 @@ searchBottomPic();
   }
   p {
     font-size: 12px;
-    color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
   }
 }
 .footer-zc {
@@ -182,11 +168,11 @@ searchBottomPic();
   justify-content: center;
   gap: 10px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
 }
 .footer-tips {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
   margin-top: 20px;
   span {
     padding: 10px 0;

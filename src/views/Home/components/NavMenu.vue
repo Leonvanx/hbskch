@@ -195,7 +195,7 @@ onMounted(() => {
   width: 100%;
   padding: 10px 60px;
   background-size: 100% 100%;
-  gap: 80px;
+  gap: 30px;
   background-color: #1f4d83;
   position: relative;
   .nav-menu-item {
