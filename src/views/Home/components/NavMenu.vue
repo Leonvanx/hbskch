@@ -12,7 +12,7 @@
 <template>
   <!-- 桌面端菜单 -->
   <div v-if="!isMobile" class="nav-menu-wrapper">
-    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0">
+    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0; overflow: auto hidden">
       <div
         v-for="item in menuList"
         :key="item.id"
