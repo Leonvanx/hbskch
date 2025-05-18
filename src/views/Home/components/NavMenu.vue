@@ -12,7 +12,7 @@
 <template>
   <!-- 桌面端菜单 -->
   <div v-if="!isMobile" class="nav-menu-wrapper">
-    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0; overflow: auto">
+    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0">
       <div
         v-for="item in menuList"
         :key="item.id"
@@ -20,7 +20,10 @@
         @mouseenter="showSubMenu(item.id)"
         @mouseleave="hideSubMenu(item.id)"
       >
-        <div :class="{ 'menu-name': item.name !== '首页' }" @click="clickMainMenu(item.name)">
+        <div
+          :class="{ 'menu-name': item.name !== '首页' }"
+          @click="clickMainMenu(item.name, item.id, item.showType)"
+        >
           {{ item.name }}
         </div>
         <!-- 使用 transition 组件添加淡入淡出动画 -->
@@ -33,7 +36,7 @@
               v-for="subItem in item.children"
               :key="subItem.id"
               class="sub-menu-item"
-              v-on:click="clickSubMenu(subItem.id, subItem.name, item.name)"
+              v-on:click="clickSubMenu(subItem.id, subItem.showType, subItem.name, item.name)"
             >
               {{ subItem.name }}
             </div>
@@ -79,7 +82,7 @@
               ></path>
             </svg>
           </n-icon>
-          <span style="margin-left: 5px" @click="clickMainMenu('首页')">首页</span>
+          <span style="margin-left: 5px" @click="clickMainMenu('首页', 0, 0)">首页</span>
         </div>
         <n-collapse default-expanded-names="1" accordion class="mobile-menu-wrapper">
           <n-collapse-item
@@ -93,7 +96,7 @@
                 v-for="subItem in item.children"
                 :key="subItem.id"
                 class="mobile-sub-menu-item"
-                @click="clickSubMenu(subItem.id, subItem.name)"
+                @click="clickSubMenu(subItem.id, subItem.showType, subItem.name)"
               >
                 {{ subItem.name }}
               </div>
@@ -106,8 +109,8 @@
 </template>
 
 <script setup lang="ts">
-import { searchMenu } from '@/apis';
-import type { Menu } from '@/types';
+import { searchMenu, searchPage } from '@/apis';
+import type { Menu, Page } from '@/types';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -126,6 +129,7 @@ const isMobile = computed(() => {
 const showDrawer = ref(false);
 
 const menuList = ref<Menu[]>([]);
+const aricle = ref<Page[]>([]);
 const searchMenuList = async () => {
   const res = await searchMenu();
   if (res.code === 0) {
@@ -164,7 +168,7 @@ const hideSubMenu = (id: number) => {
 };
 
 // 点击首页
-const clickMainMenu = (name?: string) => {
+const clickMainMenu = (name: string, id: number, showType: number) => {
   if (name === '首页') {
     if (isMobile.value) {
       showDrawer.value = false;
@@ -172,20 +176,80 @@ const clickMainMenu = (name?: string) => {
     router.push({
       name: 'home',
     });
+  } else {
+    if (showType === 1) {
+      router.push({
+        name: 'subMenuArticleList',
+        query: {
+          parentMenuName: name,
+          name: name,
+          menuId: id,
+          searchWord: '',
+        },
+      });
+    } else if (showType === 2) {
+      const params = {
+        page: 1,
+        size: 10,
+        menuId: id,
+        searchWord: '',
+      };
+      searchPage(params).then((data) => {
+        if (data.code === 0) {
+          aricle.value = data.data!.records;
+          if (aricle.value.length === 0) {
+            return;
+          }
+          router.push({
+            name: 'articleDetail',
+            query: {
+              id: aricle.value[0].id,
+              parentMenuName: name,
+              subMenuName: null,
+            },
+          });
+        }
+      });
+    }
   }
 };
 // 点击子菜单
-const clickSubMenu = (id: number, name?: string, parentMenuName?: string) => {
+const clickSubMenu = (id: number, showType: number, name?: string, parentMenuName?: string) => {
   showDrawer.value = false;
-  router.push({
-    name: 'subMenuArticleList',
-    query: {
-      parentMenuName: parentMenuName,
-      name: name,
+  if (showType === 1) {
+    router.push({
+      name: 'subMenuArticleList',
+      query: {
+        parentMenuName: parentMenuName,
+        name: name,
+        menuId: id,
+        searchWord: '',
+      },
+    });
+  } else if (showType === 2) {
+    const params = {
+      page: 1,
+      size: 10,
       menuId: id,
       searchWord: '',
-    },
-  });
+    };
+    searchPage(params).then((data) => {
+      if (data.code === 0) {
+        aricle.value = data.data!.records;
+        if (aricle.value.length === 0) {
+          return;
+        }
+        router.push({
+          name: 'articleDetail',
+          query: {
+            id: aricle.value[0].id,
+            parentMenuName: parentMenuName,
+            subMenuName: name,
+          },
+        });
+      }
+    });
+  }
 };
 onMounted(() => {
   searchMenuList();
@@ -199,6 +263,7 @@ onMounted(() => {
   background-size: 100% 100%;
   background-color: #1f4d83;
   position: relative;
+
   .nav-menu-item {
     position: relative;
     color: #fff;
@@ -208,6 +273,7 @@ onMounted(() => {
     line-height: 40px;
     cursor: pointer;
     flex-shrink: 0;
+
     // &:hover {
     //   font-weight: 600;
     // }
@@ -237,6 +303,7 @@ onMounted(() => {
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+
     &:first-child .sub-menu {
       left: 60%;
     }
@@ -246,31 +313,38 @@ onMounted(() => {
       padding: 8px 12px;
       text-align: center;
       font-weight: 400;
+
       &:hover {
         border-radius: 8px;
         background-color: #f8f8f8;
       }
     }
   }
+
   .search-wrapper {
     position: absolute;
     right: 30px;
     top: 10px;
+
     .search-icon {
       width: 20px;
       height: 20px;
       margin-left: 10px;
     }
+
     .search-input {
       width: 260px;
       background-color: #4c719c;
+
       .search-suffix-btn {
         cursor: pointer;
         color: #fff;
       }
+
       :deep(.n-input__placeholder) {
         color: #fff;
       }
+
       :deep(.n-input__input-el) {
         color: #fff;
       }
@@ -284,24 +358,29 @@ onMounted(() => {
   right: 5px;
   z-index: 1000;
   cursor: pointer;
+
   .menu-svg {
     width: 35px;
     height: 35px;
   }
 }
+
 .mobile-menu {
   padding-bottom: 16px;
   margin-bottom: 16px;
   border-bottom: 1px solid #efeff5;
+
   .mobile-menu-svg {
     width: 18px;
     height: 18px;
   }
 }
+
 .mobile-menu-wrapper {
   :deep(.n-collapse-item__header-main) {
     font-size: 16px;
   }
+
   .mobile-sub-menu-item {
     font-size: 14px;
     color: #1a1a1a;

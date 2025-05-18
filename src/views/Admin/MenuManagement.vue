@@ -286,11 +286,21 @@ const editTarget = ref<Menu>({
   parentId: null,
   showType: 1,
 });
+const editTargetOld = ref<Menu>({
+  // @ts-expect-error 此处忽略类型检查，新增不用id
+  id: null,
+  name: '',
+  menuType: 'main',
+  // @ts-expect-error 此处忽略类型检查，新增不用id
+  parentId: null,
+  showType: 1,
+});
 const message = useMessage();
 const dialog = useDialog();
 const editMenu = (menu: Menu) => {
   drawerVisible.value = true;
   editTarget.value = JSON.parse(JSON.stringify(menu));
+  editTargetOld.value = JSON.parse(JSON.stringify(menu));
 };
 const add = () => {
   editTarget.value = {
@@ -447,7 +457,7 @@ const submit = () => {
     if (error) {
       return;
     }
-    if (editTarget.value.menuType === 'main') {
+    if (editTarget.value.menuType === 'main' && editTargetOld.value.menuType != 'main') {
       const params = {
         menuId: editTarget.value.id,
       };
@@ -460,7 +470,12 @@ const submit = () => {
           searchData();
         }
       });
-    } else {
+    }
+    if (
+      editTarget.value.menuType === 'sub' ||
+      editTarget.value.showType != editTargetOld.value.showType ||
+      editTarget.value.parentId != editTargetOld.value.parentId
+    ) {
       const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
       saveMenu(params).then((data) => {
         if (data.code === 0) {
