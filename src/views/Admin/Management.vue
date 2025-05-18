@@ -396,9 +396,9 @@ const closed = () => {
   drawerVisible.value = false;
   editTarget.value = {};
 };
-const serachMenuName = (row) => {
+const serachMenuName = (row: Page) => {
   // 从菜单内找到对应的
-  let targetMenuName: string;
+  let targetMenuName: string = '';
   const resolveMenu = (menus: Menu[]) => {
     for (let i = 0; i < menus.length; i++) {
       const menu = menus[i];
