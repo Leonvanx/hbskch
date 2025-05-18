@@ -12,7 +12,7 @@
 <template>
   <!-- 桌面端菜单 -->
   <div v-if="!isMobile" class="nav-menu-wrapper">
-    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0; overflow: auto">
+    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0">
       <div
         v-for="item in menuList"
         :key="item.id"
@@ -199,29 +199,42 @@ onMounted(() => {
   background-size: 100% 100%;
   background-color: #1f4d83;
   position: relative;
+  height: fit-content;
   .nav-menu-item {
     position: relative;
     color: #fff;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 400;
     height: 40px;
     line-height: 40px;
     cursor: pointer;
     flex-shrink: 0;
-    // &:hover {
-    //   font-weight: 600;
-    // }
-    .menu-name:hover {
-      animation: 300ms menuRiseAndFall;
-
+    transition: all 0.3s;
+    &::before {
+      position: absolute;
+      width: 100%;
+      height: 20px;
+      content: '';
+      left: 0;
+      top: 100%;
+      background-color: transparent;
+    }
+    &::after {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 100%);
+      height: 2px;
+      width: 0%;
+      transition: width 0.3s;
+      content: '';
+      background-color: #fff;
+    }
+    &:hover {
+      font-size: 16px;
+      font-weight: 600;
       &::after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 0;
         width: 100%;
-        height: 10px;
-        background: transparent;
       }
     }
 
@@ -231,24 +244,39 @@ onMounted(() => {
       top: 100%;
       left: 50%;
       transform: translateX(-50%) translateY(10px);
-      background-color: #fff;
       min-width: 150px;
       z-index: 1000;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      background-color: #1f4d83;
     }
     &:first-child .sub-menu {
       left: 60%;
     }
 
     .sub-menu-item {
-      color: #1a1a1a;
       padding: 8px 12px;
       text-align: center;
+      color: #fff;
+      font-size: 16px;
       font-weight: 400;
+      position: relative;
+      &::after {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, -100%);
+        height: 2px;
+        width: 0%;
+        transition: width 0.3s;
+        content: '';
+        background-color: #fff;
+      }
       &:hover {
-        border-radius: 8px;
-        background-color: #f8f8f8;
+        font-weight: 600;
+        &::after {
+          width: 90%;
+        }
       }
     }
   }
