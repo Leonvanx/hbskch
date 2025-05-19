@@ -101,6 +101,7 @@
             v-model:value="editTarget.showType"
             :options="showTypeOptions"
             placeholder="请选择展示类型"
+            clearable
           />
         </n-form-item>
       </n-form>
@@ -194,7 +195,7 @@
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Menu } from '@/types';
-import { searchMenu, deleteMenu, saveMenu, saveMainMenu, sortMenu } from '@/apis/admin';
+import { searchMenu, deleteMenu, saveMenu, sortMenu } from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
 const parendMenuOptions = ref<{ label: string; value: number }[]>();
 const showTypeOptions = [
@@ -254,10 +255,10 @@ const basicEditRules: FormRules = {
     required: true,
     message: '请选择菜单类型',
   },
-  showType: {
-    required: true,
-    message: '请选择菜单类型',
-  },
+  // showType: {
+  //   required: true,
+  //   message: '请选择菜单类型',
+  // },
 };
 const editRules = computed(() => {
   return editTarget.value.menuType === 'sub'
@@ -457,34 +458,23 @@ const submit = () => {
     if (error) {
       return;
     }
-    if (editTarget.value.menuType === 'main' && editTargetOld.value.menuType != 'main') {
-      const params = {
-        menuId: editTarget.value.id,
-      };
-      saveMainMenu(params, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      }).then((data) => {
-        if (data.code === 0) {
-          message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
-          drawerVisible.value = false;
-          searchData();
+    if (editTarget.value.menuType === 'main') {
+      editTarget.value.parentId = 0;
+      editTarget.value.orderNum = menuList.value.length;
+    } else {
+      for (let i = 0; i < menuList.value.length; i++) {
+        if (menuList.value[i].id === editTarget.value.parentId) {
+          editTarget.value.orderNum = menuList.value[i].children?.length;
         }
-      });
+      }
     }
-    if (
-      editTarget.value.menuType === 'sub' ||
-      editTarget.value.showType != editTargetOld.value.showType ||
-      editTarget.value.parentId != editTargetOld.value.parentId
-    ) {
-      const params = Object.assign({}, { id: null, parentId: 0 }, editTarget.value);
-      saveMenu(params).then((data) => {
-        if (data.code === 0) {
-          message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
-          drawerVisible.value = false;
-          searchData();
-        }
-      });
-    }
+    saveMenu(editTarget.value).then((data) => {
+      if (data.code === 0) {
+        message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
+        drawerVisible.value = false;
+        searchData();
+      }
+    });
   });
 };
 const closed = () => {
