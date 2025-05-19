@@ -11,27 +11,25 @@
 -->
 <template>
   <!-- 桌面端菜单 -->
-  <div v-if="!isMobile" class="nav-menu-wrapper">
-    <div class="flex-row align-center" style="gap: 30px; flex-shrink: 0">
-      <div
-        v-for="item in menuList"
-        :key="item.id"
-        class="nav-menu-item"
-        @mouseenter="showSubMenu(item.id)"
-        @mouseleave="hideSubMenu(item.id)"
-      >
-        <div
-          :class="{ 'menu-name': item.name !== '首页' }"
-          @click="clickMainMenu(item.name, item.id, item.showType)"
+  <div v-if="!isMobile" class="nav-menu-wrapper flex-row align-center">
+    <div class="nav-menu flex-row align-center">
+      <div v-for="item in menuList" :key="item.id" class="nav-menu-item">
+        <n-popover
+          trigger="hover"
+          raw
+          :show-arrow="false"
+          placement="bottom"
+          content-class="sub-menu-popover"
         >
-          {{ item.name }}
-        </div>
-        <!-- 使用 transition 组件添加淡入淡出动画 -->
-        <transition name="sub-menu-fade">
-          <div
-            v-if="showingSubMenus[item.id] && item.children && item.children.length > 0"
-            class="sub-menu"
-          >
+          <template #trigger
+            ><div
+              :class="{ 'menu-name': item.name !== '首页' }"
+              @click="clickMainMenu(item.name, item.id, item.showType)"
+            >
+              {{ item.name }}
+            </div>
+          </template>
+          <div v-if="item.children && item.children.length > 0" class="sub-menu">
             <div
               v-for="subItem in item.children"
               :key="subItem.id"
@@ -41,7 +39,7 @@
               {{ subItem.name }}
             </div>
           </div>
-        </transition>
+        </n-popover>
       </div>
     </div>
     <div class="search-wrapper flex-row align-center">
@@ -154,19 +152,6 @@ const searchArticle = () => {
   });
 };
 
-// 用于记录每个主菜单对应的子菜单是否显示
-const showingSubMenus = ref<Record<number, boolean>>({});
-
-// 显示子菜单
-const showSubMenu = (id: number) => {
-  showingSubMenus.value[id] = true;
-};
-
-// 隐藏子菜单
-const hideSubMenu = (id: number) => {
-  showingSubMenus.value[id] = false;
-};
-
 // 点击首页
 const clickMainMenu = (name: string, id: number, showType: number) => {
   if (name === '首页') {
@@ -259,13 +244,17 @@ onMounted(() => {
 <style scoped lang="scss">
 .nav-menu-wrapper {
   width: 100%;
-  padding: 10px 300px 10px 60px;
+  padding: 10px 60px;
   background-size: 100% 100%;
   background-color: #1f4d83;
   position: relative;
-  height: fit-content;
+  height: 60px;
+  justify-content: space-between;
+  .nav-menu {
+    overflow-x: auto;
+    gap: 30px;
+  }
   .nav-menu-item {
-    position: relative;
     color: #fff;
     font-size: 16px;
     font-weight: 400;
@@ -273,90 +262,17 @@ onMounted(() => {
     line-height: 40px;
     cursor: pointer;
     flex-shrink: 0;
-    transition: all 0.3s;
-    &::before {
-      position: absolute;
-      width: 100%;
-      height: 20px;
-      content: '';
-      left: 0;
-      top: 100%;
-      background-color: transparent;
-    }
-    &::after {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translate(-50%, 100%);
-      height: 2px;
-      width: 0%;
-      transition: width 0.3s;
-      content: '';
-      background-color: #fff;
-    }
     &:hover {
       font-size: 16px;
       font-weight: 600;
-      &::after {
-        width: 100%;
-      }
-    }
-
-    .sub-menu {
-      box-sizing: content-box;
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      min-width: 150px;
-      z-index: 1000;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      background-color: #1f4d83;
-    }
-
-    &:first-child .sub-menu {
-      left: 60%;
-    }
-
-    .sub-menu-item {
-      padding: 8px 12px;
-      text-align: center;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 400;
-      position: relative;
-      &::after {
-        position: absolute;
-        left: 50%;
-        bottom: 0;
-        transform: translate(-50%, -100%);
-        height: 2px;
-        width: 0%;
-        transition: width 0.3s;
-        content: '';
-        background-color: #fff;
-      }
-      &:hover {
-        font-weight: 600;
-        &::after {
-          width: 90%;
-        }
-      }
     }
   }
-
   .search-wrapper {
-    position: absolute;
-    right: 30px;
-    top: 10px;
-
     .search-icon {
       width: 20px;
       height: 20px;
       margin-left: 10px;
     }
-
     .search-input {
       width: 260px;
       background-color: #4c719c;
@@ -417,50 +333,46 @@ onMounted(() => {
   .nav-menu-wrapper {
     .nav-menu {
       width: 100%;
-      padding: 14px 20px;
+      margin-right: 20px;
     }
   }
 }
-
-/* 定义淡入淡出动画 */
-.sub-menu-fade-enter-active,
-.sub-menu-fade-leave-active {
-  transition: opacity 300ms ease-in;
-}
-
-.sub-menu-fade-enter-from,
-.sub-menu-fade-leave-to {
-  opacity: 0;
-}
-
-/* 定义搜索框滑动动画 */
-.search-slide-enter-active,
-.search-slide-leave-active {
-  transition: all 300ms ease;
-}
-
-.search-slide-enter-from {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-.search-slide-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-// 定义主菜单升起再落下的动画
-@keyframes menuRiseAndFall {
-  0% {
-    transform: translateY(0);
+</style>
+<style lang="scss">
+.sub-menu-popover {
+  .sub-menu {
+    min-width: 150px;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background-color: #1f4d83;
+    padding-bottom: 5px;
   }
-
-  50% {
-    transform: translateY(-5px);
-  }
-
-  100% {
-    transform: translateY(0);
+  .sub-menu-item {
+    padding: 8px 12px;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    position: relative;
+    cursor: pointer;
+    &::after {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, -100%);
+      height: 2px;
+      width: 0%;
+      transition: width 0.3s;
+      content: '';
+      background-color: #fff;
+    }
+    &:hover {
+      font-weight: 600;
+      &::after {
+        width: 90%;
+      }
+    }
   }
 }
 </style>
