@@ -273,7 +273,7 @@ const columns = [
     title: '操作',
     key: 'actions',
     width: '150px',
-    fixed: 'right',
+    fixed: 'right' as const,
   },
 ];
 
