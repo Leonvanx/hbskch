@@ -10,10 +10,13 @@
   修改时间：
 -->
 <template>
-  <div class="home-top-header">
-    <div class="container">
+  <div class="home-top-header flex-row justify-between">
+    <div class="container flex-row align-center">
+      <span class="nowTime">{{ nowTime }}</span>
       <iframe
-        width="280"
+        v-if="!isMobile"
+        class="tianq"
+        width="200"
         height="26"
         frameborder="0"
         scrolling="no"
@@ -22,8 +25,25 @@
       ></iframe>
       <!-- 搜索 -->
       <span style="flex: 1"></span>
-      <n-input size="small" style="width: 150px" placeholder="请输入关键字"></n-input>
     </div>
+    <n-input
+      ref="target"
+      v-model:value="searchValue"
+      round
+      class="search-input"
+      size="large"
+      placeholder="请输入关键字"
+      @keydown.enter="searchArticle()"
+    >
+      <template #suffix>
+        <i-mdi-search
+          class="pointer"
+          style="font-size: 1rem; margin-left: 8px"
+          @click="searchArticle()"
+        />
+        <!-- <span class="search-suffix-btn" @click="searchArticle()">搜一下</span> -->
+      </template>
+    </n-input>
   </div>
   <div
     class="home-header flex-row align-center posr"
@@ -34,29 +54,22 @@
       <h1 class="web-title-cn">{{ props.webTitle }}</h1>
       <div class="web-title-en">{{ props.webTitleEn }}</div>
     </div>
-    <span style="flex: 1"></span>
-    <CTextRoll
-      v-if="isMobile && props.webDesc"
-      class="text-roll"
-      :text="props.webDesc"
-      :speed="15"
-      color="#f2f2f2"
-    />
+    <n-marquee v-if="isMobile" class="web-desc isMobile">
+      {{ props.webDesc }}
+    </n-marquee>
     <div v-else class="web-desc">
-      <CTextRoll
-        direction="vertical"
-        class="text-roll"
-        :text="props.webDesc"
-        :speed="15"
-        color="#f2f2f2"
-        show-height="100%"
-      />
+      <CTextRoll :speed="10" direction="up">
+        {{ props.webDesc }}
+      </CTextRoll>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import headerIcon from '@/assets/icons/science-color.svg';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+dayjs.locale('zh-cn');
 const router = useRouter();
 type Props = {
   webTitle?: string;
@@ -73,7 +86,19 @@ const props = withDefaults(defineProps<Props>(), {
   bgImg: '',
   webDesc: '',
 });
-
+const nowTime = computed(() => {
+  return '现在是' + dayjs().format('YYYY年MM月DD日 星期dd');
+});
+const searchValue = ref('');
+const searchArticle = () => {
+  router.push({
+    name: 'subMenuArticleList',
+    query: {
+      meunId: 0,
+      searchWord: searchValue.value,
+    },
+  });
+};
 const goHome = () => {
   router.replace({
     name: 'home',
@@ -87,13 +112,29 @@ const goHome = () => {
   height: 35px;
   background-color: #f1f1f1;
   flex-shrink: 0;
-  .container {
-    margin-right: auto;
-    margin-left: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 15px;
+  padding: 5px 60px;
+  .nowTime {
+    font-size: 14px;
+    margin-right: 10px;
+  }
+  .search-input {
+    width: 260px;
+    :deep(.n-input__input-el) {
+      height: 100%;
+      line-height: 100%;
+    }
+    // .search-suffix-btn {
+    //   cursor: pointer;
+    //   color: #fff;
+    // }
+
+    // :deep(.n-input__placeholder) {
+    //   color: #fff;
+    // }
+
+    // :deep(.n-input__input-el) {
+    //   color: #fff;
+    // }
   }
 }
 .home-header {
@@ -124,7 +165,7 @@ const goHome = () => {
       font-weight: 400;
     }
 
-    @media (min-width: 768px) {
+    @media (max-width: 768px) {
       .web-title-cn {
         font-size: clamp(14px, 3vw, 72px);
       }
@@ -146,25 +187,43 @@ const goHome = () => {
   }
 
   .web-desc {
-    margin-left: 20px;
-    margin-top: 20px;
+    margin-left: auto;
+    max-width: 350px;
     color: #f2f2f2;
-    width: 350px;
-    position: relative;
+    flex: 1;
     height: 80px;
-    padding: 5px;
     border: 1px dotted #f2f2f230;
     border-radius: 3px;
-  }
-  .text-roll {
-    position: absolute;
-    bottom: 0px;
-    color: #f2f2f2;
+    padding: 5px;
+    &.isMobile {
+      margin-left: 20px;
+      margin-right: 20px;
+      max-width: calc(100% - 40px);
+      height: 30px;
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+    }
   }
 }
-@media (min-width: 768px) {
-  .container {
-    width: 750px;
+@media (max-width: 768px) {
+  .home-top-header {
+    padding: 5px 30px;
+  }
+  .web-desc {
+    width: 100%;
+    height: 30px;
+  }
+}
+@media (max-width: 480px) {
+  .home-top-header {
+    padding: 5px 10px;
+    .nowTime {
+      font-size: 12px;
+    }
+  }
+  .home-top-header .search-input {
+    width: 150px;
   }
 }
 </style>

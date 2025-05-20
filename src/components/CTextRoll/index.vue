@@ -1,184 +1,132 @@
-<!--
-  功能：文字滚动组件
-  作者：xulf
-  邮箱：lvin_xu@outlook.com
-  时间：2025年05月15日 15:23:50
-  版本：v1.0
-  修改记录：
-  修改内容：
-  修改人员：
-  修改时间：
--->
 <template>
-  <div ref="containerRef" class="text-scroll-container" :style="{ height: `${showHeight}` }">
-    <div
-      ref="contentRef"
-      class="text-scroll-content"
-      :class="{
-        'horizontal-scroll': direction === 'horizontal',
-        'vertical-scroll': direction === 'vertical',
-      }"
-      :style="contentStyle"
-    >
-      <span v-for="(item, index) in displayText" :key="index">{{ item }}</span>
+  <!-- 文本滚动 -->
+  <div ref="textScroll" class="text-scroll">
+    <div ref="content" class="content" :style="contentStyle">
+      <!-- 默认插槽，插入滚动内容 -->
+      <slot></slot>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed, onMounted, onUnmounted, watch } from 'vue';
+<script setup lang="ts">
+interface Props {
+  direction?: 'up' | 'down' | 'left' | 'right';
+  speed?: number;
+  isForceScroll?: boolean;
+}
 
-export default defineComponent({
-  name: 'TextScroll',
-  props: {
-    text: {
-      type: String,
-      required: true,
-    },
-    showHeight: {
-      type: String,
-      default: '30px',
-    },
-    speed: {
-      type: Number,
-      default: 50,
-    },
-    direction: {
-      type: String as () => 'horizontal' | 'vertical',
-      default: 'horizontal',
-      validator: (value: string) => ['horizontal', 'vertical'].includes(value),
-    },
-    fontSize: {
-      type: String,
-      default: '14px',
-    },
-    color: {
-      type: String,
-      default: '#333333',
-    },
-    repeat: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup(props) {
-    const containerRef = ref<HTMLElement | null>(null);
-    const contentRef = ref<HTMLElement | null>(null);
-    const animationFrameId = ref<number | null>(null);
-    const scrollPosition = ref(0);
-    const containerSize = ref({ width: 0, height: 0 });
-    const contentSize = ref({ width: 0, height: 0 });
+const props = withDefaults(defineProps<Props>(), {
+  direction: 'up',
+  speed: 60,
+  isForceScroll: true,
+});
 
-    // 根据是否重复显示文本生成显示内容
-    const displayText = computed(() => {
-      if (!props.repeat) return [props.text];
-      return props.direction === 'horizontal' ? [props.text, props.text] : [props.text];
-    });
+const textScroll = ref<HTMLElement | null>(null);
+const content = ref<HTMLElement | null>(null);
 
-    // 内容样式
-    const contentStyle = computed(() => ({
-      fontSize: props.fontSize,
-      color: props.color,
-      transform:
-        props.direction === 'horizontal'
-          ? `translateX(${-scrollPosition.value}px)`
-          : `translateY(${-scrollPosition.value}px)`,
-    }));
+const contentStyle = ref({
+  '--animation-end': '',
+  animation: '',
+});
 
-    // 更新容器和内容尺寸
-    const updateSizes = () => {
-      if (containerRef.value && contentRef.value) {
-        containerSize.value = {
-          width: containerRef.value.offsetWidth,
-          height: containerRef.value.offsetHeight,
-        };
+const setScrollAnimation = () => {
+  if (!textScroll.value || !content.value) return;
 
-        contentSize.value = {
-          width: contentRef.value.scrollWidth,
-          height: contentRef.value.scrollHeight,
-        };
+  const textScrollWidth = textScroll.value.offsetWidth,
+    textScrollHeight = textScroll.value.offsetHeight,
+    contentWidth = content.value.offsetWidth,
+    contentHeight = content.value.offsetHeight;
+
+  if (!props.isForceScroll) {
+    if (props.direction === 'up' || props.direction === 'down') {
+      if (contentHeight <= textScrollHeight) {
+        contentStyle.value['--animation-end'] = '';
+        contentStyle.value.animation = '';
+        return;
       }
-    };
-
-    // 滚动动画
-    const animate = () => {
-      if (!containerRef.value || !contentRef.value) return;
-
-      const maxScroll =
-        props.direction === 'horizontal' ? contentSize.value.width / 2 : contentSize.value.height;
-
-      scrollPosition.value += props.speed / 60; // 60fps
-
-      // 重置位置以实现无缝滚动
-      if (scrollPosition.value >= maxScroll) {
-        scrollPosition.value = 0;
+    } else {
+      if (contentWidth <= textScrollWidth) {
+        contentStyle.value['--animation-end'] = '';
+        contentStyle.value.animation = '';
+        return;
       }
+    }
+  }
 
-      animationFrameId.value = requestAnimationFrame(animate);
-    };
+  let scrollLength, time;
+  switch (props.direction) {
+    case 'up':
+      contentStyle.value['--animation-end'] = `-${contentHeight}px`;
+      scrollLength = contentHeight + textScrollHeight;
+      console.log('🚀 ~ setScrollAnimation ~ scrollLength:', scrollLength);
+      time = scrollLength / props.speed;
+      contentStyle.value.animation = `up-scroll linear ${time}s infinite`;
+      break;
+    case 'down':
+      contentStyle.value['--animation-end'] = `-${contentHeight}px`;
+      scrollLength = contentHeight + textScrollHeight;
+      time = scrollLength / props.speed;
+      contentStyle.value.animation = `up-scroll linear ${time}s infinite reverse`;
+      break;
+    case 'left':
+      contentStyle.value['--animation-end'] = `-${contentWidth}px`;
+      scrollLength = contentWidth + textScrollWidth;
+      time = scrollLength / props.speed;
+      contentStyle.value.animation = `left-scroll linear ${time}s infinite`;
+      break;
+    case 'right':
+      contentStyle.value['--animation-end'] = `-${contentWidth}px`;
+      scrollLength = contentWidth + textScrollWidth;
+      time = scrollLength / props.speed;
+      contentStyle.value.animation = `left-scroll linear ${time}s infinite reverse`;
+      break;
+  }
+};
 
-    // 处理窗口大小变化
-    const handleResize = () => {
-      updateSizes();
-    };
+onMounted(() => {
+  setScrollAnimation();
+});
 
-    onMounted(() => {
-      updateSizes();
-      animate();
-      window.addEventListener('resize', handleResize);
-    });
-
-    onUnmounted(() => {
-      if (animationFrameId.value) {
-        cancelAnimationFrame(animationFrameId.value);
-      }
-      window.removeEventListener('resize', handleResize);
-    });
-
-    // 监听文本变化
-    watch(
-      () => props.text,
-      () => {
-        updateSizes();
-      },
-    );
-
-    return {
-      containerRef,
-      contentRef,
-      displayText,
-      contentStyle,
-    };
-  },
+onUpdated(() => {
+  setScrollAnimation();
 });
 </script>
 
 <style scoped lang="scss">
-.text-scroll-container {
+.text-scroll {
   width: 100%;
-  height: 30px;
+  height: 100%;
   overflow: hidden;
   position: relative;
 
-  .text-scroll-content {
+  .content {
+    width: fit-content;
+    height: fit-content;
     position: absolute;
-    white-space: nowrap;
-    &.horizontal-scroll {
-      display: flex;
-      align-items: center;
+  }
+}
+</style>
+
+<style lang="scss">
+.text-scroll {
+  .content {
+    @keyframes up-scroll {
+      0% {
+        top: 100%;
+      }
+
+      100% {
+        top: var(--animation-end);
+      }
     }
 
-    &.vertical-scroll {
-      white-space: normal;
-      word-break: break-all;
-    }
+    @keyframes left-scroll {
+      0% {
+        left: 100%;
+      }
 
-    span {
-      display: inline-block;
-      margin-right: 20px; // 水平滚动时文字间距
-      .vertical-scroll & {
-        display: block;
-        margin-bottom: 20px; // 垂直滚动时文字间距
+      100% {
+        left: var(--animation-end);
       }
     }
   }
