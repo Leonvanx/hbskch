@@ -34,6 +34,7 @@
       <h1 class="web-title-cn">{{ props.webTitle }}</h1>
       <div class="web-title-en">{{ props.webTitleEn }}</div>
     </div>
+    <span style="flex: 1"></span>
     <CTextRoll
       v-if="isMobile && props.webDesc"
       class="text-roll"
@@ -112,7 +113,6 @@ const goHome = () => {
 
   .web-title {
     margin-left: 30px;
-
     .web-title-cn {
       white-space: nowrap;
       color: #ffffff;
@@ -149,7 +149,7 @@ const goHome = () => {
     margin-left: 20px;
     margin-top: 20px;
     color: #f2f2f2;
-    flex: 1;
+    width: 350px;
     position: relative;
     height: 80px;
     padding: 5px;
