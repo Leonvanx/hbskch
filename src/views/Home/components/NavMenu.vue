@@ -12,36 +12,38 @@
 <template>
   <!-- 桌面端菜单 -->
   <div v-if="!isMobile" class="nav-menu-wrapper flex-row align-center">
-    <div class="nav-menu flex-row align-center">
-      <div v-for="item in menuList" :key="item.id" class="nav-menu-item">
-        <n-popover
-          trigger="hover"
-          raw
-          :show-arrow="false"
-          placement="bottom"
-          content-class="sub-menu-popover"
-        >
-          <template #trigger
-            ><div
-              :class="{ 'menu-name': item.name !== '首页' }"
-              @click="clickMainMenu(item.name, item.id, item.showType)"
-            >
-              {{ item.name }}
+    <n-scrollbar x-scrollable>
+      <div class="nav-menu flex-row align-center">
+        <div v-for="item in menuList" :key="item.id" class="nav-menu-item">
+          <n-popover
+            trigger="hover"
+            raw
+            :show-arrow="false"
+            placement="bottom"
+            content-class="sub-menu-popover"
+          >
+            <template #trigger
+              ><div
+                :class="{ 'menu-name': item.name !== '首页' }"
+                @click="clickMainMenu(item.name, item.id, item.showType)"
+              >
+                {{ item.name }}
+              </div>
+            </template>
+            <div v-if="item.children && item.children.length > 0" class="sub-menu">
+              <div
+                v-for="subItem in item.children"
+                :key="subItem.id"
+                class="sub-menu-item"
+                v-on:click="clickSubMenu(subItem.id, subItem.showType, subItem.name, item.name)"
+              >
+                {{ subItem.name }}
+              </div>
             </div>
-          </template>
-          <div v-if="item.children && item.children.length > 0" class="sub-menu">
-            <div
-              v-for="subItem in item.children"
-              :key="subItem.id"
-              class="sub-menu-item"
-              v-on:click="clickSubMenu(subItem.id, subItem.showType, subItem.name, item.name)"
-            >
-              {{ subItem.name }}
-            </div>
-          </div>
-        </n-popover>
+          </n-popover>
+        </div>
       </div>
-    </div>
+    </n-scrollbar>
     <div class="search-wrapper flex-row align-center">
       <!-- <transition name="search-slide"> -->
       <n-input
@@ -250,8 +252,8 @@ onMounted(() => {
   position: relative;
   height: 60px;
   justify-content: space-between;
+  gap: 20px;
   .nav-menu {
-    overflow-x: auto;
     gap: 30px;
   }
   .nav-menu-item {
