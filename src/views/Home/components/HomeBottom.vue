@@ -51,7 +51,7 @@
             <!-- 注册信息 -->
             <div class="info-one">湖北省科技进步促进会 主办</div>
             <div class="info-one">技术支持：百度</div>
-            <div class="info-one">备案号：苏ICP备140093143号-2</div>
+            <div class="info-one" @click="openbeian">备案号：鄂ICP备2025115975号-1</div>
           </div>
         </div>
         <div class="footer-tips">
@@ -86,6 +86,12 @@ const searchBottomPic = async () => {
   if (res.code === 0) {
     searchBt.value = res.data?.[0]?.url || '';
   }
+};
+const openbeian = () => {
+  window.open(
+    'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42010602001219',
+    '_black',
+  );
 };
 searchQRcode();
 searchBottomPic();
