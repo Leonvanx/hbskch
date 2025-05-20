@@ -10,6 +10,21 @@
   修改时间：
 -->
 <template>
+  <div class="home-top-header">
+    <div class="container">
+      <iframe
+        width="280"
+        height="26"
+        frameborder="0"
+        scrolling="no"
+        src="https://i.tianqi.com/index.php?c=code&amp;id=26&amp;icon=1&amp;num=3"
+        allowtransparency="true"
+      ></iframe>
+      <!-- 搜索 -->
+      <span style="flex: 1"></span>
+      <n-input size="small" style="width: 150px" placeholder="请输入关键字"></n-input>
+    </div>
+  </div>
   <div
     class="home-header flex-row align-center posr"
     :style="{ backgroundImage: props.bgImg ? `url(${props.bgImg})` : '' }"
@@ -66,6 +81,20 @@ const goHome = () => {
 </script>
 
 <style scoped lang="scss">
+.home-top-header {
+  width: 100%;
+  height: 35px;
+  background-color: #f1f1f1;
+  flex-shrink: 0;
+  .container {
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px;
+  }
+}
 .home-header {
   padding: 50px 60px 70px;
   background-color: #fff;
@@ -131,6 +160,11 @@ const goHome = () => {
     position: absolute;
     bottom: 0px;
     color: #f2f2f2;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
   }
 }
 </style>

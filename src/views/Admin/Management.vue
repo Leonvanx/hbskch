@@ -78,14 +78,6 @@
             <img src="@/assets/icons/default_image.svg" width="50" height="50" />
           </template>
         </template>
-        <template #status="{ row }">
-          <n-switch
-            v-model:value="row.status"
-            :checked-value="1"
-            :unchecked-value="0"
-            @change="() => changeShowStatus('status', row)"
-          />
-        </template>
         <template #showType="{ row }">
           <template v-if="row.summary && row.showType">
             {{ showTypeList.find((item) => item.value == row.showType)?.label }}
@@ -168,12 +160,7 @@
           <n-input-number v-model:value="editTarget.orderNum" clearable placeholder="请输入排序" />
         </n-form-item> -->
         <n-form-item path="summary" label="是否展示在首页">
-          <n-switch
-            v-model:value="editTarget.summary"
-            :checked-value="1"
-            :unchecked-value="0"
-            @change="changeEditSummary"
-          />
+          <n-switch v-model:value="editTarget.summary" :checked-value="1" :unchecked-value="0" />
         </n-form-item>
         <n-form-item v-if="editTarget.summary" path="showType" label="展示版块">
           <n-select
@@ -182,14 +169,7 @@
             placeholder="请选择展示的版块"
           />
         </n-form-item>
-        <n-form-item path="status" label="是否展示在菜单">
-          <n-switch
-            v-model:value="editTarget.status"
-            :checked-value="1"
-            :unchecked-value="0"
-            @change="changeEditStatus"
-          />
-        </n-form-item>
+
         <n-form-item label="内容编辑">
           <RichTextEditor ref="editRef" :content="editTarget.content"></RichTextEditor>
         </n-form-item>
@@ -222,12 +202,6 @@ const editRules: FormRules = {
       message: '请输入文章标题',
     },
   ],
-  menuId: [
-    {
-      required: true,
-      message: '请选择子菜单',
-    },
-  ],
 };
 const editFormRef = ref<FormInst | null>(null);
 const editTarget = ref<Page>({});
@@ -242,7 +216,7 @@ const columns = [
     width: '200px',
   },
   {
-    title: '菜单',
+    title: '展示菜单',
     key: 'menuId',
     width: '100px',
   },
@@ -254,15 +228,12 @@ const columns = [
   {
     title: '首页展示',
     key: 'summary',
+    width: '100px',
   },
   {
     title: '展示位置',
     key: 'showType',
     width: '150px',
-  },
-  {
-    title: '菜单展示',
-    key: 'status',
   },
   {
     title: '更新时间',
@@ -353,18 +324,7 @@ const submit = () => {
     }
   });
 };
-const changeEditStatus = () => {
-  if (!editTarget.value.status) {
-    editTarget.value.summary = 0;
-  }
-};
-const changeEditSummary = () => {
-  if (editTarget.value.summary) {
-    editTarget.value.status = 1;
-  } else {
-    editTarget.value.showType = null;
-  }
-};
+
 const changeShowStatus = (type: string, row: Page) => {
   let { summary, status, showType } = row;
   if (type === 'summary') {
