@@ -307,7 +307,6 @@ const submit = () => {
 
   editFormRef.value?.validate((errors) => {
     if (!errors) {
-      console.log('submit', editTarget.value);
       //添加新增内容接口
       savePage(editTarget.value).then((data) => {
         if (data.code === 0) {
@@ -318,8 +317,8 @@ const submit = () => {
           } else {
             pageChange(1);
           }
+          closed();
         }
-        closed();
       });
     }
   });

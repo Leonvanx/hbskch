@@ -38,6 +38,12 @@ onMounted(() => {
     queryArticleContent(Number(articleId));
   }
 });
+watch(route, () => {
+  const articleId = route.query.id;
+  if (articleId) {
+    queryArticleContent(Number(articleId));
+  }
+});
 </script>
 
 <style scoped lang="scss">

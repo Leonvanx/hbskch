@@ -13,7 +13,9 @@
   <div class="article-list flex-column">
     <div class="title">
       <i-mdi-location></i-mdi-location>
-      {{ `${route.query.searchWord || route.query.name || '文章列表'}` }}
+      {{
+        `${route.query.searchWord ? `搜索:${route.query.searchWord}` : route.query.name || '文章列表'}`
+      }}
     </div>
     <template v-if="pages.total">
       <div class="list">

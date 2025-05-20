@@ -154,7 +154,6 @@ const goHome = () => {
 
   .web-title {
     margin-left: 30px;
-
     .web-title-cn {
       white-space: nowrap;
       color: #ffffff;
