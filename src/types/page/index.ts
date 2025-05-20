@@ -4,7 +4,7 @@ export interface Page {
   id?: number;
   pathName?: string;
   searchWord?: string;
-  menuId?: number | null;
+  menuId?: number;
   orderNum?: number;
   status?: number;
   summary?: number;
