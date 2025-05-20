@@ -187,16 +187,21 @@ const goHome = () => {
   }
 
   .web-desc {
-    margin-left: 20px;
+    margin-left: auto;
+    max-width: 350px;
     color: #f2f2f2;
     flex: 1;
     height: 80px;
     border: 1px dotted #f2f2f230;
     border-radius: 3px;
+    padding: 5px;
     &.isMobile {
-      width: 100%;
+      margin-left: 20px;
+      margin-right: 20px;
+      max-width: calc(100% - 40px);
       height: 30px;
       position: absolute;
+      left: 0px;
       bottom: 0px;
     }
   }

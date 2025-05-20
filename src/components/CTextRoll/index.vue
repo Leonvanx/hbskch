@@ -58,6 +58,7 @@ const setScrollAnimation = () => {
     case 'up':
       contentStyle.value['--animation-end'] = `-${contentHeight}px`;
       scrollLength = contentHeight + textScrollHeight;
+      console.log('🚀 ~ setScrollAnimation ~ scrollLength:', scrollLength);
       time = scrollLength / props.speed;
       contentStyle.value.animation = `up-scroll linear ${time}s infinite`;
       break;
