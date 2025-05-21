@@ -88,10 +88,7 @@ const searchBottomPic = async () => {
   }
 };
 const openbeian = () => {
-  window.open(
-    'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42010602001219',
-    '_black',
-  );
+  window.open('https://beian.miit.gov.cn/#/Integrated/index', '_black');
 };
 searchQRcode();
 searchBottomPic();
