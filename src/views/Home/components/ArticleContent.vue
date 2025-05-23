@@ -13,10 +13,15 @@
   <div class="article-content flex-row" :class="{ 'reverse-row': props.isRowReverse }">
     <div v-if="carouselArticles.length > 0" class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
-        <div v-for="item in carouselArticles" :key="item.id" class="article-item posr">
+        <div
+          v-for="item in carouselArticles"
+          :key="item.id"
+          class="article-item posr pointer"
+          @click="clickArticle(item.id)"
+        >
           <img class="carousel-img" :src="item.coverImage" />
           <div class="article-title-wrapper">
-            <div class="article-title pointer" @click="clickArticle(item.id)">
+            <div class="article-title">
               <span>{{ item.title }}</span>
             </div>
           </div>
