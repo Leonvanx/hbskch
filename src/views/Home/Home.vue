@@ -26,6 +26,7 @@
       :right-articles="articleList.second"
     />
     <CenterSplit v-if="isHomePage" :center-page="resourceObj.centerPage"></CenterSplit>
+    <FriendLink :posType="1" />
     <ArticleContent
       v-if="isHomePage"
       :carousel-articles="articleList.third"
@@ -33,7 +34,6 @@
       :is-row-reverse="!isMobile"
     />
     <RouterView v-if="!isHomePage" />
-    <FriendLink />
     <HomeBottom />
   </div>
 </template>

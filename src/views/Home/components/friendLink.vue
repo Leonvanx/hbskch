@@ -14,7 +14,7 @@
     <!-- 友情链接 -->
     <div class="contain">
       <div class="footer-cont">
-        <ul class="footer-links">
+        <ul :class="props.posType === 0 ? 'footer-links-bottom' : 'footer-links-mid'">
           <!-- 友情链接 -->
           <li
             v-for="(item, index) in footerLinks"
@@ -37,8 +37,12 @@ import { searchFriendLink, searchResource } from '@/apis/admin';
 import type { Link } from '@/types';
 const footerLinks = ref<Link[]>([]);
 const footerPic = ref('');
+type Props = {
+  posType: number;
+};
+const props = defineProps<Props>();
 const getLinkList = async () => {
-  const res = await searchFriendLink();
+  const res = await searchFriendLink(props.posType);
   if (res.code === 0) {
     footerLinks.value = res.data || [];
   }
@@ -70,7 +74,46 @@ searchLinkPic();
 .footer-cont {
   padding: 30px 0 0 0;
 }
-.footer-links {
+.footer-links-mid {
+  margin: 0 -16px;
+  padding-left: 0;
+  padding-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 8px;
+  .link-one {
+    margin: 0;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background-size: cover;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #fff;
+    .cn-name {
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .en-name {
+      transition: all 0.3s;
+      font-size: 10px;
+    }
+    &:hover {
+      cursor: pointer;
+      .cn-name {
+        font-size: 16px;
+      }
+      .en-name {
+        font-size: 12px;
+      }
+    }
+  }
+}
+.footer-links-bottom {
   margin: 0 -16px;
   padding-left: 0;
   padding-bottom: 15px;
