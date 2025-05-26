@@ -50,8 +50,8 @@ export const updateResource = (params: Resource, config?: AxiosRequestConfig) =>
   return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/resource/saveOrUpdate`, params, config);
 };
 // 获取友情链接列表
-export const searchFriendLink = (config?: AxiosRequestConfig) => {
-  return request.post<ResultSuccess<Link[]>>('/tech/resource/bottom/list', null, config);
+export const searchFriendLink = (posType:number,config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<Link[]>>(`/tech/resource/bottom/list?posType=${posType}`, null, config);
 };
 // 修改友情链接
 export const updateFriendLink = (params: Link, config?: AxiosRequestConfig) => {

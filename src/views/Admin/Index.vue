@@ -105,10 +105,10 @@
         </n-form>
       </n-card>
     </n-flex>
-    <n-card title="友情链接" style="flex: 1">
+    <n-card title="中部友情链接" style="flex: 1">
       <template #header-extra>
         <n-space>
-          <n-button type="primary" @click="() => sortLink()"
+          <n-button type="primary" @click="() => sortLink('mid')"
             ><template #icon>
               <n-icon>
                 <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
@@ -116,7 +116,7 @@
             </template>
             排序</n-button
           >
-          <n-button type="primary" @click="() => addLink()"
+          <n-button type="primary" @click="() => addLinkMid()"
             ><template #icon>
               <n-icon>
                 <i-mdi-add style="font-size: 1.1rem; color: #fff" />
@@ -125,10 +125,51 @@
           >
         </n-space>
       </template>
-      <CTable :columns="linkColumns" :table-data="linkList" :flex-height="false">
+      <CTable :columns="linkColumns" :table-data="linkListMid" :flex-height="false">
         <template #actions="{ row }">
           <n-space>
-            <n-button title="修改" strong tertiary size="small" @click="addLink(row)"
+            <n-button title="修改" strong tertiary size="small" @click="addLinkMid(row)"
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-edit style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button title="删除" strong tertiary size="small" @click="delLink(row)">
+              <template #icon>
+                <n-icon>
+                  <i-material-symbols-light-delete style="font-size: 1.2rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
+          </n-space>
+        </template>
+      </CTable>
+    </n-card>
+    <n-card title="底部友情链接" style="flex: 1">
+      <template #header-extra>
+        <n-space>
+          <n-button type="primary" @click="() => sortLink('bottom')"
+            ><template #icon>
+              <n-icon>
+                <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
+              </n-icon>
+            </template>
+            排序</n-button
+          >
+          <n-button type="primary" @click="() => addLinkBottom()"
+            ><template #icon>
+              <n-icon>
+                <i-mdi-add style="font-size: 1.1rem; color: #fff" />
+              </n-icon> </template
+            >添加</n-button
+          >
+        </n-space>
+      </template>
+      <CTable :columns="linkColumns" :table-data="linkListBottom" :flex-height="false">
+        <template #actions="{ row }">
+          <n-space>
+            <n-button title="修改" strong tertiary size="small" @click="addLinkBottom(row)"
               ><template #icon>
                 <n-icon>
                   <i-iconoir-edit style="font-size: 1.1rem; color: #000" />
@@ -147,10 +188,10 @@
       </CTable>
     </n-card>
   </n-flex>
-  <n-modal v-model:show="modalVisible" @mask-click="cancel">
+  <n-modal v-model:show="modalVisibleMid" @mask-click="cancel">
     <n-card
       style="width: 600px"
-      :title="urlForm.id ? '编辑' : '新增链接'"
+      :title="urlForm.id ? '编辑中部链接' : '新增中部链接'"
       :bordered="false"
       size="huge"
       role="dialog"
@@ -170,7 +211,35 @@
       <template #footer>
         <n-flex justify="end">
           <n-button type="primary" @click="submit">确定</n-button>
-          <n-button @click="modalVisible = false">取消</n-button>
+          <n-button @click="modalVisibleMid = false">取消</n-button>
+        </n-flex>
+      </template>
+    </n-card>
+  </n-modal>
+  <n-modal v-model:show="modalVisibleBottom" @mask-click="cancel">
+    <n-card
+      style="width: 600px"
+      :title="urlForm.id ? '编辑底部链接' : '新增底部链接'"
+      :bordered="false"
+      size="huge"
+      role="dialog"
+      aria-modal="true"
+    >
+      <n-form ref="linkFormRef" :model="urlForm" :rules="rules" label-width="100px">
+        <n-form-item label="链接名称" path="name">
+          <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>
+        </n-form-item>
+        <n-form-item label="链接名称" path="enName">
+          <n-input v-model:value="urlForm.enName" placeholder="请输入链接英文名"></n-input>
+        </n-form-item>
+        <n-form-item label="链接地址" path="url">
+          <n-input v-model:value="urlForm.url" placeholder="请输入链接地址"></n-input>
+        </n-form-item>
+      </n-form>
+      <template #footer>
+        <n-flex justify="end">
+          <n-button type="primary" @click="submit">确定</n-button>
+          <n-button @click="modalVisibleBottom = false">取消</n-button>
         </n-flex>
       </template>
     </n-card>
@@ -260,9 +329,11 @@ import {
   searchResource,
   updateResource,
 } from '@/apis/admin';
-const linkList = ref<Link[]>([]);
+const linkListMid = ref<Link[]>([]);
+const linkListBottom = ref<Link[]>([]);
 const sortList = ref<Link[]>([]);
-const modalVisible = ref(false);
+const modalVisibleMid = ref(false);
+const modalVisibleBottom = ref(false);
 const linkFormRef = ref<FormInst | null>();
 const urlForm = ref<Link>({ name: '', url: '', orderNum: 1, enName: '' });
 const message = useMessage();
@@ -307,9 +378,13 @@ const updateData = async (value: string, code: string) => {
   }
 };
 const getLinkList = async () => {
-  const res = await searchFriendLink();
-  if (res.code === 0) {
-    linkList.value = res.data ? res.data : [];
+  const resMid = await searchFriendLink(1);
+  if (resMid.code === 0) {
+    linkListMid.value = resMid.data ? resMid.data : [];
+  }
+  const resBottom = await searchFriendLink(0);
+  if (resBottom.code === 0) {
+    linkListBottom.value = resBottom.data ? resBottom.data : [];
   }
 };
 const delLink = ({ id }: Link) => {
@@ -325,15 +400,18 @@ const delLink = ({ id }: Link) => {
       const res = await deleteFriendLink(id!);
       if (res.code === 0) {
         message.success('删除成功！');
-        modalVisible.value = false;
+        modalVisibleMid.value = false;
+        modalVisibleBottom.value = false;
         getLinkList();
       }
     },
   });
 };
 const cancel = () => {};
-const sortLink = () => {
-  sortList.value = JSON.parse(JSON.stringify(linkList.value));
+const sortLink = (posType: string) => {
+  sortList.value = JSON.parse(
+    JSON.stringify(posType === 'mid' ? linkListMid.value : linkListBottom.value),
+  );
   sortVisible.value = true;
 };
 const rules: FormRules = {
@@ -356,7 +434,8 @@ const submit = async () => {
     if (!error) {
       const res = await updateFriendLink(params);
       if (res.code === 0) {
-        modalVisible.value = false;
+        modalVisibleMid.value = false;
+        modalVisibleBottom.value = false;
         message.success(`${params.id ? '修改' : '添加'}成功`);
         getLinkList();
       }
@@ -375,14 +454,35 @@ const submitSort = async () => {
     getLinkList();
   }
 };
-const addLink = (row?: Link) => {
+const addLinkMid = (row?: Link) => {
   if (row) {
-    const { name, url, orderNum, id, enName } = row;
-    urlForm.value = { name, url, orderNum, id, enName };
+    const { name, url, orderNum, id, enName, posType } = row;
+    urlForm.value = { name, url, orderNum, id, enName, posType };
   } else {
-    urlForm.value = { name: '', url: '', orderNum: 1, enName: '' };
+    urlForm.value = {
+      name: '',
+      url: '',
+      orderNum: linkListMid.value.length,
+      enName: '',
+      posType: 1,
+    };
   }
-  modalVisible.value = true;
+  modalVisibleMid.value = true;
+};
+const addLinkBottom = (row?: Link) => {
+  if (row) {
+    const { name, url, orderNum, id, enName, posType } = row;
+    urlForm.value = { name, url, orderNum, id, enName, posType };
+  } else {
+    urlForm.value = {
+      name: '',
+      url: '',
+      orderNum: linkListBottom.value.length,
+      enName: '',
+      posType: 0,
+    };
+  }
+  modalVisibleBottom.value = true;
 };
 const linkColumns = [
   {
