@@ -4,6 +4,7 @@ export interface Resource {
   name: string;
   createTime?: string;
   updateTime?: string;
+  posType?: number;
   url: string;
 }
 export interface Link {
@@ -15,4 +16,5 @@ export interface Link {
   enName?: string;
   createTime?: string;
   updateTime?: string;
+  posType?: number;
 }

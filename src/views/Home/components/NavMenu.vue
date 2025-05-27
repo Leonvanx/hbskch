@@ -11,7 +11,7 @@
 -->
 <template>
   <!-- 桌面端菜单 -->
-  <div v-if="!isMobile" class="nav-menu-wrapper flex-row align-center">
+  <div class="nav-menu-wrapper flex-row align-center">
     <n-scrollbar x-scrollable>
       <div class="nav-menu flex-row align-center">
         <div v-for="item in menuList" :key="item.id" class="nav-menu-item">
@@ -44,68 +44,7 @@
         </div>
       </div>
     </n-scrollbar>
-    <div class="search-wrapper flex-row align-center">
-      <!-- <transition name="search-slide"> -->
-      <n-input
-        ref="target"
-        v-model:value="searchValue"
-        round
-        class="search-input"
-        size="large"
-        placeholder="请输入关键字"
-        @keydown.enter="searchArticle()"
-      >
-        <template #suffix>
-          <i-mdi-search
-            class="pointer"
-            style="font-size: 1.5rem; color: #fff; margin-left: 8px"
-            @click="searchArticle()"
-          />
-          <!-- <span class="search-suffix-btn" @click="searchArticle()">搜一下</span> -->
-        </template>
-      </n-input>
-      <!-- </transition> -->
-    </div>
   </div>
-  <template v-else>
-    <div v-if="isMobile" class="mobile-menu-btn">
-      <img src="@/assets/icons/menu-mobile.svg" class="menu-svg" @click="showDrawer = true" />
-    </div>
-    <n-drawer v-model:show="showDrawer" placement="top">
-      <n-drawer-content>
-        <div class="mobile-menu flex-row align-center">
-          <n-icon size="18">
-            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M5.64645 3.14645C5.45118 3.34171 5.45118 3.65829 5.64645 3.85355L9.79289 8L5.64645 12.1464C5.45118 12.3417 5.45118 12.6583 5.64645 12.8536C5.84171 13.0488 6.15829 13.0488 6.35355 12.8536L10.8536 8.35355C11.0488 8.15829 11.0488 7.84171 10.8536 7.64645L6.35355 3.14645C6.15829 2.95118 5.84171 2.95118 5.64645 3.14645Z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </n-icon>
-          <span style="margin-left: 5px" @click="clickMainMenu('首页', 0, 0)">首页</span>
-        </div>
-        <n-collapse default-expanded-names="1" accordion class="mobile-menu-wrapper">
-          <n-collapse-item
-            v-for="item in menuList.slice(1)"
-            :key="item.id"
-            :title="item.name"
-            :name="item.id"
-          >
-            <div class="sub-menu-wrapper flex-column gap">
-              <div
-                v-for="subItem in item.children"
-                :key="subItem.id"
-                class="mobile-sub-menu-item"
-                @click="clickSubMenu(subItem.id, subItem.showType, subItem.name)"
-              >
-                {{ subItem.name }}
-              </div>
-            </div>
-          </n-collapse-item>
-        </n-collapse>
-      </n-drawer-content>
-    </n-drawer>
-  </template>
 </template>
 
 <script setup lang="ts">
@@ -114,19 +53,6 @@ import type { Menu, Page } from '@/types';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const { width } = useWindowSize();
-const isMobile = computed(() => {
-  const userAgent = navigator.userAgent;
-  const mobileAgents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
-  for (let i = 0; i < mobileAgents.length; i++) {
-    if (userAgent.indexOf(mobileAgents[i]) > -1) {
-      return true;
-    }
-  }
-  return width.value < 768;
-});
-
-const showDrawer = ref(false);
 
 const menuList = ref<Menu[]>([]);
 const aricle = ref<Page[]>([]);
@@ -137,29 +63,9 @@ const searchMenuList = async () => {
   }
 };
 
-const searchValue = ref('');
-
-const showSearchInput = ref(false);
-
-const target = useTemplateRef<HTMLElement>('target');
-onClickOutside(target, () => (showSearchInput.value = false));
-
-const searchArticle = () => {
-  router.push({
-    name: 'subMenuArticleList',
-    query: {
-      meunId: 0,
-      searchWord: searchValue.value,
-    },
-  });
-};
-
 // 点击首页
 const clickMainMenu = (name: string, id: number, showType: number) => {
   if (name === '首页') {
-    if (isMobile.value) {
-      showDrawer.value = false;
-    }
     router.push({
       name: 'home',
     });
@@ -202,7 +108,6 @@ const clickMainMenu = (name: string, id: number, showType: number) => {
 };
 // 点击子菜单
 const clickSubMenu = (id: number, showType: number, name?: string, parentMenuName?: string) => {
-  showDrawer.value = false;
   if (showType === 1) {
     router.push({
       name: 'subMenuArticleList',

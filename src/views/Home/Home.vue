@@ -26,6 +26,7 @@
       :right-articles="articleList.second"
     />
     <CenterSplit v-if="isHomePage" :center-page="resourceObj.centerPage"></CenterSplit>
+    <FriendLink :posType="1" />
     <ArticleContent
       v-if="isHomePage"
       :carousel-articles="articleList.third"
@@ -33,7 +34,6 @@
       :is-row-reverse="!isMobile"
     />
     <RouterView v-if="!isHomePage" />
-    <FriendLink />
     <HomeBottom />
   </div>
 </template>
@@ -114,10 +114,14 @@ const getArticles = () => {
   };
   searchPage(params).then((res) => {
     if (res.data) {
-      articleList.value.first = res.data.records.filter((it) => it.showType === 1);
-      articleList.value.second = res.data.records.filter((it) => it.showType === 2);
-      articleList.value.third = res.data.records.filter((it) => it.showType === 3);
-      articleList.value.fourth = res.data.records.filter((it) => it.showType === 4);
+      const first = res.data.records.filter((it) => it.showType === 1);
+      const second = res.data.records.filter((it) => it.showType === 2);
+      const third = res.data.records.filter((it) => it.showType === 3);
+      const fourth = res.data.records.filter((it) => it.showType === 4);
+      articleList.value.first = first;
+      articleList.value.second = [...first, ...second];
+      articleList.value.third = third;
+      articleList.value.fourth = [...third, ...fourth];
     }
   });
 };

@@ -14,6 +14,12 @@
     <!-- 三部分，友情链接，二维码，详细信息，底部说明 -->
     <div class="contain">
       <div class="footer-cont">
+        <ul class="footer-links">
+          <!-- 友情链接 -->
+          <li v-for="(item, index) in footerLinks" :key="index" class="link-one">
+            <a :href="item.url" target="_blank">{{ item.name }}</a>
+          </li>
+        </ul>
         <div class="footer-info">
           <!--二维码，注册信息，联系方式 -->
           <div class="footer-pic">
@@ -63,8 +69,8 @@
 </template>
 
 <script setup lang="ts">
-import { searchResource } from '@/apis/admin';
-
+import { searchFriendLink, searchResource } from '@/apis/admin';
+const footerLinks = ref<Link[]>([]);
 const qrCode = ref('');
 const searchBt = ref('');
 const connectInfo = ref({
@@ -87,9 +93,16 @@ const searchBottomPic = async () => {
     searchBt.value = res.data?.[0]?.url || '';
   }
 };
+const getLinkList = async () => {
+  const res = await searchFriendLink(0);
+  if (res.code === 0) {
+    footerLinks.value = res.data || [];
+  }
+};
 const openbeian = () => {
   window.open('https://beian.miit.gov.cn/#/Integrated/index', '_black');
 };
+getLinkList();
 searchQRcode();
 searchBottomPic();
 </script>
@@ -118,19 +131,28 @@ searchBottomPic();
   border-bottom: 1px solid #ddd;
   display: flex;
   flex-wrap: wrap;
-
+  justify-content: space-between;
+  gap: 8;
   .link-one {
+    width: 170px;
+    background-color: rgba(255, 255, 255, 0.9);
+    margin: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
     a {
-      color: #ffffff;
+      color: #000000;
       white-space: nowrap;
       text-decoration: none;
       font-size: 14px;
       &:hover {
-        color: #18a058;
+        color: #181818;
       }
     }
   }
 }
+
 .footer-info {
   display: flex;
   flex-wrap: wrap;
