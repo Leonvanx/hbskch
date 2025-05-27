@@ -18,7 +18,7 @@ import { AiEditor } from 'aieditor';
 import 'aieditor/dist/style.css';
 const divRef = ref<Element | null>(null);
 let aiEditor: AiEditor | null = null;
-
+const token = sessionStorage.getItem('token');
 type Props = {
   content?: string;
 };
@@ -40,6 +40,7 @@ onMounted(() => {
       uploadHeaders: {
         jwt: 'xxxxx',
         other: 'xxxx',
+        Authorization: `Bearer ${token}`,
       },
       uploader: (
         file: File,
@@ -95,6 +96,7 @@ onMounted(() => {
       uploadHeaders: {
         jwt: 'xxxxx',
         other: 'xxxx',
+        Authorization: `Bearer ${token}`,
       },
       uploader: (
         file: File,

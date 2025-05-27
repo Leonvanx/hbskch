@@ -158,6 +158,7 @@ const goHome = () => {
       white-space: nowrap;
       color: #ffffff;
       font-weight: 800;
+      font-size: clamp(18px, 4vw, 72px);
     }
 
     .web-title-en {
@@ -167,7 +168,6 @@ const goHome = () => {
 
     @media (max-width: 768px) {
       .web-title-cn {
-        font-size: clamp(14px, 3vw, 72px);
       }
 
       .web-title-en {
@@ -177,7 +177,6 @@ const goHome = () => {
 
     @media (max-width: 768px) {
       .web-title-cn {
-        font-size: 16px;
       }
 
       .web-title-en {
@@ -188,9 +187,9 @@ const goHome = () => {
 
   .web-desc {
     margin-left: auto;
-    max-width: 350px;
+    width: 400px;
+    flex-shrink: 0;
     color: #f2f2f2;
-    flex: 1;
     height: 80px;
     border: 1px dotted #f2f2f230;
     border-radius: 3px;
