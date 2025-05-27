@@ -70,6 +70,7 @@
 
 <script setup lang="ts">
 import { searchFriendLink, searchResource } from '@/apis/admin';
+import type { Link } from '@/types';
 const footerLinks = ref<Link[]>([]);
 const qrCode = ref('');
 const searchBt = ref('');
