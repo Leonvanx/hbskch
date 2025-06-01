@@ -54,7 +54,7 @@ import { useRoute } from 'vue-router';
 import type { Menu, Page } from '@/types';
 import { searchMenu, searchResource, searchPage } from '@/apis';
 import NavMenu from './components/NavMenu.vue';
-import { NConfigProvider, GlobalThemeOverrides } from 'naive-ui';
+import type { GlobalThemeOverrides } from 'naive-ui';
 const themeOverrides: GlobalThemeOverrides = {
   Input: {
     borderHover: '1px solid #1e80ff',
