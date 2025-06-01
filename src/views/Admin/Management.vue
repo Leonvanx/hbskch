@@ -148,8 +148,7 @@
         </n-form-item>
         <n-form-item path="publishTime" label="发布时间">
           <n-date-picker
-            v-model:formatted-value="editTarget.publishTime"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            v-model:value="editTarget.publishTime"
             placeholder="请选择发布时间日期"
             type="datetime"
             clearable

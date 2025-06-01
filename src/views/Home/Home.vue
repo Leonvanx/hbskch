@@ -10,36 +10,38 @@
   修改时间：
 -->
 <template>
-  <div class="home-page flex-column">
-    <HomeHeader
-      :webTitle="resourceObj.webTitle"
-      :web-title-en="resourceObj.webTitleEn"
-      :web-logo="resourceObj.webLogo"
-      :web-desc="resourceObj.webDesc"
-      :bg-img="resourceObj.bgImg"
-      :isMobile="isMobile"
-    />
-    <NavMenu />
-    <ArticleContent
-      v-if="isHomePage"
-      :carousel-articles="articleList.first"
-      :right-articles="articleList.second"
-    />
-    <CenterSplit
-      v-if="isHomePage"
-      :center-page="resourceObj.centerPage"
-      :jump-url="resourceObj.jumpUrl"
-    ></CenterSplit>
-    <FriendLink v-if="isHomePage" :posType="1" />
-    <ArticleContent
-      v-if="isHomePage"
-      :carousel-articles="articleList.third"
-      :right-articles="articleList.fourth"
-      :is-row-reverse="!isMobile"
-    />
-    <RouterView v-if="!isHomePage" />
-    <HomeBottom />
-  </div>
+  <n-config-provider :theme-overrides="themeOverrides">
+    <div class="home-page flex-column">
+      <HomeHeader
+        :webTitle="resourceObj.webTitle"
+        :web-title-en="resourceObj.webTitleEn"
+        :web-logo="resourceObj.webLogo"
+        :web-desc="resourceObj.webDesc"
+        :bg-img="resourceObj.bgImg"
+        :isMobile="isMobile"
+      />
+      <NavMenu />
+      <ArticleContent
+        v-if="isHomePage"
+        :carousel-articles="articleList.first"
+        :right-articles="articleList.second"
+      />
+      <CenterSplit
+        v-if="isHomePage"
+        :center-page="resourceObj.centerPage"
+        :jump-url="resourceObj.jumpUrl"
+      ></CenterSplit>
+      <FriendLink v-if="isHomePage" :posType="1" />
+      <ArticleContent
+        v-if="isHomePage"
+        :carousel-articles="articleList.third"
+        :right-articles="articleList.fourth"
+        :is-row-reverse="!isMobile"
+      />
+      <RouterView v-if="!isHomePage" />
+      <HomeBottom />
+    </div>
+  </n-config-provider>
 </template>
 
 <script setup lang="ts">
@@ -52,7 +54,20 @@ import { useRoute } from 'vue-router';
 import type { Menu, Page } from '@/types';
 import { searchMenu, searchResource, searchPage } from '@/apis';
 import NavMenu from './components/NavMenu.vue';
-
+import { NConfigProvider, GlobalThemeOverrides } from 'naive-ui';
+const themeOverrides: GlobalThemeOverrides = {
+  Input: {
+    borderHover: '1px solid #1e80ff',
+    borderFocus: '1px solid #1e80ff',
+    caretColor: '#1e80ff',
+    boxShadowFocus: '0 0 0 2px rgba(30,28,255,0.2);',
+  },
+  Pagination: {
+    itemTextColorHover: '#1e80ff',
+    itemTextColorActive: '#1e80ff',
+    itemBorderActive: '1px solid #1e80ff',
+  },
+};
 const route = useRoute();
 const menuList = ref<Menu[]>([]);
 const searchMenuList = async () => {

@@ -233,7 +233,7 @@
         <n-form-item label="链接名称" path="name">
           <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>
         </n-form-item>
-        <n-form-item label="链接名称" path="enName">
+        <n-form-item label="链接背景图" path="enName">
           <n-input v-model:value="urlForm.enName" placeholder="请输入链接英文名"></n-input>
         </n-form-item>
         <n-form-item label="链接地址" path="url">

@@ -24,7 +24,6 @@
             @click="jumpTo(item.url)"
           >
             <div class="cn-name">{{ item.name }}</div>
-            <div class="en-name">{{ item.enName }}</div>
           </li>
         </ul>
       </div>
@@ -92,23 +91,18 @@ searchLinkPic();
     gap: 3px;
     background-size: cover;
     border-radius: 5px;
-    font-size: 14px;
     color: #fff;
     .cn-name {
-      font-size: 16px;
+      font-size: 18px;
       transition: all 0.3s;
+      font-weight: 600;
     }
-    .en-name {
-      transition: all 0.3s;
-      font-size: 10px;
-    }
+
     &:hover {
       cursor: pointer;
       .cn-name {
         font-size: 20px;
-      }
-      .en-name {
-        font-size: 12px;
+        color: #ff3401;
       }
     }
   }
@@ -137,18 +131,12 @@ searchLinkPic();
     .cn-name {
       font-size: 14px;
       transition: all 0.3s;
-    }
-    .en-name {
-      transition: all 0.3s;
-      font-size: 10px;
+      font-weight: 600;
     }
     &:hover {
       cursor: pointer;
       .cn-name {
         font-size: 16px;
-      }
-      .en-name {
-        font-size: 12px;
       }
     }
   }
