@@ -29,34 +29,22 @@
           <div class="footer-connect">
             <!-- 联系方式 -->
             <div class="connect-left">
-              <p class="connect-one">
-                <span class="connect-title">联系人：</span>
-                <span class="connect-value">{{ connectInfo.name }}</span>
-              </p>
-              <p class="connect-one">
-                <span class="connect-title">联系电话：</span>
-                <span class="connect-value">{{ connectInfo.phone }}</span>
-              </p>
-              <p class="connect-one">
-                <span class="connect-title">联系地址：</span>
-                <span class="connect-value">{{ connectInfo.address }}</span>
+              <!-- 第一部分 -->
+              <p v-for="text in text1.split('\n')" :key="text" class="connect-one">
+                {{ text }}
               </p>
             </div>
             <div class="connect-right">
-              <p class="connect-one">
-                <span class="connect-title">邮箱：</span>
-                <span class="connect-value">{{ connectInfo.email }}</span>
-              </p>
-              <p class="connect-one">
-                <span class="connect-title">QQ：</span>
-                <span class="connect-value">{{ connectInfo.qq }}</span>
+              <p v-for="text in text2.split('\n')" :key="text" class="connect-one">
+                {{ text }}
               </p>
             </div>
           </div>
           <div class="footer-zc">
             <!-- 注册信息 -->
-            <div class="info-one">湖北省科技进步促进会 主办</div>
-            <div class="info-one">技术支持：百度</div>
+            <div v-for="text in text3.split('\n')" :key="text" class="info-one">
+              {{ text }}
+            </div>
             <div class="info-one" @click="openbeian">备案号：鄂ICP备2025115975号-1</div>
           </div>
         </div>
@@ -74,14 +62,10 @@ import type { Link } from '@/types';
 const footerLinks = ref<Link[]>([]);
 const qrCode = ref('');
 const searchBt = ref('');
-const connectInfo = ref({
-  phone: '13545341627',
-  name: '张怿',
-  email: 'sfjd600@126.com',
-  address: '武汉市武昌区洪山路2号科教大厦A座602',
-  qq: '126951900',
-});
 
+const text1 = ref('');
+const text2 = ref('');
+const text3 = ref('');
 const searchQRcode = async () => {
   const res = await searchResource('qrCode');
   if (res.code === 0) {
@@ -100,12 +84,33 @@ const getLinkList = async () => {
     footerLinks.value = res.data || [];
   }
 };
+const searchText1 = async () => {
+  const res = await searchResource('text1');
+  if (res.code === 0) {
+    text1.value = res.data?.[0]?.url || '';
+  }
+};
+const searchText2 = async () => {
+  const res = await searchResource('text2');
+  if (res.code === 0) {
+    text2.value = res.data?.[0]?.url || '';
+  }
+};
+const searchText3 = async () => {
+  const res = await searchResource('text3');
+  if (res.code === 0) {
+    text3.value = res.data?.[0]?.url || '';
+  }
+};
 const openbeian = () => {
   window.open('https://beian.miit.gov.cn/#/Integrated/index', '_black');
 };
 getLinkList();
 searchQRcode();
 searchBottomPic();
+searchText1();
+searchText2();
+searchText3();
 </script>
 
 <style scoped lang="scss">

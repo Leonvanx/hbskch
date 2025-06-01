@@ -11,20 +11,31 @@
 -->
 <template>
   <div class="center-split-line">
-    <img style="width: 100%; height: 100%; object-fit: cover" :src="props.centerPage" alt="" />
+    <img
+      style="width: 100%; height: 100%; object-fit: cover; cursor: pointer"
+      :src="props.centerPage"
+      alt=""
+      @click="jumpTo"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 type Props = {
   centerPage: string;
+  jumpUrl: string;
 };
 const props = withDefaults(defineProps<Props>(), {});
+const jumpTo = () => {
+  if (props.jumpUrl) {
+    window.open(props.jumpUrl, '_black');
+  }
+};
 </script>
 
 <style scoped lang="scss">
 .center-split-line {
-  margin: 0 auto;
+  margin: -20px auto 0;
   max-width: 1200px;
   max-height: 200px;
 }

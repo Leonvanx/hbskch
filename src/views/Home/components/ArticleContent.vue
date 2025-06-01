@@ -133,7 +133,7 @@ onMounted(() => {});
         overflow: hidden;
         /* 隐藏溢出的文本 */
         text-overflow: ellipsis;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
         color: #f7f7f7;
       }
@@ -165,7 +165,8 @@ onMounted(() => {});
 .article-list {
   flex: 1;
   padding: 3px;
-
+  height: 382px;
+  overflow: auto;
   .article-list-item {
     gap: 16px;
     padding: 0 15px;
@@ -173,14 +174,14 @@ onMounted(() => {});
 
     &:hover {
       .article-title {
-        color: #18a058;
+        color: #ff3401;
       }
     }
 
     .article-title {
-      padding: 14px 0;
+      padding: 11px 0;
       color: #1a1a1a;
-      font-size: 14px;
+      font-size: 16px;
     }
 
     .release-time {

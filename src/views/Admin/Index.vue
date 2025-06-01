@@ -80,22 +80,29 @@
             <template #footer>底部二维码</template>
           </n-card>
         </n-space>
-        <n-form inline style="margin-top: 20px">
-          <n-form-item label="顶部中文名" style="width: 33%">
+        <n-form inline style="margin-top: 20px; flex-wrap: wrap">
+          <n-form-item label="窗帘跳转url" style="width: 100%">
+            <n-input
+              v-model:value="resourceObj.jumpUrl"
+              placeholder="请输入跳转url"
+              @change="(val: string) => updateData(val, 'jumpUrl')"
+            ></n-input>
+          </n-form-item>
+          <n-form-item label="顶部中文名" style="width: 30%">
             <n-input
               v-model:value="resourceObj.zhTitle"
               placeholder="请输入中文名"
               @change="(val: string) => updateData(val, 'zhTitle')"
             ></n-input>
           </n-form-item>
-          <n-form-item label="顶部英文名" style="width: 33%">
+          <n-form-item label="顶部英文名" style="width: 30%">
             <n-input
               v-model:value="resourceObj.enTitle"
               placeholder="请输入英文名"
               @change="(val: string) => updateData(val, 'enTitle')"
             ></n-input>
           </n-form-item>
-          <n-form-item label="顶部描述" style="width: 33%">
+          <n-form-item label="顶部描述" style="width: 30%">
             <n-input
               v-model:value="resourceObj.desc"
               placeholder="请输入描述"
@@ -186,6 +193,31 @@
           </n-space>
         </template>
       </CTable>
+    </n-card>
+    <n-card title="底部文案区域调整">
+      <n-form>
+        <n-form-item label="第一部分文案">
+          <n-input
+            v-model:value="resourceObj.part1Text"
+            type="textarea"
+            @change="(val: string) => updateData(val, 'text1')"
+          ></n-input>
+        </n-form-item>
+        <n-form-item label="第二部分文案">
+          <n-input
+            v-model:value="resourceObj.part2Text"
+            type="textarea"
+            @change="(val: string) => updateData(val, 'text2')"
+          ></n-input>
+        </n-form-item>
+        <n-form-item label="第三部分文案">
+          <n-input
+            v-model:value="resourceObj.part3Text"
+            type="textarea"
+            @change="(val: string) => updateData(val, 'text3')"
+          ></n-input>
+        </n-form-item>
+      </n-form>
     </n-card>
   </n-flex>
   <n-modal v-model:show="modalVisibleMid" @mask-click="cancel">
@@ -349,6 +381,10 @@ const resourceObj = ref({
   desc: '',
   qrcode: '',
   footerPic: '',
+  part1Text: '',
+  part2Text: '',
+  part3Text: '',
+  jumpUrl: '',
 });
 const sortVisible = ref(false);
 const getAllResourceList = async () => {
@@ -364,6 +400,10 @@ const getAllResourceList = async () => {
     resourceObj.value.desc = res.data?.find((item) => item.code === 'desc')?.url || '';
     resourceObj.value.qrcode = res.data?.find((item) => item.code === 'qrcode')?.url || '';
     resourceObj.value.footerPic = res.data?.find((item) => item.code === 'footerPic')?.url || '';
+    resourceObj.value.part1Text = res.data?.find((item) => item.code === 'text1')?.url || '';
+    resourceObj.value.part2Text = res.data?.find((item) => item.code === 'text2')?.url || '';
+    resourceObj.value.part3Text = res.data?.find((item) => item.code === 'text3')?.url || '';
+    resourceObj.value.jumpUrl = res.data?.find((item) => item.code === 'jumpUrl')?.url || '';
   }
 };
 const updateData = async (value: string, code: string) => {

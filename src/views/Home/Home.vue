@@ -25,8 +25,12 @@
       :carousel-articles="articleList.first"
       :right-articles="articleList.second"
     />
-    <CenterSplit v-if="isHomePage" :center-page="resourceObj.centerPage"></CenterSplit>
-    <FriendLink :posType="1" />
+    <CenterSplit
+      v-if="isHomePage"
+      :center-page="resourceObj.centerPage"
+      :jump-url="resourceObj.jumpUrl"
+    ></CenterSplit>
+    <FriendLink v-if="isHomePage" :posType="1" />
     <ArticleContent
       v-if="isHomePage"
       :carousel-articles="articleList.third"
@@ -80,6 +84,7 @@ const resourceObj = ref({
   bgImg: '',
   webDesc: '',
   centerPage: '',
+  jumpUrl: '',
 });
 
 const queryResources = () => {
@@ -91,6 +96,7 @@ const queryResources = () => {
       resourceObj.value.bgImg = res.data.filter((it) => it.code === 'topbg')[0].url;
       resourceObj.value.webDesc = res.data.filter((it) => it.code === 'desc')[0].url;
       resourceObj.value.centerPage = res.data.filter((it) => it.code === 'searchH5')[0].url;
+      resourceObj.value.jumpUrl = res.data.filter((it) => it.code === 'jumpUrl')[0].url;
     }
   });
 };

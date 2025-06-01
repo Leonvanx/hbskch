@@ -122,7 +122,7 @@ watch(route, () => {
 .list {
   min-height: 400px;
   .list-item {
-    padding: 27px 8px;
+    padding: 15px 8px;
     gap: 16px;
     border-bottom: 1px solid #dddddd;
     align-items: baseline;
@@ -132,19 +132,19 @@ watch(route, () => {
       height: 8px;
       display: block;
       position: absolute;
-      background-color: #18a058;
+      background-color: #1e80ff;
       top: 50%;
       transform: translateY(-50%);
     }
     .article-title {
       color: #1a1a1a;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 400;
       line-height: 20px;
       margin-left: 15px;
       &:hover {
         font-weight: 500;
-        color: #18a058;
+        color: #ff3401;
       }
     }
     .release-time {

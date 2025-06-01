@@ -95,7 +95,7 @@ searchLinkPic();
     font-size: 14px;
     color: #fff;
     .cn-name {
-      font-size: 14px;
+      font-size: 16px;
       transition: all 0.3s;
     }
     .en-name {
@@ -105,7 +105,7 @@ searchLinkPic();
     &:hover {
       cursor: pointer;
       .cn-name {
-        font-size: 16px;
+        font-size: 20px;
       }
       .en-name {
         font-size: 12px;

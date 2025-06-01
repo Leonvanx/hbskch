@@ -87,7 +87,7 @@ const props = withDefaults(defineProps<Props>(), {
   webDesc: '',
 });
 const nowTime = computed(() => {
-  return '现在是' + dayjs().format('YYYY年MM月DD日 星期dd');
+  return dayjs().format('YYYY年MM月DD日 星期dd');
 });
 const searchValue = ref('');
 const searchArticle = () => {

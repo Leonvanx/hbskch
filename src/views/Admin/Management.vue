@@ -146,6 +146,17 @@
         <n-form-item path="coverImage" label="展示图">
           <CommonUpload v-model:fileUrl="editTarget.coverImage" :max="1"></CommonUpload>
         </n-form-item>
+        <n-form-item path="publishTime" label="发布时间">
+          <n-date-picker
+            v-model:formatted-value="editTarget.publishTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="请选择发布时间日期"
+            type="datetime"
+            clearable
+            style="width: '100%'"
+          >
+          </n-date-picker>
+        </n-form-item>
         <n-form-item path="menuId" label="展示菜单">
           <n-tree-select
             v-model:value="editTarget.menuId"
@@ -236,8 +247,8 @@ const columns = [
     width: '150px',
   },
   {
-    title: '更新时间',
-    key: 'updateTime',
+    title: '发布时间',
+    key: 'publishTime',
     width: '200px',
   },
   {
