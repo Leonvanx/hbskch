@@ -102,7 +102,6 @@ searchLinkPic();
       cursor: pointer;
       .cn-name {
         font-size: 20px;
-        color: #ff3401;
       }
     }
   }
