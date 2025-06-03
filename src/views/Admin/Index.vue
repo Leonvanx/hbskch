@@ -233,8 +233,8 @@
         <n-form-item label="链接名称" path="name">
           <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>
         </n-form-item>
-        <n-form-item label="链接背景图" path="enName">
-          <n-input v-model:value="urlForm.enName" placeholder="请输入链接英文名"></n-input>
+        <n-form-item label="链接背景图" path="picUrl">
+          <n-input v-model:value="urlForm.picUrl" placeholder="请输入链接英文名"></n-input>
         </n-form-item>
         <n-form-item label="链接地址" path="url">
           <n-input v-model:value="urlForm.url" placeholder="请输入链接地址"></n-input>
@@ -261,8 +261,8 @@
         <n-form-item label="链接名称" path="name">
           <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>
         </n-form-item>
-        <n-form-item label="链接名称" path="enName">
-          <n-input v-model:value="urlForm.enName" placeholder="请输入链接英文名"></n-input>
+        <n-form-item label="链接名称" path="picUrl">
+          <n-input v-model:value="urlForm.picUrl" placeholder="请输入链接英文名"></n-input>
         </n-form-item>
         <n-form-item label="链接地址" path="url">
           <n-input v-model:value="urlForm.url" placeholder="请输入链接地址"></n-input>
@@ -367,7 +367,7 @@ const sortList = ref<Link[]>([]);
 const modalVisibleMid = ref(false);
 const modalVisibleBottom = ref(false);
 const linkFormRef = ref<FormInst | null>();
-const urlForm = ref<Link>({ name: '', url: '', orderNum: 1, enName: '' });
+const urlForm = ref<Link>({ name: '', url: '', orderNum: 1, picUrl: '' });
 const message = useMessage();
 const dialog = useDialog();
 const resourceObj = ref({
@@ -496,14 +496,14 @@ const submitSort = async () => {
 };
 const addLinkMid = (row?: Link) => {
   if (row) {
-    const { name, url, orderNum, id, enName, posType } = row;
-    urlForm.value = { name, url, orderNum, id, enName, posType };
+    const { name, url, orderNum, id, picUrl, posType } = row;
+    urlForm.value = { name, url, orderNum, id, picUrl, posType };
   } else {
     urlForm.value = {
       name: '',
       url: '',
       orderNum: linkListMid.value.length,
-      enName: '',
+      picUrl: '',
       posType: 1,
     };
   }
@@ -511,14 +511,14 @@ const addLinkMid = (row?: Link) => {
 };
 const addLinkBottom = (row?: Link) => {
   if (row) {
-    const { name, url, orderNum, id, enName, posType } = row;
-    urlForm.value = { name, url, orderNum, id, enName, posType };
+    const { name, url, orderNum, id, picUrl, posType } = row;
+    urlForm.value = { name, url, orderNum, id, picUrl, posType };
   } else {
     urlForm.value = {
       name: '',
       url: '',
       orderNum: linkListBottom.value.length,
-      enName: '',
+      picUrl: '',
       posType: 0,
     };
   }
@@ -530,8 +530,8 @@ const linkColumns = [
     key: 'name',
   },
   {
-    title: '链接英文名',
-    key: 'enName',
+    title: '链接背景图',
+    key: 'picUrl',
   },
   {
     title: '链接地址',

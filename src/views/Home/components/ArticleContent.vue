@@ -48,7 +48,7 @@
         <div class="article-title els">
           <span>{{ item.title }}</span>
         </div>
-        <div class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</div>
+        <div class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</div>
       </div>
     </div>
   </div>

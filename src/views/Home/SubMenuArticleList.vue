@@ -30,7 +30,7 @@
               :patterns="route.query.searchWord ? [route.query.searchWord as string] : undefined" />
             {{
           }}</span>
-          <span class="release-time">{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
+          <span class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</span>
         </div>
       </div>
       <div v-if="pages.total > pages.size" class="article-pagination">

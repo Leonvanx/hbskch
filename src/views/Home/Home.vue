@@ -55,6 +55,7 @@ import type { Menu, Page } from '@/types';
 import { searchMenu, searchResource, searchPage } from '@/apis';
 import NavMenu from './components/NavMenu.vue';
 import type { GlobalThemeOverrides } from 'naive-ui';
+import dayjs from 'dayjs';
 const themeOverrides: GlobalThemeOverrides = {
   Input: {
     borderHover: '1px solid #1e80ff',
@@ -140,9 +141,13 @@ const getArticles = () => {
       const third = res.data.records.filter((it) => it.showType === 3);
       const fourth = res.data.records.filter((it) => it.showType === 4);
       articleList.value.first = first;
-      articleList.value.second = [...first, ...second];
+      articleList.value.second = [...first, ...second].sort(
+        (a, b) => +dayjs(b.publishTime) - +dayjs(a.publishTime),
+      );
       articleList.value.third = third;
-      articleList.value.fourth = [...third, ...fourth];
+      articleList.value.fourth = [...third, ...fourth].sort(
+        (a, b) => +dayjs(b.publishTime) - +dayjs(a.publishTime),
+      );
     }
   });
 };
