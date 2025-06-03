@@ -13,7 +13,7 @@ export interface Link {
   url: string;
   orderNum?: number;
   delFlag?: number;
-  enName?: string;
+  picUrl?: string;
   createTime?: string;
   updateTime?: string;
   posType?: number;
