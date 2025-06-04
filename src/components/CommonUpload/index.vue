@@ -16,6 +16,7 @@
     list-type="image-card"
     :max="1"
     @preview="handlePreview"
+    @remove="handleClear"
   />
   <n-modal v-model:show="showModal" preset="card" style="width: 600px" title="图片预览">
     <img :src="previewImageUrl" style="width: 100%" />
@@ -40,6 +41,12 @@ const handlePreview = (file: UploadFileInfo) => {
   const { url } = file;
   previewImageUrl.value = url as string;
   showModal.value = true;
+};
+const handleClear = () => {
+  previewImageUrl.value = '';
+  previewFileList.value = [];
+  console.log('clear');
+  emit('update:fileUrl', '');
 };
 const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
   // 上传图片

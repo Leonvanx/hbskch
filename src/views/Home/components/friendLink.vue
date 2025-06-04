@@ -20,7 +20,7 @@
             v-for="(item, index) in footerLinks"
             :key="index"
             class="link-one"
-            :style="{ backgroundImage: `url(${footerPic})` }"
+            :style="{ backgroundImage: `url(${item.picUrl})` }"
             @click="jumpTo(item.url)"
           >
             <div class="cn-name">{{ item.name }}</div>
@@ -32,10 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import { searchFriendLink, searchResource } from '@/apis/admin';
+import { searchFriendLink } from '@/apis/admin';
 import type { Link } from '@/types';
 const footerLinks = ref<Link[]>([]);
-const footerPic = ref('');
 type Props = {
   posType: number;
 };
@@ -46,17 +45,11 @@ const getLinkList = async () => {
     footerLinks.value = res.data || [];
   }
 };
-const searchLinkPic = async () => {
-  const res = await searchResource('footerPic');
-  if (res.code === 0) {
-    footerPic.value = res.data?.[0]?.url || '';
-  }
-};
+
 const jumpTo = (url: string) => {
   window.open(url, '_black');
 };
 getLinkList();
-searchLinkPic();
 </script>
 
 <style scoped lang="scss">

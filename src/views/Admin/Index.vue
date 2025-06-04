@@ -63,15 +63,6 @@
           </n-card>
           <n-card style="width: fit-content">
             <CommonUpload
-              :key="resourceObj.footerPic"
-              v-model:fileUrl="resourceObj.footerPic"
-              :max="1"
-              @uploadSuccess="(url: string) => updateData(url, 'footerPic')"
-            ></CommonUpload>
-            <template #footer>友情链接背景</template>
-          </n-card>
-          <n-card style="width: fit-content">
-            <CommonUpload
               :key="resourceObj.qrcode"
               v-model:fileUrl="resourceObj.qrcode"
               :max="1"
@@ -132,7 +123,16 @@
           >
         </n-space>
       </template>
+
       <CTable :columns="linkColumns" :table-data="linkListMid" :flex-height="false">
+        <template #picUrl="{ row }">
+          <template v-if="row.picUrl">
+            <n-image :src="row.picUrl" width="50" height="50"></n-image>
+          </template>
+          <template v-else>
+            <img src="@/assets/icons/default_image.svg" width="50" height="50" />
+          </template>
+        </template>
         <template #actions="{ row }">
           <n-space>
             <n-button title="修改" strong tertiary size="small" @click="addLinkMid(row)"
@@ -173,7 +173,7 @@
           >
         </n-space>
       </template>
-      <CTable :columns="linkColumns" :table-data="linkListBottom" :flex-height="false">
+      <CTable :columns="linkColumnsWithoutBg" :table-data="linkListBottom" :flex-height="false">
         <template #actions="{ row }">
           <n-space>
             <n-button title="修改" strong tertiary size="small" @click="addLinkBottom(row)"
@@ -234,7 +234,11 @@
           <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>
         </n-form-item>
         <n-form-item label="链接背景图" path="picUrl">
-          <n-input v-model:value="urlForm.picUrl" placeholder="请输入链接英文名"></n-input>
+          <CommonUpload
+            :key="urlForm.picUrl"
+            v-model:fileUrl="urlForm.picUrl"
+            :max="1"
+          ></CommonUpload>
         </n-form-item>
         <n-form-item label="链接地址" path="url">
           <n-input v-model:value="urlForm.url" placeholder="请输入链接地址"></n-input>
@@ -261,9 +265,9 @@
         <n-form-item label="链接名称" path="name">
           <n-input v-model:value="urlForm.name" placeholder="请输入链接名称"></n-input>
         </n-form-item>
-        <n-form-item label="链接名称" path="picUrl">
+        <!-- <n-form-item label="链接背景图" path="picUrl">
           <n-input v-model:value="urlForm.picUrl" placeholder="请输入链接英文名"></n-input>
-        </n-form-item>
+        </n-form-item> -->
         <n-form-item label="链接地址" path="url">
           <n-input v-model:value="urlForm.url" placeholder="请输入链接地址"></n-input>
         </n-form-item>
@@ -285,7 +289,7 @@
       role="dialog"
       aria-modal="true"
     >
-      <CTable :columns="linkColumns" :table-data="sortList" :flex-height="false">
+      <CTable :columns="linkColumnsWithoutBg" :table-data="sortList" :flex-height="false">
         <template #actions="{ row }">
           <n-space>
             <n-button
@@ -532,6 +536,20 @@ const linkColumns = [
   {
     title: '链接背景图',
     key: 'picUrl',
+  },
+  {
+    title: '链接地址',
+    key: 'url',
+  },
+  {
+    title: '操作',
+    key: 'actions',
+  },
+];
+const linkColumnsWithoutBg = [
+  {
+    title: '链接名称',
+    key: 'name',
   },
   {
     title: '链接地址',
