@@ -49,7 +49,10 @@
           </div>
         </div>
         <div class="footer-tips">
-          <span>为确保最佳浏览效果，建议您使用最新版Edge浏览器或者Google Chrome浏览器。</span>
+          <span v-for="text in text4.split('\n')" :key="text">
+            {{ text }}
+          </span>
+          <!-- <span>为确保最佳浏览效果，建议您使用最新版Edge浏览器或者Google Chrome浏览器。</span> -->
         </div>
       </div>
     </div>
@@ -57,60 +60,30 @@
 </template>
 
 <script setup lang="ts">
-import { searchFriendLink, searchResource } from '@/apis/admin';
+import { searchFriendLink } from '@/apis/admin';
 import type { Link } from '@/types';
 const footerLinks = ref<Link[]>([]);
-const qrCode = ref('');
-const searchBt = ref('');
+type Props = {
+  qrCode: string;
+  searchBt: string;
+  text1: string;
+  text2: string;
+  text3: string;
+  text4: string;
+};
+defineProps<Props>();
 
-const text1 = ref('');
-const text2 = ref('');
-const text3 = ref('');
-const searchQRcode = async () => {
-  const res = await searchResource('qrCode');
-  if (res.code === 0) {
-    qrCode.value = res.data?.[0]?.url || '';
-  }
-};
-const searchBottomPic = async () => {
-  const res = await searchResource('searchBt');
-  if (res.code === 0) {
-    searchBt.value = res.data?.[0]?.url || '';
-  }
-};
 const getLinkList = async () => {
   const res = await searchFriendLink(0);
   if (res.code === 0) {
     footerLinks.value = res.data || [];
   }
 };
-const searchText1 = async () => {
-  const res = await searchResource('text1');
-  if (res.code === 0) {
-    text1.value = res.data?.[0]?.url || '';
-  }
-};
-const searchText2 = async () => {
-  const res = await searchResource('text2');
-  if (res.code === 0) {
-    text2.value = res.data?.[0]?.url || '';
-  }
-};
-const searchText3 = async () => {
-  const res = await searchResource('text3');
-  if (res.code === 0) {
-    text3.value = res.data?.[0]?.url || '';
-  }
-};
+
 const openbeian = () => {
   window.open('https://beian.miit.gov.cn/#/Integrated/index', '_black');
 };
 getLinkList();
-searchQRcode();
-searchBottomPic();
-searchText1();
-searchText2();
-searchText3();
 </script>
 
 <style scoped lang="scss">
@@ -189,6 +162,7 @@ searchText3();
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex: 1 1 0;
   }
   p {
     font-size: 12px;
@@ -204,12 +178,14 @@ searchText3();
   color: #ffffff;
 }
 .footer-tips {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
   font-size: 12px;
   color: #ffffff;
   margin-top: 20px;
-  span {
-    padding: 10px 0;
-  }
+  padding: 10px 0;
 }
 
 @media (min-width: 430px) {

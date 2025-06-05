@@ -39,7 +39,14 @@
         :is-row-reverse="!isMobile"
       />
       <RouterView v-if="!isHomePage" />
-      <HomeBottom />
+      <HomeBottom
+        :qrCode="resourceObj.qrCode"
+        :searchBt="resourceObj.searchBt"
+        :text1="resourceObj.text1"
+        :text2="resourceObj.text2"
+        :text3="resourceObj.text3"
+        :text4="resourceObj.text4"
+      />
     </div>
   </n-config-provider>
 </template>
@@ -101,6 +108,12 @@ const resourceObj = ref({
   webDesc: '',
   centerPage: '',
   jumpUrl: '',
+  qrCode: '',
+  searchBt: '',
+  text1: '',
+  text2: '',
+  text3: '',
+  text4: '',
 });
 
 const queryResources = () => {
@@ -113,6 +126,12 @@ const queryResources = () => {
       resourceObj.value.webDesc = res.data.filter((it) => it.code === 'desc')[0].url;
       resourceObj.value.centerPage = res.data.filter((it) => it.code === 'searchH5')[0].url;
       resourceObj.value.jumpUrl = res.data.filter((it) => it.code === 'jumpUrl')[0].url;
+      resourceObj.value.qrCode = res.data.filter((it) => it.code === 'qrcode')[0].url;
+      resourceObj.value.searchBt = res.data.filter((it) => it.code === 'searchBt')[0].url;
+      resourceObj.value.text1 = res.data.filter((it) => it.code === 'text1')[0].url;
+      resourceObj.value.text2 = res.data.filter((it) => it.code === 'text2')[0].url;
+      resourceObj.value.text3 = res.data.filter((it) => it.code === 'text3')[0].url;
+      resourceObj.value.text4 = res.data.filter((it) => it.code === 'text4')[0].url;
     }
   });
 };

@@ -217,6 +217,13 @@
             @change="(val: string) => updateData(val, 'text3')"
           ></n-input>
         </n-form-item>
+        <n-form-item label="第四部分文案">
+          <n-input
+            v-model:value="resourceObj.part4Text"
+            type="textarea"
+            @change="(val: string) => updateData(val, 'text4')"
+          ></n-input>
+        </n-form-item>
       </n-form>
     </n-card>
   </n-flex>
@@ -388,6 +395,7 @@ const resourceObj = ref({
   part1Text: '',
   part2Text: '',
   part3Text: '',
+  part4Text: '',
   jumpUrl: '',
 });
 const sortVisible = ref(false);
@@ -407,6 +415,7 @@ const getAllResourceList = async () => {
     resourceObj.value.part1Text = res.data?.find((item) => item.code === 'text1')?.url || '';
     resourceObj.value.part2Text = res.data?.find((item) => item.code === 'text2')?.url || '';
     resourceObj.value.part3Text = res.data?.find((item) => item.code === 'text3')?.url || '';
+    resourceObj.value.part4Text = res.data?.find((item) => item.code === 'text4')?.url || '';
     resourceObj.value.jumpUrl = res.data?.find((item) => item.code === 'jumpUrl')?.url || '';
   }
 };

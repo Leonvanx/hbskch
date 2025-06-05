@@ -213,6 +213,12 @@ const editRules: FormRules = {
       message: '请输入文章标题',
     },
   ],
+  publishTime: [
+    {
+      required: true,
+      message: '请选择发布时间',
+    },
+  ],
 };
 const editFormRef = ref<FormInst | null>(null);
 const editTarget = ref<Page>({});
