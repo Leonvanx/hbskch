@@ -158,7 +158,7 @@ const goHome = () => {
       white-space: nowrap;
       color: #ffffff;
       font-weight: 800;
-      font-size: clamp(18px, 4vw, 72px);
+      font-size: clamp(18px, 4vw, 55px);
     }
 
     .web-title-en {
@@ -186,7 +186,8 @@ const goHome = () => {
   }
 
   .web-desc {
-    margin-left: auto;
+    margin-left: 60px;
+    margin-top: 30px;
     width: 400px;
     flex-shrink: 0;
     color: #f2f2f2;
