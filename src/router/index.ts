@@ -47,6 +47,12 @@ const routes = [
         meta: { label: '内容管理', iconName: 'article' },
         component: () => import('@/views/Admin/Management.vue'),
       },
+      {
+        path: 'expertManagement',
+        name: 'expertManagement',
+        meta: { label: '专家管理', iconName: 'expert' },
+        component: () => import('@/views/Admin/ExpertManagement.vue'),
+      },
     ],
   },
   {
