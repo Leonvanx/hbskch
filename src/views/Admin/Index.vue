@@ -468,15 +468,9 @@ const sortLink = (posType: string) => {
   sortVisible.value = true;
 };
 const rules: FormRules = {
-  name: {
-    required: true,
-    message: '请输入链接名称',
-    trigger: 'blur',
-  },
   url: {
     required: true,
     message: '请输入链接地址',
-    trigger: 'blur',
   },
 };
 const submit = async () => {
