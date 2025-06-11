@@ -23,8 +23,17 @@ type Props = {
   content?: string;
 };
 const props = defineProps<Props>();
+const replaceSpacesInP = (html) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const ps = doc.querySelectorAll('p');
+  ps.forEach((p) => {
+    if (p.textContent) p.innerHTML = p.textContent.replace(/ /g, '&nbsp;');
+  });
+  return doc.body.innerHTML;
+};
 const getContent = () => {
-  return aiEditor?.getHtml();
+  return replaceSpacesInP(aiEditor?.getHtml());
 };
 defineExpose({ getContent });
 onMounted(() => {
