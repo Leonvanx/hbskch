@@ -69,6 +69,11 @@ watch(route, () => {
   }
   .rich-text {
     margin-top: 26px;
+    :deep(p) {
+      margin: 16px 0;
+      min-height: 26px;
+      line-height: 26px;
+    }
   }
 }
 @media screen and (max-width: 1000px) {
