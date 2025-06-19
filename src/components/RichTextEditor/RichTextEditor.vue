@@ -27,8 +27,11 @@ const replaceSpacesInP = (html: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   const ps = doc.querySelectorAll('p');
-  ps.forEach((p) => {
-    if (p.textContent) p.innerHTML = p.textContent.replace(/ /g, '&nbsp;');
+  ps.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+      // 替换文本节点中的空格为&nbsp;
+      node.textContent = node.textContent.replace(/ /g, '&nbsp;');
+    }
   });
   return doc.body.innerHTML;
 };
