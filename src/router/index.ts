@@ -53,6 +53,12 @@ const routes = [
         meta: { label: '专家管理', iconName: 'expert' },
         component: () => import('@/views/Admin/ExpertManagement.vue'),
       },
+      {
+        path: 'backupManagement',
+        name: 'backupManagement',
+        meta: { label: '备份管理', iconName: 'backup' },
+        component: () => import('@/views/Admin/BackupManagement.vue'),
+      },
     ],
   },
   {
