@@ -38,17 +38,26 @@
         </template>
       </n-carousel>
     </div>
-    <div v-if="rightArticles.length > 0" class="article-list ovf">
-      <div
-        v-for="item in rightArticles"
-        :key="item.id"
-        class="article-list-item flex-row align-center ovf justify-between pointer"
-        @click="clickArticle(item.id)"
-      >
-        <div class="article-title els">
-          <span>{{ item.title }}</span>
+    <div v-if="rightArticles.length > 0" class="article-list-container flex-column ovf">
+      <!-- 新增横向tab -->
+      <n-tabs type="line" style="overflow-x: auto; white-space: nowrap">
+        <n-tab-pane name="latest" tab="最新文章"></n-tab-pane>
+        <n-tab-pane name="hot" tab="热门文章"></n-tab-pane>
+        <n-tab-pane name="recommend" tab="推荐文章"></n-tab-pane>
+      </n-tabs>
+      <div class="article-list">
+        <!-- 原有内容 -->
+        <div
+          v-for="item in rightArticles"
+          :key="item.id"
+          class="article-list-item flex-row align-center ovf justify-between pointer"
+          @click="clickArticle(item.id)"
+        >
+          <div class="article-title els">
+            <span>{{ item.title }}</span>
+          </div>
+          <div class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</div>
         </div>
-        <div class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</div>
       </div>
     </div>
   </div>
@@ -162,43 +171,46 @@ onMounted(() => {});
   }
 }
 
-.article-list {
+.article-list-container {
   flex: 1;
   padding: 3px;
   height: 382px;
-  overflow: auto;
-  .article-list-item {
-    gap: 16px;
-    padding: 0 15px;
-    border-bottom: 1px solid #eeeeee;
-    position: relative;
-    &::before {
-      width: 5px;
-      height: 5px;
-      position: absolute;
-      left: 0;
-      content: '';
-      display: block;
-      background-color: #1e80ff;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    &:hover {
-      .article-title {
-        color: #ff3401;
+  .article-list {
+    overflow-y: auto;
+    flex: 1;
+    .article-list-item {
+      gap: 16px;
+      padding: 0 15px;
+      border-bottom: 1px solid #eeeeee;
+      position: relative;
+      &::before {
+        width: 5px;
+        height: 5px;
+        position: absolute;
+        left: 0;
+        content: '';
+        display: block;
+        background-color: #1e80ff;
+        top: 50%;
+        transform: translateY(-50%);
       }
-    }
+      &:hover {
+        .article-title {
+          color: #ff3401;
+        }
+      }
 
-    .article-title {
-      padding: 11px 0;
-      color: #1a1a1a;
-      font-size: 16px;
-    }
+      .article-title {
+        padding: 11px 0;
+        color: #1a1a1a;
+        font-size: 16px;
+      }
 
-    .release-time {
-      font-size: 12px;
-      color: #999;
-      flex-shrink: 0;
+      .release-time {
+        font-size: 12px;
+        color: #999;
+        flex-shrink: 0;
+      }
     }
   }
 }
@@ -266,5 +278,16 @@ onMounted(() => {});
     height: 200px;
     object-fit: cover;
   }
+}
+</style>
+
+<style scoped>
+/* 新增tab样式 */
+.article-list :deep(.n-tabs) {
+  margin-bottom: 16px;
+}
+
+.article-list :deep(.n-tabs-nav) {
+  border-bottom: 1px solid #f0f0f0;
 }
 </style>
