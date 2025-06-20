@@ -57,7 +57,6 @@ import ArticleContent from './components/ArticleContent.vue';
 import HomeBottom from './components/HomeBottom.vue';
 import CenterSplit from './components/CenterSplit.vue';
 import FriendLink from './components/friendLink.vue';
-import { useRoute } from 'vue-router';
 import type { Menu, Page } from '@/types';
 import { searchMenu, searchResource, searchPage } from '@/apis';
 import NavMenu from './components/NavMenu.vue';
@@ -68,7 +67,7 @@ const themeOverrides: GlobalThemeOverrides = {
     borderHover: '1px solid #1e80ff',
     borderFocus: '1px solid #1e80ff',
     caretColor: '#1e80ff',
-    boxShadowFocus: '0 0 0 2px rgba(30,28,255,0.2);',
+    boxShadowFocus: '0 0 0 2px rgba(30,28,255,0.2)',
   },
   Pagination: {
     itemTextColorHover: '#1e80ff',
