@@ -40,10 +40,16 @@
     </div>
     <div v-if="rightArticles.length > 0" class="article-list-container flex-column ovf">
       <!-- 新增横向tab -->
-      <n-tabs type="line" style="overflow-x: auto; white-space: nowrap">
-        <n-tab-pane name="latest" tab="最新文章"></n-tab-pane>
-        <n-tab-pane name="hot" tab="热门文章"></n-tab-pane>
-        <n-tab-pane name="recommend" tab="推荐文章"></n-tab-pane>
+      <n-tabs
+        type="line"
+        pane-wrapper-class="article-list-tabs"
+        default-value="latest"
+        trigger="hover"
+        @update-value="tabChange"
+      >
+        <n-tab name="latest" tab="最新文章"></n-tab>
+        <n-tab name="hot" tab="热门文章"></n-tab>
+        <n-tab name="recommend" tab="推荐文章"></n-tab>
       </n-tabs>
       <div class="article-list">
         <!-- 原有内容 -->
@@ -65,7 +71,6 @@
 
 <script setup lang="ts">
 import type { Page } from '@/types';
-import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 type Props = {
   isRowReverse?: boolean;
@@ -82,6 +87,11 @@ const clickArticle = (id?: number) => {
       id: id,
     },
   });
+};
+
+const activeTab = ref('');
+const tabChange = (val: string) => {
+  activeTab.value = val;
 };
 onMounted(() => {});
 </script>
@@ -175,7 +185,23 @@ onMounted(() => {});
   flex: 1;
   padding: 3px;
   height: 382px;
+  .article-list-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  :deep(.n-tabs-tab__label) {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f4d83;
+  }
+  :deep(.n-tabs-bar) {
+    background-color: #1f4d83;
+  }
+  :deep(.n-tabs-bar) {
+    bottom: 0px;
+  }
   .article-list {
+    margin-top: 12px;
     overflow-y: auto;
     flex: 1;
     .article-list-item {
