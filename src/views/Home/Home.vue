@@ -24,7 +24,7 @@
       <ArticleContent
         v-if="isHomePage"
         :carousel-articles="articleList.first"
-        :right-articles="articleList.second"
+        :mebuTabs="firstMenuTabs"
       />
       <CenterSplit
         v-if="isHomePage"
@@ -35,7 +35,7 @@
       <ArticleContent
         v-if="isHomePage"
         :carousel-articles="articleList.third"
-        :right-articles="articleList.fourth"
+        :mebuTabs="secondMenuTabs"
         :is-row-reverse="!isMobile"
       />
       <RouterView v-if="!isHomePage" />
@@ -58,10 +58,9 @@ import HomeBottom from './components/HomeBottom.vue';
 import CenterSplit from './components/CenterSplit.vue';
 import FriendLink from './components/friendLink.vue';
 import type { Menu, Page } from '@/types';
-import { searchMenu, searchResource, searchPage } from '@/apis';
+import { searchMenu, searchResource, searchPage, searchMenuByTab } from '@/apis';
 import NavMenu from './components/NavMenu.vue';
 import type { GlobalThemeOverrides } from 'naive-ui';
-import dayjs from 'dayjs';
 const themeOverrides: GlobalThemeOverrides = {
   Input: {
     borderHover: '1px solid #1e80ff',
@@ -137,15 +136,13 @@ const queryResources = () => {
 
 const articleList = ref<{
   first: Page[];
-  second: Page[];
   third: Page[];
-  fourth: Page[];
 }>({
   first: [],
-  second: [],
   third: [],
-  fourth: [],
 });
+const firstMenuTabs = ref<Menu[]>([]);
+const secondMenuTabs = ref<Menu[]>([]);
 const getArticles = () => {
   const params = {
     page: 1,
@@ -155,25 +152,30 @@ const getArticles = () => {
   searchPage(params).then((res) => {
     if (res.data) {
       const first = res.data.records.filter((it) => it.showType === 1);
-      const second = res.data.records.filter((it) => it.showType === 2);
       const third = res.data.records.filter((it) => it.showType === 3);
-      const fourth = res.data.records.filter((it) => it.showType === 4);
       articleList.value.first = first;
-      articleList.value.second = [...first, ...second].sort(
-        (a, b) => +dayjs(b.publishTime) - +dayjs(a.publishTime),
-      );
       articleList.value.third = third;
-      articleList.value.fourth = [...third, ...fourth].sort(
-        (a, b) => +dayjs(b.publishTime) - +dayjs(a.publishTime),
-      );
+    }
+  });
+};
+const getMenuByTab = () => {
+  searchMenuByTab({ tabId: 1 }).then(async (res) => {
+    if (res.code === 0) {
+      firstMenuTabs.value = res.data as Menu[];
+    }
+  });
+  searchMenuByTab({ tabId: 2 }).then(async (res) => {
+    if (res.code === 0) {
+      secondMenuTabs.value = res.data as Menu[];
     }
   });
 };
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   getArticles();
   queryResources();
-  await searchMenuList();
+  getMenuByTab();
+  searchMenuList();
 });
 </script>
 
