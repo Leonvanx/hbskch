@@ -3,7 +3,6 @@ dist/
 dist-ssr/
 coverage/
 node_modules/
-src/apis/*
 
 # 忽略特定文件类型
 *.log

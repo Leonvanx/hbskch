@@ -1,6 +1,14 @@
 <template>
   <n-card title="备份管理">
-    <CTable :columns="columns" :table-data="backupData" :bordered="true" :striped="true" />
+    <div class="action-bar">
+      <n-button type="primary" @click="handleCreateBackup">
+        <template #icon>
+          <MdiAdd />
+        </template>
+        新增备份
+      </n-button>
+    </div>
+    <CTable :columns="columns" :table-data="tableData" :bordered="true" :striped="true" />
   </n-card>
   <n-card class="pagination-container">
     <n-pagination
@@ -15,7 +23,9 @@
 
 <script lang="ts" setup>
 import { NButton } from 'naive-ui';
-
+import { createBackup, getBackupList, restoreBackup } from '@/apis';
+import type { BackupItem } from '@/types';
+const message = useMessage();
 // 表格列定义
 const columns = [
   {
@@ -31,7 +41,7 @@ const columns = [
         NButton,
         {
           type: 'primary',
-          onClick: () => restoreBackup(row.id),
+          onClick: () => handleRestore(row.timestamp),
         },
         { default: () => '恢复备份' },
       );
@@ -40,11 +50,7 @@ const columns = [
 ];
 
 // 模拟数据
-const backupData = ref([
-  { id: 1, time: '2023-10-01 10:00:00' },
-  { id: 2, time: '2023-10-02 14:30:00' },
-  { id: 3, time: '2023-10-03 09:15:00' },
-]);
+const tableData = ref<BackupItem[]>([]);
 
 // 分页配置
 const pagination = ref({
@@ -52,11 +58,35 @@ const pagination = ref({
   size: 10,
   total: 0,
 });
-function pageChange(page: number) {
+const loadBackupList = async () => {
+  const res = await getBackupList();
+  if (res.data) {
+    tableData.value = res.data;
+    pagination.value.total = res.data.length;
+  }
+};
+// 分页变化
+const pageChange = (page: number) => {
   pagination.value.page = page;
-}
-const restoreBackup = (id: number) => {
-  console.log('🚀 ~ restoreBackup ~ id:', id);
+  loadBackupList();
+};
+// 创建备份
+const handleCreateBackup = async () => {
+  const res = await createBackup();
+  if (res.data.code === 0) {
+    message.success('创建备份成功');
+    loadBackupList(); // 刷新列表
+  }
+};
+// 恢复备份
+const handleRestore = async (timestamp: string) => {
+  const res = await restoreBackup({ timestamp });
+  if (res.data.code === 0) {
+    message.success('恢复备份成功');
+    loadBackupList();
+  } else {
+    message.error(res.data.msg);
+  }
 };
 </script>
 
