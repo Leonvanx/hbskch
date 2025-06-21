@@ -9,6 +9,6 @@ export const getBackupList = (config?: AxiosRequestConfig) => {
   return request.get<ResultSuccess<BackupItem[]>>('/tech/api/backup/list', null, config);
 };
 
-export const restoreBackup = (params: { timestamp: string }, config?: AxiosRequestConfig) => {
-  return request.post<ResultSuccess>('/tech/api/backup/restore', params, config);
+export const restoreBackup = (params: string, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess>('/tech/api/backup/restore?timestamp=' + params, null, config);
 };

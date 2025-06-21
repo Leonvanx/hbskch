@@ -102,6 +102,13 @@
             :options="showTypeOptions"
             placeholder="请选择展示类型"
             clearable
+          /> </n-form-item
+        ><n-form-item path="tabNum" label="展示Tab">
+          <n-select
+            v-model:value="editTarget.tabNum"
+            :options="tabOptions"
+            placeholder="请选择展示Tab类型"
+            clearable
           />
         </n-form-item>
       </n-form>
@@ -212,6 +219,16 @@ const showTypeOptions = [
     value: 2,
   },
 ];
+const tabOptions = [
+  {
+    label: '头版Tab',
+    value: 1,
+  },
+  {
+    label: '二版Tab',
+    value: 2,
+  },
+];
 const columns = [
   {
     title: '菜单名称',
@@ -301,6 +318,7 @@ const dialog = useDialog();
 const editMenu = (menu: Menu) => {
   drawerVisible.value = true;
   editTarget.value = JSON.parse(JSON.stringify(menu));
+  console.log('🚀 ~ editMenu ~ editTarget:', toRaw(editTarget.value));
   editTargetOld.value = JSON.parse(JSON.stringify(menu));
 };
 const add = () => {
@@ -458,6 +476,9 @@ const submit = () => {
     if (error) {
       return;
     }
+    /**
+     * 这段if else 逻辑有问题？
+     */
     if (editTarget.value.menuType === 'main') {
       editTarget.value.parentId = 0;
       editTarget.value.orderNum = menuList.value.length;
