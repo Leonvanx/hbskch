@@ -1,14 +1,21 @@
 <template>
   <n-card title="备份管理">
-    <div class="action-bar">
+    <template #header-extra>
       <n-button type="primary" @click="handleCreateBackup">
         <template #icon>
-          <MdiAdd />
+          <i-mdi-add></i-mdi-add>
         </template>
         新增备份
       </n-button>
-    </div>
-    <CTable :columns="columns" :table-data="tableData" :bordered="true" :striped="true" />
+    </template>
+    <CTable :columns="columns" :table-data="tableData" :bordered="true" :striped="true">
+      <template #time="{ row }">
+        {{ formatDate(row.time) }}
+      </template>
+      <template #actions="{ row }">
+        <n-button type="primary" @click="handleRestore(row.timeStr)"> 恢复备份 </n-button>
+      </template>
+    </CTable>
   </n-card>
   <n-card class="pagination-container">
     <n-pagination
@@ -25,6 +32,7 @@
 import { NButton } from 'naive-ui';
 import { createBackup, getBackupList, restoreBackup } from '@/apis';
 import type { BackupItem } from '@/types';
+import dayjs from 'dayjs';
 const message = useMessage();
 // 表格列定义
 const columns = [
@@ -35,17 +43,6 @@ const columns = [
   {
     title: '操作',
     key: 'actions',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    render(row: any) {
-      return h(
-        NButton,
-        {
-          type: 'primary',
-          onClick: () => handleRestore(row.timestamp),
-        },
-        { default: () => '恢复备份' },
-      );
-    },
   },
 ];
 
@@ -72,22 +69,32 @@ const pageChange = (page: number) => {
 };
 // 创建备份
 const handleCreateBackup = async () => {
-  const res = await createBackup();
-  if (res.data.code === 0) {
+  message.loading('正在创建备份...', { duration: 0 });
+  const res = await createBackup({ timeout: 20000 });
+  if (res.code === 0) {
+    message.destroyAll();
     message.success('创建备份成功');
     loadBackupList(); // 刷新列表
   }
 };
 // 恢复备份
 const handleRestore = async (timestamp: string) => {
-  const res = await restoreBackup({ timestamp });
-  if (res.data.code === 0) {
+  message.loading('正在恢复备份...', { duration: 0 });
+  const res = await restoreBackup(timestamp, { timeout: 20000 });
+  if (res.code === 0) {
+    message.destroyAll();
     message.success('恢复备份成功');
     loadBackupList();
   } else {
     message.error(res.data.msg);
   }
 };
+const formatDate = (date: string) => {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+};
+onMounted(() => {
+  loadBackupList();
+});
 </script>
 
 <style lang="scss" scoped>

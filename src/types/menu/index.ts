@@ -8,6 +8,7 @@ export interface Menu {
   children?: Menu[];
   menuType?: string;
   showType: number;
+  tabNum: number;
 }
 export interface MainMenu {
   menuId: number;
