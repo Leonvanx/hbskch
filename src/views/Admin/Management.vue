@@ -394,9 +394,9 @@ const serachMenuName = (row: Page) => {
 const subMenuList = ref<{ value?: number; label?: string }[]>([]);
 const showTypeList = ref<{ value?: number; label?: string }[]>([
   { value: 1, label: '首版Banner图' },
-  { value: 2, label: '首版列表' },
+  // { value: 2, label: '首版列表' },
   { value: 3, label: '二版Banner图' },
-  { value: 4, label: '二版列表' },
+  // { value: 4, label: '二版列表' },
 ]);
 const menuList = ref<Menu[]>([]);
 const resolveMenu = (menuList: Menu[]) => {

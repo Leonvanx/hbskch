@@ -102,8 +102,9 @@
             :options="showTypeOptions"
             placeholder="请选择展示类型"
             clearable
+            @change="changeShowType"
           /> </n-form-item
-        ><n-form-item path="tabNum" label="展示Tab">
+        ><n-form-item v-if="editTarget.showType == 1" path="tabNum" label="展示Tab">
           <n-select
             v-model:value="editTarget.tabNum"
             :options="tabOptions"
@@ -260,7 +261,11 @@ const menuTypeOptions = [
 ];
 
 const drawerVisible = ref<boolean>(false);
-
+const changeShowType = (val: number) => {
+  if (val != 1) {
+    editTarget.value.tabNum = null;
+  }
+};
 const editFormRef = ref<FormInst | null>(null);
 const basicEditRules: FormRules = {
   name: {
