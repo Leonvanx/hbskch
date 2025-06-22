@@ -338,6 +338,13 @@ const add = () => {
     // @ts-expect-error 此处忽略类型检查，新增不用id
     id: null,
   };
+  editTargetOld.value = {
+    name: '',
+    menuType: 'main',
+    orderNum: 0,
+    // @ts-expect-error 此处忽略类型检查，新增不用id
+    id: null,
+  };
   drawerVisible.value = true;
 };
 const delMenu = ({ id }: Menu) => {
@@ -488,10 +495,11 @@ const submit = () => {
     /**
      * 这段if else 逻辑有问题？
      */
-    if (editTarget.value.menuType === 'main') {
+    if (editTarget.value.menuType === 'main' && editTargetOld.value.menuType === 'sub') {
       editTarget.value.parentId = 0;
       editTarget.value.orderNum = menuList.value.length;
-    } else {
+    }
+    if (editTargetOld.value.menuType === 'main' && editTarget.value.menuType === 'sub') {
       for (let i = 0; i < menuList.value.length; i++) {
         if (menuList.value[i].id === editTarget.value.parentId) {
           editTarget.value.orderNum = menuList.value[i].children?.length;
