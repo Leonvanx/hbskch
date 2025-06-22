@@ -43,49 +43,52 @@
       <n-tabs
         type="line"
         pane-wrapper-class="article-list-tabs"
-        default-value="latest"
         trigger="hover"
-        @update-value="tabChange"
+        @update-value="debouncedTabChange"
       >
         <n-tab v-for="item in mebuTabs" :key="item.id" :name="item.id" :tab="item.name"></n-tab>
       </n-tabs>
       <div class="article-list">
         <!-- 原有内容 -->
-        <template v-if="rightArticles.length">
-          <div
-            v-for="item in rightArticles"
-            :key="item.id"
-            class="article-list-item flex-row align-center ovf justify-between pointer"
-            @click="clickArticle(item.id)"
-          >
-            <div class="article-title els">
-              <span>{{ item.title }}</span>
+        <n-spin :show="loading" stroke="#1f4d83">
+          <template v-if="rightArticles.length">
+            <div
+              v-for="item in rightArticles"
+              :key="item.id"
+              class="article-list-item flex-row align-center ovf justify-between pointer"
+              @click="clickArticle(item.id)"
+            >
+              <div class="article-title els">
+                <span>{{ item.title }}</span>
+              </div>
+              <div class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</div>
             </div>
-            <div class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</div>
+          </template>
+          <div v-else class="empty flex-column flex-center">
+            <div class="empty-text">暂无文章</div>
+            <img class="empty-img" src="@/assets/icons/empty.svg" alt="" />
           </div>
-        </template>
-        <div v-else class="empty flex-column flex-center">
-          <div class="empty-text">暂无文章</div>
-          <img class="empty-img" src="@/assets/icons/empty.svg" alt="" />
-        </div>
+        </n-spin>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { searchPage } from '@/apis';
+import { searchMenuByTab, searchPage } from '@/apis';
 import type { Menu, Page } from '@/types';
 import dayjs from 'dayjs';
 type Props = {
   isRowReverse?: boolean;
   carouselArticles: Page[];
-  mebuTabs: Menu[];
 };
 const router = useRouter();
 const props = defineProps<Props>();
 
+const mebuTabs = ref<Menu[]>([]);
+
 const rightArticles = ref<Page[]>([]);
+const loading = ref<boolean>(false);
 
 const clickArticle = (id?: number) => {
   router.push({
@@ -96,20 +99,49 @@ const clickArticle = (id?: number) => {
   });
 };
 
-const tabChange = (val: string) => {
+const tabChange = (val: number) => {
+  loading.value = true;
   const params = {
     page: 1,
     size: 100,
     summary: 1,
-    menuId: Number(val),
+    menuId: val,
   };
-  searchPage(params).then((res) => {
-    if (res.code === 0 && res.data) {
-      rightArticles.value = res.data.records;
-    }
-  });
+  searchPage(params)
+    .then((res) => {
+      if (res.code === 0 && res.data) {
+        rightArticles.value = res.data.records;
+        setTimeout(() => {
+          loading.value = false;
+        }, 5000);
+      }
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
-onMounted(() => {});
+
+const debouncedTabChange = useDebounceFn(tabChange, 300); // 300ms防抖延迟
+const getMenuByTab = () => {
+  if (!props.isRowReverse) {
+    searchMenuByTab({ tabId: 1 }).then(async (res) => {
+      if (res.code === 0) {
+        mebuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
+        tabChange(mebuTabs.value[0].id);
+      }
+    });
+  } else {
+    searchMenuByTab({ tabId: 2 }).then(async (res) => {
+      if (res.code === 0) {
+        mebuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
+        tabChange(mebuTabs.value[0].id);
+      }
+    });
+  }
+};
+onMounted(() => {
+  getMenuByTab();
+});
 </script>
 
 <style scoped lang="scss">

@@ -13,7 +13,10 @@
         {{ formatDate(row.time) }}
       </template>
       <template #actions="{ row }">
-        <n-button type="primary" @click="handleRestore(row.timeStr)"> 恢复备份 </n-button>
+        <n-flex>
+          <n-button type="primary" @click="handleRestore(row.timeStr)"> 恢复备份 </n-button>
+          <n-button type="error" @click="handleDelete(row.timeStr)"> 删除备份 </n-button>
+        </n-flex>
       </template>
     </CTable>
   </n-card>
@@ -30,7 +33,7 @@
 
 <script lang="ts" setup>
 import { NButton } from 'naive-ui';
-import { createBackup, getBackupList, restoreBackup } from '@/apis';
+import { createBackup, deleteBackup, getBackupList, restoreBackup } from '@/apis';
 import type { BackupItem } from '@/types';
 import dayjs from 'dayjs';
 const message = useMessage();
@@ -68,26 +71,52 @@ const pageChange = (page: number) => {
   loadBackupList();
 };
 // 创建备份
-const handleCreateBackup = async () => {
+const handleCreateBackup = () => {
   message.loading('正在创建备份...', { duration: 0 });
-  const res = await createBackup({ timeout: 20000 });
-  if (res.code === 0) {
-    message.destroyAll();
-    message.success('创建备份成功');
-    loadBackupList(); // 刷新列表
-  }
+  createBackup({ timeout: 20000 })
+    .then((res) => {
+      if (res.code === 0) {
+        message.destroyAll();
+        message.success('创建备份成功');
+        loadBackupList(); // 刷新列表
+      }
+    })
+    .catch(() => {
+      message.destroyAll();
+    });
 };
 // 恢复备份
 const handleRestore = async (timestamp: string) => {
   message.loading('正在恢复备份...', { duration: 0 });
-  const res = await restoreBackup(timestamp, { timeout: 20000 });
-  if (res.code === 0) {
-    message.destroyAll();
-    message.success('恢复备份成功');
-    loadBackupList();
-  } else {
-    message.error(res.data.msg);
-  }
+  restoreBackup(timestamp, { timeout: 20000 })
+    .then((res) => {
+      if (res.code === 0) {
+        message.destroyAll();
+        message.success('恢复备份成功');
+        loadBackupList();
+      } else {
+        message.error(res.data.msg);
+      }
+    })
+    .catch(() => {
+      message.destroyAll();
+    });
+};
+const handleDelete = async (timestamp: string) => {
+  message.loading('正在删除备份...', { duration: 0 });
+  deleteBackup(timestamp, { timeout: 20000 })
+    .then((res) => {
+      if (res.code === 0) {
+        message.destroyAll();
+        message.success('删除备份成功');
+        loadBackupList();
+      } else {
+        message.error(res.data.msg);
+      }
+    })
+    .catch(() => {
+      message.destroyAll();
+    });
 };
 const formatDate = (date: string) => {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
