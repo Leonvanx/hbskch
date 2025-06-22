@@ -20,15 +20,6 @@
       </template>
     </CTable>
   </n-card>
-  <n-card class="pagination-container">
-    <n-pagination
-      v-model:page="pagination.page"
-      :item-count="pagination.total"
-      :page-size="pagination.size"
-      :page-slot="7"
-      @update:page="pageChange"
-    />
-  </n-card>
 </template>
 
 <script lang="ts" setup>
@@ -51,24 +42,11 @@ const columns = [
 
 // 模拟数据
 const tableData = ref<BackupItem[]>([]);
-
-// 分页配置
-const pagination = ref({
-  page: 1,
-  size: 10,
-  total: 0,
-});
 const loadBackupList = async () => {
   const res = await getBackupList();
   if (res.data) {
     tableData.value = res.data;
-    pagination.value.total = res.data.length;
   }
-};
-// 分页变化
-const pageChange = (page: number) => {
-  pagination.value.page = page;
-  loadBackupList();
 };
 // 创建备份
 const handleCreateBackup = () => {
@@ -127,15 +105,4 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-/* 新增样式 */
-.pagination-container {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
-  :deep(.n-card__content) {
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-</style>
+<style lang="scss" scoped></style>
