@@ -161,12 +161,12 @@ const getArticles = () => {
 const getMenuByTab = () => {
   searchMenuByTab({ tabId: 1 }).then(async (res) => {
     if (res.code === 0) {
-      firstMenuTabs.value = res.data as Menu[];
+      firstMenuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
     }
   });
   searchMenuByTab({ tabId: 2 }).then(async (res) => {
     if (res.code === 0) {
-      secondMenuTabs.value = res.data as Menu[];
+      secondMenuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
     }
   });
 };
