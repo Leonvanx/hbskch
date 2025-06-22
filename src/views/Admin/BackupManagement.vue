@@ -1,30 +1,41 @@
 <template>
-  <n-card>
-    <n-button type="primary" @click="createBackupList">
-      <template #icon>
-        <n-icon>
-          <i-mdi-add style="font-size: 1.1rem; color: #fff" />
-        </n-icon>
+  <n-card title="备份管理">
+    <template #header-extra>
+      <n-button type="primary" @click="handleCreateBackup">
+        <template #icon>
+          <i-mdi-add></i-mdi-add>
+        </template>
+        新增备份
+      </n-button>
+    </template>
+    <CTable :columns="columns" :table-data="tableData" :bordered="true" :striped="true">
+      <template #time="{ row }">
+        {{ formatDate(row.time) }}
       </template>
-      新增备份</n-button
-    >
+      <template #actions="{ row }">
+        <n-button type="primary" @click="handleRestore(row.timeStr)"> 恢复备份 </n-button>
+      </template>
+    </CTable>
   </n-card>
-  <n-card style="margin-top: 10px">
-    <CTable :columns="columns" :table-data="backupData" :bordered="true" :striped="true" />
+  <n-card class="pagination-container">
+    <n-pagination
+      v-model:page="pagination.page"
+      :item-count="pagination.total"
+      :page-size="pagination.size"
+      :page-slot="7"
+      @update:page="pageChange"
+    />
   </n-card>
 </template>
 
 <script lang="ts" setup>
 import { NButton } from 'naive-ui';
-import { getBackupList, createBackup, restoreBackup } from '@/apis/admin';
-import { useMessage } from 'naive-ui';
+import { createBackup, getBackupList, restoreBackup } from '@/apis';
+import type { BackupItem } from '@/types';
+import dayjs from 'dayjs';
 const message = useMessage();
 // 表格列定义
 const columns = [
-  {
-    title: '备份名称',
-    key: 'timeStr',
-  },
   {
     title: '备份时间点',
     key: 'time',
@@ -32,51 +43,58 @@ const columns = [
   {
     title: '操作',
     key: 'actions',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    render(row: any) {
-      return h(
-        NButton,
-        {
-          type: 'primary',
-          onClick: () => restore(row.timeStr),
-        },
-        { default: () => '恢复备份' },
-      );
-    },
   },
 ];
-const getTableData = async () => {
-  const data = await getBackupList();
-  backupData.value = data.data;
-};
-const backupData = ref([]);
-// 分页配置
 
-const restore = async (time: string) => {
-  const messageReactive = message.create('正在恢复备份', {
-    type: 'loading',
-    duration: 0,
-  });
-  const res = await restoreBackup(time);
-  if (res.code == 0) {
-    messageReactive.destroy();
-    message.success('恢复备份成功');
-    getTableData();
+// 模拟数据
+const tableData = ref<BackupItem[]>([]);
+
+// 分页配置
+const pagination = ref({
+  page: 1,
+  size: 10,
+  total: 0,
+});
+const loadBackupList = async () => {
+  const res = await getBackupList();
+  if (res.data) {
+    tableData.value = res.data;
+    pagination.value.total = res.data.length;
   }
 };
-const createBackupList = async () => {
-  const messageReactive = message.create('正在创建备份', {
-    type: 'loading',
-    duration: 0,
-  });
-  const res = await createBackup();
+// 分页变化
+const pageChange = (page: number) => {
+  pagination.value.page = page;
+  loadBackupList();
+};
+// 创建备份
+const handleCreateBackup = async () => {
+  message.loading('正在创建备份...', { duration: 0 });
+  const res = await createBackup({ timeout: 20000 });
   if (res.code === 0) {
-    messageReactive.destroy();
+    message.destroyAll();
     message.success('创建备份成功');
-    getTableData();
+    loadBackupList(); // 刷新列表
   }
 };
-getTableData();
+// 恢复备份
+const handleRestore = async (timestamp: string) => {
+  message.loading('正在恢复备份...', { duration: 0 });
+  const res = await restoreBackup(timestamp, { timeout: 20000 });
+  if (res.code === 0) {
+    message.destroyAll();
+    message.success('恢复备份成功');
+    loadBackupList();
+  } else {
+    message.error(res.data.msg);
+  }
+};
+const formatDate = (date: string) => {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+};
+onMounted(() => {
+  loadBackupList();
+});
 </script>
 
 <style lang="scss" scoped>

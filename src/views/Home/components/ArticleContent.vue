@@ -11,7 +11,7 @@
 -->
 <template>
   <div class="article-content flex-row" :class="{ 'reverse-row': props.isRowReverse }">
-    <div v-if="carouselArticles.length > 0" class="main-article flex-column ovf">
+    <div class="main-article flex-column ovf">
       <n-carousel show-arrow autoplay>
         <div
           v-for="item in carouselArticles"
@@ -38,7 +38,7 @@
         </template>
       </n-carousel>
     </div>
-    <div v-if="rightArticles.length > 0" class="article-list-container flex-column ovf">
+    <div v-if="mebuTabs.length" class="article-list-container flex-column ovf">
       <!-- 新增横向tab -->
       <n-tabs
         type="line"
@@ -47,22 +47,26 @@
         trigger="hover"
         @update-value="tabChange"
       >
-        <n-tab name="latest" tab="最新文章"></n-tab>
-        <n-tab name="hot" tab="热门文章"></n-tab>
-        <n-tab name="recommend" tab="推荐文章"></n-tab>
+        <n-tab v-for="item in mebuTabs" :key="item.id" :name="item.id" :tab="item.name"></n-tab>
       </n-tabs>
       <div class="article-list">
         <!-- 原有内容 -->
-        <div
-          v-for="item in rightArticles"
-          :key="item.id"
-          class="article-list-item flex-row align-center ovf justify-between pointer"
-          @click="clickArticle(item.id)"
-        >
-          <div class="article-title els">
-            <span>{{ item.title }}</span>
+        <template v-if="rightArticles.length">
+          <div
+            v-for="item in rightArticles"
+            :key="item.id"
+            class="article-list-item flex-row align-center ovf justify-between pointer"
+            @click="clickArticle(item.id)"
+          >
+            <div class="article-title els">
+              <span>{{ item.title }}</span>
+            </div>
+            <div class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</div>
           </div>
-          <div class="release-time">{{ dayjs(item.publishTime).format('YYYY-MM-DD') }}</div>
+        </template>
+        <div v-else class="empty flex-column flex-center">
+          <div class="empty-text">暂无文章</div>
+          <img class="empty-img" src="@/assets/icons/empty.svg" alt="" />
         </div>
       </div>
     </div>
@@ -70,15 +74,18 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '@/types';
+import { searchPage } from '@/apis';
+import type { Menu, Page } from '@/types';
 import dayjs from 'dayjs';
 type Props = {
   isRowReverse?: boolean;
   carouselArticles: Page[];
-  rightArticles: Page[];
+  mebuTabs: Menu[];
 };
 const router = useRouter();
 const props = defineProps<Props>();
+
+const rightArticles = ref<Page[]>([]);
 
 const clickArticle = (id?: number) => {
   router.push({
@@ -89,9 +96,18 @@ const clickArticle = (id?: number) => {
   });
 };
 
-const activeTab = ref('');
 const tabChange = (val: string) => {
-  activeTab.value = val;
+  const params = {
+    page: 1,
+    size: 100,
+    summary: 1,
+    menuId: Number(val),
+  };
+  searchPage(params).then((res) => {
+    if (res.code === 0 && res.data) {
+      rightArticles.value = res.data.records;
+    }
+  });
 };
 onMounted(() => {});
 </script>
@@ -204,6 +220,7 @@ onMounted(() => {});
     margin-top: 12px;
     overflow-y: auto;
     flex: 1;
+    position: relative;
     .article-list-item {
       gap: 16px;
       padding: 0 15px;
@@ -236,6 +253,20 @@ onMounted(() => {});
         font-size: 12px;
         color: #999;
         flex-shrink: 0;
+      }
+    }
+    .empty {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .empty-text {
+        color: #666;
+        font-size: 14px;
+      }
+      .empty-img {
+        width: 40px;
+        height: 40px;
       }
     }
   }

@@ -3,3 +3,4 @@ export * from './requestOptions';
 export * from './menu';
 export * from './resource';
 export * from './expert';
+export * from './backup';
