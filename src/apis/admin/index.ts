@@ -69,3 +69,15 @@ export const sortFriendLink = (params: {id?:number,orderNum?:number}[], config?:
 export const sortMenu = (params: {id?:number,orderNum?:number}[], config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess<{ code: number; message: string }>>(`/tech/menu/order`, params, config);
 }
+// 查找备份菜单列表
+export const getBackupList = (config?: AxiosRequestConfig) => {
+  return request.get<ResultSuccess>(`/tech/api/backup/list`, {}, config);
+}
+// 新建备份列表
+export const createBackup = (config?: AxiosRequestConfig) => {
+  return request.get<ResultSuccess>(`/tech/api/backup/create`, {}, config);
+}
+// 恢复备份
+export const restoreBackup = (timeStamp:string,config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess>(`/tech/api/backup/restore?timestamp=${timeStamp}`, null, config);
+}

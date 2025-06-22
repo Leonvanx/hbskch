@@ -1,23 +1,30 @@
 <template>
-  <n-card title="备份管理">
-    <CTable :columns="columns" :table-data="backupData" :bordered="true" :striped="true" />
+  <n-card>
+    <n-button type="primary" @click="createBackupList">
+      <template #icon>
+        <n-icon>
+          <i-mdi-add style="font-size: 1.1rem; color: #fff" />
+        </n-icon>
+      </template>
+      新增备份</n-button
+    >
   </n-card>
-  <n-card class="pagination-container">
-    <n-pagination
-      v-model:page="pagination.page"
-      :item-count="pagination.total"
-      :page-size="pagination.size"
-      :page-slot="7"
-      @update:page="pageChange"
-    />
+  <n-card style="margin-top: 10px">
+    <CTable :columns="columns" :table-data="backupData" :bordered="true" :striped="true" />
   </n-card>
 </template>
 
 <script lang="ts" setup>
 import { NButton } from 'naive-ui';
-
+import { getBackupList, createBackup, restoreBackup } from '@/apis/admin';
+import { useMessage } from 'naive-ui';
+const message = useMessage();
 // 表格列定义
 const columns = [
+  {
+    title: '备份名称',
+    key: 'timeStr',
+  },
   {
     title: '备份时间点',
     key: 'time',
@@ -31,33 +38,45 @@ const columns = [
         NButton,
         {
           type: 'primary',
-          onClick: () => restoreBackup(row.id),
+          onClick: () => restore(row.timeStr),
         },
         { default: () => '恢复备份' },
       );
     },
   },
 ];
-
-// 模拟数据
-const backupData = ref([
-  { id: 1, time: '2023-10-01 10:00:00' },
-  { id: 2, time: '2023-10-02 14:30:00' },
-  { id: 3, time: '2023-10-03 09:15:00' },
-]);
-
-// 分页配置
-const pagination = ref({
-  page: 1,
-  size: 10,
-  total: 0,
-});
-function pageChange(page: number) {
-  pagination.value.page = page;
-}
-const restoreBackup = (id: number) => {
-  console.log('🚀 ~ restoreBackup ~ id:', id);
+const getTableData = async () => {
+  const data = await getBackupList();
+  backupData.value = data.data;
 };
+const backupData = ref([]);
+// 分页配置
+
+const restore = async (time: string) => {
+  const messageReactive = message.create('正在恢复备份', {
+    type: 'loading',
+    duration: 0,
+  });
+  const res = await restoreBackup(time);
+  if (res.code == 0) {
+    messageReactive.destroy();
+    message.success('恢复备份成功');
+    getTableData();
+  }
+};
+const createBackupList = async () => {
+  const messageReactive = message.create('正在创建备份', {
+    type: 'loading',
+    duration: 0,
+  });
+  const res = await createBackup();
+  if (res.code === 0) {
+    messageReactive.destroy();
+    message.success('创建备份成功');
+    getTableData();
+  }
+};
+getTableData();
 </script>
 
 <style lang="scss" scoped>
