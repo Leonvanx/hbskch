@@ -111,9 +111,7 @@ const tabChange = (val: number) => {
     .then((res) => {
       if (res.code === 0 && res.data) {
         rightArticles.value = res.data.records;
-        setTimeout(() => {
-          loading.value = false;
-        }, 5000);
+        loading.value = false;
       }
     })
     .finally(() => {

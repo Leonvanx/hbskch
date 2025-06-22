@@ -15,7 +15,7 @@
       <template #actions="{ row }">
         <n-flex>
           <n-button type="primary" @click="handleRestore(row.timeStr)"> 恢复备份 </n-button>
-          <n-button type="error" @click="handleDelete(row.timeStr)"> 删除备份 </n-button>
+          <n-button type="error" @click="handleDelete(row.time)"> 删除备份 </n-button>
         </n-flex>
       </template>
     </CTable>
@@ -104,7 +104,8 @@ const handleRestore = async (timestamp: string) => {
 };
 const handleDelete = async (timestamp: string) => {
   message.loading('正在删除备份...', { duration: 0 });
-  deleteBackup(timestamp, { timeout: 20000 })
+  const str = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
+  deleteBackup(str, { timeout: 20000 })
     .then((res) => {
       if (res.code === 0) {
         message.destroyAll();
