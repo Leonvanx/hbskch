@@ -222,6 +222,10 @@ const showTypeOptions = [
 ];
 const tabOptions = [
   {
+    label: '不展示',
+    value: 0,
+  },
+  {
     label: '头版Tab',
     value: 1,
   },
@@ -263,7 +267,7 @@ const menuTypeOptions = [
 const drawerVisible = ref<boolean>(false);
 const changeShowType = (val: number) => {
   if (val != 1) {
-    editTarget.value.tabNum = null;
+    editTarget.value.tabNum = 0;
   }
 };
 const editFormRef = ref<FormInst | null>(null);
