@@ -21,11 +21,7 @@
         :isMobile="isMobile"
       />
       <NavMenu />
-      <ArticleContent
-        v-if="isHomePage"
-        :carousel-articles="articleList.first"
-        :mebuTabs="firstMenuTabs"
-      />
+      <ArticleContent v-if="isHomePage" :carousel-articles="articleList.first" />
       <CenterSplit
         v-if="isHomePage"
         :center-page="resourceObj.centerPage"
@@ -35,7 +31,6 @@
       <ArticleContent
         v-if="isHomePage"
         :carousel-articles="articleList.third"
-        :mebuTabs="secondMenuTabs"
         :is-row-reverse="!isMobile"
       />
       <RouterView v-if="!isHomePage" />
@@ -58,7 +53,7 @@ import HomeBottom from './components/HomeBottom.vue';
 import CenterSplit from './components/CenterSplit.vue';
 import FriendLink from './components/friendLink.vue';
 import type { Menu, Page } from '@/types';
-import { searchMenu, searchResource, searchPage, searchMenuByTab } from '@/apis';
+import { searchMenu, searchResource, searchPage } from '@/apis';
 import NavMenu from './components/NavMenu.vue';
 import type { GlobalThemeOverrides } from 'naive-ui';
 const themeOverrides: GlobalThemeOverrides = {
@@ -141,8 +136,6 @@ const articleList = ref<{
   first: [],
   third: [],
 });
-const firstMenuTabs = ref<Menu[]>([]);
-const secondMenuTabs = ref<Menu[]>([]);
 const getArticles = () => {
   const params = {
     page: 1,
@@ -158,23 +151,10 @@ const getArticles = () => {
     }
   });
 };
-const getMenuByTab = () => {
-  searchMenuByTab({ tabId: 1 }).then(async (res) => {
-    if (res.code === 0) {
-      firstMenuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
-    }
-  });
-  searchMenuByTab({ tabId: 2 }).then(async (res) => {
-    if (res.code === 0) {
-      secondMenuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
-    }
-  });
-};
 
-onBeforeMount(() => {
+onMounted(() => {
   getArticles();
   queryResources();
-  getMenuByTab();
   searchMenuList();
 });
 </script>
