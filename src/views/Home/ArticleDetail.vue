@@ -74,6 +74,28 @@ watch(route, () => {
       min-height: 26px;
       line-height: 26px;
     }
+    :deep(.tableWrapper) {
+      padding: 1rem 0;
+    }
+    :deep(table) {
+      border-collapse: collapse;
+      margin: 0;
+      overflow: hidden;
+      table-layout: fixed;
+      td,
+      th {
+        border: 2px solid #ced4da;
+        box-sizing: border-box;
+        min-width: 1em;
+        padding: 3px 5px;
+        position: relative;
+        vertical-align: top;
+      }
+      p {
+        margin: 0;
+        text-align: center;
+      }
+    }
   }
 }
 @media screen and (max-width: 1000px) {
