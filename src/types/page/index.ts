@@ -13,6 +13,7 @@ export interface Page {
   title?: string;
   showType?: number | null;
   publishTime?: string | null;
+  publishStatus?: number | null;
 }
 export interface PageOptions {
   searchWord?: string;

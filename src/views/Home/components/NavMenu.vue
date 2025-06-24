@@ -86,6 +86,7 @@ const clickMainMenu = (name: string, id: number, showType: number) => {
         size: 10,
         menuId: id,
         searchWord: '',
+        publishStatus: 1,
       };
       searchPage(params).then((data) => {
         if (data.code === 0) {
@@ -124,6 +125,7 @@ const clickSubMenu = (id: number, showType: number, name?: string, parentMenuNam
       size: 10,
       menuId: id,
       searchWord: '',
+      publishStatus: 1,
     };
     searchPage(params).then((data) => {
       if (data.code === 0) {

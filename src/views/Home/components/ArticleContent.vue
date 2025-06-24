@@ -106,6 +106,7 @@ const tabChange = (val: number) => {
     size: 100,
     summary: 1,
     menuId: val,
+    publishStatus: 1,
   };
   searchPage(params)
     .then((res) => {

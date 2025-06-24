@@ -41,6 +41,15 @@
             placeholder="请选择菜单"
           />
         </n-form-item>
+        <n-form-item path="publishStatus" label="发布状态">
+          <n-select
+            v-model:value="searchTarget.publishStatus"
+            clearable
+            style="width: 200px"
+            :options="publishStatusList"
+            placeholder="请选择发布状态"
+          />
+        </n-form-item>
         <n-form-item :show-label="false">
           <n-space>
             <n-button type="primary" @click="search">
@@ -69,6 +78,9 @@
           <!-- 从菜单里面找到对应的子菜单 -->
 
           {{ serachMenuName(row) }}
+        </template>
+        <template #publishStatus="{ row }">
+          {{ publishStatusList.find((item) => item.value == row.publishStatus)?.label }}
         </template>
         <template #coverImage="{ row }">
           <template v-if="row.coverImage">
@@ -136,7 +148,11 @@
       <template #footer>
         <n-space>
           <n-button @click="cancel">取消</n-button>
-          <n-button type="primary" @click="submit">保存</n-button>
+          <n-button type="primary" @click="submit(1)">保存</n-button>
+          <!-- 新增一个存草稿 -->
+          <n-button v-if="!editTarget?.publishStatus" type="primary" @click="submit(0)"
+            >存草稿</n-button
+          >
         </n-space>
       </template>
       <n-form ref="editFormRef" :model="editTarget" :rules="editRules">
@@ -224,7 +240,16 @@ const editFormRef = ref<FormInst | null>(null);
 const editTarget = ref<Page>({});
 const drawerVisible = ref<boolean>(false);
 const editRef = ref();
-
+const publishStatusList = ref([
+  {
+    label: '草稿',
+    value: 0,
+  },
+  {
+    label: '已发布',
+    value: 1,
+  },
+]);
 const tableData = ref<Page[]>([]);
 const columns = [
   {
@@ -235,6 +260,11 @@ const columns = [
   {
     title: '展示菜单',
     key: 'menuId',
+    width: '100px',
+  },
+  {
+    title: '状态',
+    key: 'publishStatus',
     width: '100px',
   },
   {
@@ -308,6 +338,7 @@ const searchData = async () => {
     size: pages.value.size,
     menuId: searchTarget.value.menuId,
     searchWord: searchTarget.value.searchWord,
+    publishStatus: searchTarget.value.publishStatus,
   };
   const data = await searchPage(params);
   if (data.code === 0) {
@@ -319,13 +350,13 @@ const add = () => {
   editTarget.value = {};
   drawerVisible.value = true;
 };
-const submit = () => {
+const submit = (publishStatus: number) => {
   editTarget.value.content = editRef.value.getContent();
 
   editFormRef.value?.validate((errors) => {
     if (!errors) {
       //添加新增内容接口
-      savePage(editTarget.value).then((data) => {
+      savePage({ ...editTarget.value, publishStatus }).then((data) => {
         if (data.code === 0) {
           message.success('保存成功！');
           // 如果是新增则返回到第一页

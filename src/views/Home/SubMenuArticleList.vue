@@ -77,6 +77,7 @@ const searchData = () => {
     size: pages.value.size,
     menuId: menuId,
     searchWord: searchWord,
+    publishStatus: 1,
   };
   searchPage(params).then((data) => {
     if (data.code === 0) {
