@@ -104,7 +104,7 @@ const tabChange = (val: number) => {
   const params = {
     page: 1,
     size: 100,
-    summary: 1,
+    type: 1,
     menuId: val,
     publishStatus: 1,
   };
