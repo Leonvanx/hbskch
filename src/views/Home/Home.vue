@@ -140,7 +140,6 @@ const getArticles = () => {
   const params = {
     page: 1,
     size: 100,
-    type: 1,
     publishStatus: 1,
   };
   searchPage(params).then((res) => {

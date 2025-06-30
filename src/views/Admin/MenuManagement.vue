@@ -506,7 +506,7 @@ const submit = () => {
         }
       }
     }
-    saveMenu(editTarget.value).then((data) => {
+    saveMenu({ parentId: 0, ...editTarget.value }).then((data) => {
       if (data.code === 0) {
         message.success(editTarget.value?.id ? '修改成功' : '新增菜单成功');
         drawerVisible.value = false;

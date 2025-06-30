@@ -46,7 +46,13 @@
         trigger="hover"
         @update-value="debouncedTabChange"
       >
-        <n-tab v-for="item in mebuTabs" :key="item.id" :name="item.id" :tab="item.name"></n-tab>
+        <n-tab
+          v-for="item in mebuTabs"
+          :key="item.id"
+          :name="item.id"
+          :tab="item.name"
+          @click="chooseTab(item)"
+        ></n-tab>
       </n-tabs>
       <div class="article-list">
         <!-- 原有内容 -->
@@ -103,8 +109,7 @@ const tabChange = (val: number) => {
   loading.value = true;
   const params = {
     page: 1,
-    size: 100,
-    type: 1,
+    size: 8,
     menuId: val,
     publishStatus: 1,
   };
@@ -121,6 +126,16 @@ const tabChange = (val: number) => {
 };
 
 const debouncedTabChange = useDebounceFn(tabChange, 300); // 300ms防抖延迟
+const chooseTab = (menu: Menu) => {
+  router.push({
+    name: 'subMenuArticleList',
+    query: {
+      name: menu.name,
+      menuId: menu.id,
+      searchWord: '',
+    },
+  });
+};
 const getMenuByTab = () => {
   if (!props.isRowReverse) {
     searchMenuByTab({ tabId: 1 }).then(async (res) => {
