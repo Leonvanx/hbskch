@@ -89,7 +89,7 @@ const download = async (timestamp: string) => {
 const handleDelete = async (timestamp: string) => {
   dialog.warning({
     title: '警告',
-    content: '你确定删除文章？',
+    content: '你确定删除备份吗？',
     positiveText: '确定',
     negativeText: '取消',
     draggable: true,
