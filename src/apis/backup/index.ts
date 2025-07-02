@@ -24,3 +24,6 @@ export const deleteBackup = (params: string, config?: AxiosRequestConfig) => {
     config,
   );
 };
+export const downloadBackup = (params: string) => {
+  return `http://hbkch.cn/tech/api/backup/download?timestamp=${params}`;
+};

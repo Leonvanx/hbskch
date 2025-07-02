@@ -16,6 +16,7 @@
         <n-flex>
           <n-button type="primary" @click="handleRestore(row.timeStr)"> 恢复备份 </n-button>
           <n-button type="error" @click="handleDelete(row.time)"> 删除备份 </n-button>
+          <n-button type="info" @click="download(row.time)"> 导出备份 </n-button>
         </n-flex>
       </template>
     </CTable>
@@ -24,10 +25,11 @@
 
 <script lang="ts" setup>
 import { NButton } from 'naive-ui';
-import { createBackup, deleteBackup, getBackupList, restoreBackup } from '@/apis';
+import { createBackup, deleteBackup, getBackupList, restoreBackup, downloadBackup } from '@/apis';
 import type { BackupItem } from '@/types';
 import dayjs from 'dayjs';
 const message = useMessage();
+const dialog = useDialog();
 // 表格列定义
 const columns = [
   {
@@ -80,22 +82,35 @@ const handleRestore = async (timestamp: string) => {
       message.destroyAll();
     });
 };
+const download = async (timestamp: string) => {
+  // 直接跳到新页面打开
+  window.open(downloadBackup(formatDate(timestamp)), '_blank');
+};
 const handleDelete = async (timestamp: string) => {
-  message.loading('正在删除备份...', { duration: 0 });
-  const str = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
-  deleteBackup(str, { timeout: 20000 })
-    .then((res) => {
-      if (res.code === 0) {
-        message.destroyAll();
-        message.success('删除备份成功');
-        loadBackupList();
-      } else {
-        message.error(res.data.msg);
-      }
-    })
-    .catch(() => {
-      message.destroyAll();
-    });
+  dialog.warning({
+    title: '警告',
+    content: '你确定删除文章？',
+    positiveText: '确定',
+    negativeText: '取消',
+    draggable: true,
+    onPositiveClick: () => {
+      message.loading('正在删除备份...', { duration: 0 });
+      const str = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
+      deleteBackup(str, { timeout: 20000 })
+        .then((res) => {
+          if (res.code === 0) {
+            message.destroyAll();
+            message.success('删除备份成功');
+            loadBackupList();
+          } else {
+            message.error(res.data.msg);
+          }
+        })
+        .catch(() => {
+          message.destroyAll();
+        });
+    },
+  });
 };
 const formatDate = (date: string) => {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
