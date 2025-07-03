@@ -67,20 +67,29 @@ const handleCreateBackup = () => {
 };
 // 恢复备份
 const handleRestore = async (timestamp: string) => {
-  message.loading('正在恢复备份...', { duration: 0 });
-  restoreBackup(timestamp, { timeout: 20000 })
-    .then((res) => {
-      if (res.code === 0) {
-        message.destroyAll();
-        message.success('恢复备份成功');
-        loadBackupList();
-      } else {
-        message.error(res.data.msg);
-      }
-    })
-    .catch(() => {
-      message.destroyAll();
-    });
+  dialog.success({
+    title: '警告',
+    content: '你确定恢复备份吗？',
+    positiveText: '确定',
+    negativeText: '取消',
+    draggable: true,
+    onPositiveClick: () => {
+      message.loading('正在恢复备份...', { duration: 0 });
+      restoreBackup(timestamp, { timeout: 20000 })
+        .then((res) => {
+          if (res.code === 0) {
+            message.destroyAll();
+            message.success('恢复备份成功');
+            loadBackupList();
+          } else {
+            message.error(res.data.msg);
+          }
+        })
+        .catch(() => {
+          message.destroyAll();
+        });
+    },
+  });
 };
 const download = async (timestamp: string) => {
   // 直接跳到新页面打开

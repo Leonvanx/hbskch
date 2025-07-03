@@ -141,6 +141,7 @@ const getArticles = () => {
     page: 1,
     size: 100,
     publishStatus: 1,
+    type: 1,
   };
   searchPage(params).then((res) => {
     if (res.data) {
