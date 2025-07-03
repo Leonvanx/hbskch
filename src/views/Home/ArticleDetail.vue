@@ -13,22 +13,39 @@
   <div class="article-content flex-column">
     <div class="article-title">{{ articleContent.title }}</div>
     <div class="publish-time">{{ dayjs(articleContent.publishTime).format('YYYY-MM-DD') }}</div>
-    <div class="rich-text" v-html="articleContent.content"></div>
+    <div ref="divRef">
+      <div class="aie-container" style="border-width: 0px">
+        <div class="aie-container-header" style="display: none"></div>
+        <div class="aie-container-main"></div>
+        <div class="aie-container-footer" style="display: none"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { AiEditor } from 'aieditor';
+import 'aieditor/dist/style.css';
 import { useRoute } from 'vue-router';
 import type { Page } from '@/types';
 import { searchPageById } from '@/apis';
 import dayjs from 'dayjs';
+const divRef = ref<Element | null>(null);
+let aiEditor: AiEditor | null = null;
 const articleContent = ref<Page>({});
 const route = useRoute();
-
+const initAiEditor = () => {
+  aiEditor = new AiEditor({
+    element: divRef.value as Element,
+    content: articleContent.value.content,
+    editable: false,
+  });
+};
 const queryArticleContent = (id: number) => {
   searchPageById(id).then((data) => {
     if (data.code === 0) {
       articleContent.value = data.data ? data.data : {};
+      initAiEditor();
     }
   });
 };
@@ -42,6 +59,11 @@ watch(route, () => {
   const articleId = route.query.id;
   if (articleId) {
     queryArticleContent(Number(articleId));
+  }
+});
+onUnmounted(() => {
+  if (aiEditor) {
+    aiEditor.destroy();
   }
 });
 </script>
@@ -67,52 +89,11 @@ watch(route, () => {
     font-size: 16px;
     margin-top: 10px;
   }
-  .rich-text {
-    margin-top: 26px;
-    :deep(p) {
-      margin: 16px 0;
-      min-height: 26px;
-      line-height: 26px;
-    }
-    :deep(.tableWrapper) {
-      padding: 1rem 0;
-    }
-    :deep(table) {
-      border-collapse: collapse;
-      margin: 0;
-      overflow: hidden;
-      table-layout: fixed;
-      td,
-      th {
-        border: 2px solid #ced4da;
-        box-sizing: border-box;
-        min-width: 1em;
-        padding: 3px 5px;
-        position: relative;
-        vertical-align: top;
-      }
-      p {
-        margin: 0;
-        text-align: center;
-      }
-    }
-  }
 }
 @media screen and (max-width: 1000px) {
   .article-content {
     width: 100%;
     padding: 0 26px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .rich-text {
-    :deep(img) {
-      max-width: 100% !important;
-      height: auto !important;
-      display: block;
-      margin: 0 auto;
-    }
   }
 }
 </style>

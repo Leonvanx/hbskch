@@ -10,7 +10,13 @@
   修改时间：
 -->
 <template>
-  <div ref="divRef" style="height: 600px" />
+  <div ref="divRef" style="height: 600px">
+    <!-- <div class="aie-container">
+        <div class="aie-container-header" style="display: none;"></div>
+        <div class="aie-container-main"></div>
+        <div class="aie-container-footer" style="display: none;"></div>
+    </div> -->
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,18 +30,27 @@ type Props = {
 };
 const props = defineProps<Props>();
 const replaceSpacesInP = (html: string) => {
+  /**
+   * 替换指定标签内所有文本节点中的空格为不换行空格
+   * @param html 输入的HTML字符串
+   * @returns 处理后的HTML字符串
+   */
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   // 查找所有 p 和 h1~h6 标签
   const nodes = doc.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
   nodes.forEach((node) => {
-    if (
-      (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ELEMENT_NODE) &&
-      node.textContent
-    ) {
-      // 替换文本节点中的空格为&nbsp;
-      node.textContent = node.textContent.replace(/ /g, '\u00a0');
-    }
+    // 递归替换当前节点及其所有子节点中的文本节点空格
+    const replaceSpacesInTextNodes = (element: Node) => {
+      element.childNodes.forEach((child) => {
+        if (child.nodeType === Node.TEXT_NODE && child.textContent) {
+          child.textContent = child.textContent.replace(/ /g, '\u00a0');
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          replaceSpacesInTextNodes(child);
+        }
+      });
+    };
+    replaceSpacesInTextNodes(node);
   });
   return doc.body.innerHTML;
 };
@@ -48,6 +63,22 @@ onMounted(() => {
     element: divRef.value as Element,
     placeholder: '点击输入内容...',
     content: props.content,
+    fontSize: {
+      values: [
+        { name: '初号', value: 56 },
+        { name: '小初', value: 48 },
+        { name: '一号', value: 34.7 },
+        { name: '小一', value: 32 },
+        { name: '二号', value: 29.3 },
+        { name: '小二', value: 24 },
+        { name: '三号', value: 21.3 },
+        { name: '小三', value: 20 },
+        { name: '四号', value: 18.7 },
+        { name: '小四', value: 16 },
+        { name: '五号', value: 14 },
+        { name: '小五', value: 12 },
+      ],
+    },
     image: {
       allowBase64: false,
       defaultSize: 350,
