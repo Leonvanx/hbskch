@@ -263,7 +263,7 @@ onMounted(() => {
     bottom: 0px;
   }
   .article-list {
-    margin-top: 12px;
+    margin-top: 0px;
     overflow-y: auto;
     flex: 1;
     position: relative;
@@ -290,7 +290,7 @@ onMounted(() => {
       }
 
       .article-title {
-        padding: 11px 0;
+        padding: 7px 0;
         color: #1a1a1a;
         font-size: 16px;
       }

@@ -26,7 +26,7 @@ const props = defineProps<Props>();
 const replaceSpacesInP = (html: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-  const ps = doc.querySelectorAll('p');
+  const ps = doc.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
   ps.forEach((node) => {
     if (node.nodeType === Node.TEXT_NODE && node.textContent) {
       // 替换文本节点中的空格为&nbsp;
