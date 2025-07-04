@@ -63,6 +63,15 @@ onMounted(() => {
     element: divRef.value as Element,
     placeholder: '点击输入内容...',
     content: props.content,
+    fontFamily: {
+      values: [
+        { name: '宋体', value: 'FZST' },
+        { name: '黑体', value: 'FZHT' },
+        { name: '楷体', value: 'FZKT' },
+        { name: '仿宋', value: 'FZFS' },
+        { name: '仿宋GBK', value: 'FZFSGBK' },
+      ],
+    },
     fontSize: {
       values: [
         { name: '初号', value: 56 },

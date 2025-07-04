@@ -1,0 +1,35 @@
+/* 方正楷体简体 */
+@font-face {
+  font-family: 'FZKT';
+  src: url('./FangZhengKaiTiJianTi-1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+/* 方正黑体简体 */
+@font-face {
+  font-family: 'FZHT';
+  src: url('./FangZhengHeiTiJianTi-1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+/* 方正宋体简体 */
+@font-face {
+  font-family: 'FZST';
+  src: url('./FangZhengSongTiJianTi-1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+/* 方正仿宋GBK */
+@font-face {
+  font-family: 'FZFSGBK';
+  src: url('./FangZhengFangSong-GBK-1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+/* 方正仿宋 */
+@font-face {
+  font-family: 'FZFS';
+  src: url('./FangZhengFangSong-1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
