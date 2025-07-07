@@ -162,7 +162,7 @@ onMounted(() => {
 .article-content {
   width: 1200px;
   gap: 40px;
-  margin: 40px auto;
+  margin: 40px auto 0;
   padding-bottom: 20px;
 
   &.reverse-row {
@@ -372,6 +372,9 @@ onMounted(() => {
   .article-content {
     display: flex;
     flex-direction: column;
+  }
+  .article-list-container {
+    height: fit-content;
   }
 }
 

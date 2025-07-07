@@ -32,6 +32,7 @@
         v-if="isHomePage"
         :carousel-articles="articleList.third"
         :is-row-reverse="!isMobile"
+        style="margin-top: 0"
       />
       <RouterView v-if="!isHomePage" />
       <HomeBottom
