@@ -81,6 +81,9 @@ router.beforeEach((to, from, next) => {
     next(); // 确保一定要调用 next()
   }
 });
-
+router.afterEach(() => {
+  //每次都滚动到顶部
+  window.scrollTo(0, 0);
+});
 export default router;
 export { routes };

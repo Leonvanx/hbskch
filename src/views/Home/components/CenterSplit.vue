@@ -35,7 +35,7 @@ const jumpTo = () => {
 
 <style scoped lang="scss">
 .center-split-line {
-  margin: -20px auto 0;
+  margin: 0 auto;
   max-width: 1200px;
   max-height: 200px;
 }
