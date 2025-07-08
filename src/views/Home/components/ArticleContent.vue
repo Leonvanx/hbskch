@@ -54,9 +54,9 @@
           @click="chooseTab(item)"
         ></n-tab>
       </n-tabs>
-      <div class="article-list">
+      <div class="article-list flex-column">
         <!-- 原有内容 -->
-        <n-spin :show="loading" stroke="#1f4d83">
+        <n-spin :show="loading" stroke="#1f4d83" class="flex1">
           <template v-if="rightArticles.length">
             <div
               v-for="item in rightArticles"
