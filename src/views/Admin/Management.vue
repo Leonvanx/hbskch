@@ -138,8 +138,8 @@
     v-model:show="drawerVisible"
     width="90%"
     placement="right"
-    :on-esc="closed"
-    :on-mask-click="() => closed()"
+    :close-on-esc="false"
+    :mask-closable="false"
   >
     <n-drawer-content>
       <template #header>
