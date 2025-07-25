@@ -21,7 +21,7 @@
         :isMobile="isMobile"
       />
       <NavMenu />
-      <ArticleContent v-if="isHomePage" :carousel-articles="articleList.first" />
+      <ArticleContent v-if="isHomePage" :carousel-articles="articleList.first" tabId="1" />
       <CenterSplit
         v-if="isHomePage"
         :center-page="resourceObj.centerPage"
@@ -33,6 +33,7 @@
         :carousel-articles="articleList.third"
         :is-row-reverse="!isMobile"
         style="margin-top: 0"
+        tabId="2"
       />
       <RouterView v-if="!isHomePage" />
       <HomeBottom

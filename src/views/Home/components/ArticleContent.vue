@@ -87,6 +87,7 @@ import dayjs from 'dayjs';
 type Props = {
   isRowReverse?: boolean;
   carouselArticles: Page[];
+  tabId: number;
 };
 const router = useRouter();
 const props = defineProps<Props>();
@@ -137,21 +138,12 @@ const chooseTab = (menu: Menu) => {
   });
 };
 const getMenuByTab = () => {
-  if (!props.isRowReverse) {
-    searchMenuByTab({ tabId: 1 }).then(async (res) => {
-      if (res.code === 0) {
-        mebuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
-        tabChange(mebuTabs.value[0].id);
-      }
-    });
-  } else {
-    searchMenuByTab({ tabId: 2 }).then(async (res) => {
-      if (res.code === 0) {
-        mebuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
-        tabChange(mebuTabs.value[0].id);
-      }
-    });
-  }
+  searchMenuByTab({ tabId: props.tabId }).then(async (res) => {
+    if (res.code === 0) {
+      mebuTabs.value = res.data?.filter((item) => item.showType === 1) as Menu[];
+      tabChange(mebuTabs.value[0].id);
+    }
+  });
 };
 onMounted(() => {
   getMenuByTab();
