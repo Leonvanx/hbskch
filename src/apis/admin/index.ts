@@ -160,14 +160,6 @@ export const searchExpertListAll = (params: ExpertOptions, config?: AxiosRequest
     config,
   );
 };
-// 专家库列表查询
-export const searchExpertList = (params: ExpertOptions, config?: AxiosRequestConfig) => {
-  return request.post<ResultSuccess<searchOptions<Expert>>>(
-    `/tech/api/expert/experts`,
-    params,
-    config,
-  );
-};
 // 专家库配置查询
 export const searchExpertConfig = (config?: AxiosRequestConfig) => {
   return request.get<ResultSuccess<ExpertConfig>>(`/tech/api/expert/config/current`, config);

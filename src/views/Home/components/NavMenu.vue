@@ -22,8 +22,8 @@
             placement="bottom"
             content-class="sub-menu-popover"
           >
-            <template #trigger
-              ><div
+            <template #trigger>
+              <div
                 :class="{ 'menu-name': item.name !== '首页' }"
                 @click="clickMainMenu(item.name, item.id, item.showType)"
               >
@@ -60,6 +60,18 @@ const searchMenuList = async () => {
   const res = await searchMenu();
   if (res.code === 0) {
     menuList.value = res.data || [];
+    menuList.value.push({
+      id: 10000,
+      name: '专家库',
+      parentId: 0,
+      menuType: 'main',
+      fixed: 0,
+      orderNum: 0,
+      status: 1,
+      tabNum: 1,
+      showType: 1,
+      children: [],
+    });
   }
 };
 
@@ -68,6 +80,17 @@ const clickMainMenu = (name: string, id: number, showType: number) => {
   if (name === '首页') {
     router.push({
       name: 'home',
+    });
+  } else if (name === '专家库') {
+    //专家库特殊管理
+    router.push({
+      name: 'expertList',
+      query: {
+        parentMenuName: name,
+        name: name,
+        menuId: id,
+        searchWord: '',
+      },
     });
   } else {
     if (showType === 1) {
@@ -160,9 +183,11 @@ onMounted(() => {
   height: 60px;
   justify-content: space-between;
   gap: 20px;
+
   .nav-menu {
     gap: 30px;
   }
+
   .nav-menu-item {
     color: #fff;
     font-size: 16px;
@@ -171,17 +196,20 @@ onMounted(() => {
     line-height: 40px;
     cursor: pointer;
     flex-shrink: 0;
+
     &:hover {
       font-size: 16px;
       font-weight: 600;
     }
   }
+
   .search-wrapper {
     .search-icon {
       width: 20px;
       height: 20px;
       margin-left: 10px;
     }
+
     .search-input {
       width: 260px;
       background-color: #4c719c;
@@ -257,6 +285,7 @@ onMounted(() => {
     background-color: #1f4d83;
     padding-bottom: 5px;
   }
+
   .sub-menu-item {
     padding: 8px 12px;
     text-align: center;
@@ -265,6 +294,7 @@ onMounted(() => {
     font-weight: 400;
     position: relative;
     cursor: pointer;
+
     &::after {
       position: absolute;
       left: 50%;
@@ -276,8 +306,10 @@ onMounted(() => {
       content: '';
       background-color: #fff;
     }
+
     &:hover {
       font-weight: 600;
+
       &::after {
         width: 90%;
       }

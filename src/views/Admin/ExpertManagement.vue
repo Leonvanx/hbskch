@@ -431,14 +431,13 @@ const cancel = () => {
 };
 //编辑配置
 const saveExpertConfigBtn = () => {
-  console.log(editConfigstr);
   if (editConfigstr.value!.length > 0) {
     let configStr = '';
     for (let i = 0; i < editConfigstr.value!.length; i++) {
       if (i != editConfigstr.value!.length - 1) {
-        configStr += `${!editConfigstr!.value[i]},`;
+        configStr += `${editConfigstr!.value[i]},`;
       } else {
-        configStr += `${!editConfigstr!.value[i]}`;
+        configStr += `${editConfigstr!.value[i]}`;
       }
     }
     const params = {

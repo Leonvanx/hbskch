@@ -18,6 +18,11 @@ const routes = [
         component: () => import('@/views/Home/SubMenuArticleList.vue'),
       },
       {
+        path: '/home/expertList',
+        name: 'expertList',
+        component: () => import('@/views/Home/ExpertList.vue'),
+      },
+      {
         path: '/home/articleDetail',
         name: 'articleDetail',
         component: () => import('@/views/Home/ArticleDetail.vue'),

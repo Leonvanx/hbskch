@@ -28,3 +28,8 @@ export interface searchOptions<T> {
   size?: number;
   total?: number;
 }
+
+export interface searchExpertOptions {
+  id?: number;
+  displayFields: object;
+}
