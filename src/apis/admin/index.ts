@@ -11,6 +11,9 @@ import type {
   UploadFileParams,
   Resource,
   Link,
+  Expert,
+  ExpertConfig,
+  ExpertOptions,
 } from '@/types';
 // 保存文章
 export const savePage = (params: Page, config?: AxiosRequestConfig) => {
@@ -145,6 +148,67 @@ export const sortMenu = (
   return request.post<ResultSuccess<{ code: number; message: string }>>(
     `/tech/menu/order`,
     params,
+    config,
+  );
+};
+
+// 专家库列表查询All
+export const searchExpertListAll = (params: ExpertOptions, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<searchOptions<Expert>>>(
+    `/tech/api/expert/list`,
+    params,
+    config,
+  );
+};
+// 专家库列表查询
+export const searchExpertList = (params: ExpertOptions, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<searchOptions<Expert>>>(
+    `/tech/api/expert/experts`,
+    params,
+    config,
+  );
+};
+// 专家库配置查询
+export const searchExpertConfig = (config?: AxiosRequestConfig) => {
+  return request.get<ResultSuccess<ExpertConfig>>(`/tech/api/expert/config/current`, config);
+};
+// 专家库配置更新
+export const saveExpertConfig = (params: ExpertConfig, config?: AxiosRequestConfig) => {
+  return request.put<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/expert/config/update`,
+    params,
+    config,
+  );
+};
+// 专家库列表编辑
+export const editExpertList = (params: Expert, config?: AxiosRequestConfig) => {
+  return request.put<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/expert/experts/${params.id}`,
+    params,
+    config,
+  );
+};
+// 专家库列表保存
+export const saveExpertList = (params: Expert, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/expert/experts/save`,
+    params,
+    config,
+  );
+};
+// 专家库列表删除
+export const deleteExpertList = (id: number, config?: AxiosRequestConfig) => {
+  return request.delete<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/expert/experts/${id}`,
+    id,
+    config,
+  );
+};
+//专家库excel上传
+export const uploadExcel = (file: UploadFileParams, config?: AxiosRequestConfig) => {
+  return request.uploadFile<UploadResult<{ url: string; message: string }>>(
+    `/tech/api/expert/import`,
+    file,
     config,
   );
 };

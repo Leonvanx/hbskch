@@ -1,5 +1,5 @@
 export interface Expert {
-  id?: string;
+  id?: number;
   academicAchievements?: string; //学术成就
   birthDate?: string; //出生年月
   createTime?: string;
@@ -25,4 +25,17 @@ export interface Expert {
   unitAddress?: string; //单位地址
   unitNature?: string; //	单位性质
   updateTime?: string;
+}
+
+export interface ExpertOptions {
+  name?: string;
+  cardId?: string;
+  page?: number;
+  size?: number;
+}
+
+export interface ExpertConfig {
+  id?: number;
+  configName?: string;
+  visibleFields: string;
 }

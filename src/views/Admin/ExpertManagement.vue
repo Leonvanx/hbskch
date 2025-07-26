@@ -28,7 +28,7 @@
         <!-- 按钮，新增，上传专家excel文件 -->
         <n-form-item>
           <n-space>
-            <n-button type="primary">
+            <n-button type="primary" @click="searchExpert">
               <template #icon>
                 <n-icon>
                   <i-mdi-search style="font-size: 1.1rem; color: #fff" />
@@ -53,13 +53,45 @@
             >
               <n-button type="primary">上传</n-button>
             </n-upload>
+            <n-button type="primary" @click="editExpertConfig">
+              <template #icon>
+                <n-icon>
+                  <i-mdi-add style="font-size: 1.1rem; color: #fff" />
+                </n-icon>
+              </template>
+              编辑配置</n-button
+            >
           </n-space>
         </n-form-item>
       </n-form>
     </n-card>
     <!-- 表格区域 -->
     <n-card class="table-part">
-      <!-- <CTable> </CTable> -->
+      <CTable
+        :columns="columns"
+        :scroll-x="5000"
+        :table-data="expertList"
+        :row-key="(row) => row.id"
+      >
+        <template #actions="{ row }">
+          <n-space>
+            <n-button strong tertiary size="small" title="编辑" @click="editExpert(row)">
+              <template #icon>
+                <n-icon>
+                  <i-iconoir-edit style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button strong tertiary size="small" title="删除" @click="delExpert(row)">
+              <template #icon>
+                <n-icon>
+                  <i-material-symbols-light-delete style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
+          </n-space>
+        </template>
+      </CTable>
     </n-card>
     <!-- 分页区域 -->
     <n-card class="pagination-part">
@@ -85,8 +117,8 @@
       </template>
       <template #footer>
         <n-space>
-          <n-button>取消</n-button>
-          <n-button type="primary">保存</n-button>
+          <n-button @click="cancel">取消</n-button>
+          <n-button type="primary" @click="saveExpert">保存</n-button>
         </n-space>
       </template>
       <!-- 表单，覆盖所有信息 -->
@@ -181,23 +213,164 @@
       </n-form>
     </n-drawer-content>
   </n-drawer>
+  <n-drawer
+    v-model:show="drawerConfigVisible"
+    width="40%"
+    placement="right"
+    :on-esc="closedConfig"
+    :on-mask-click="() => closedConfig()"
+  >
+    <n-drawer-content>
+      <template #header>
+        {{ '编辑' }}
+      </template>
+      <template #footer>
+        <n-space>
+          <n-button @click="cancelConfig">取消</n-button>
+          <n-button type="primary" @click="saveExpertConfigBtn">保存</n-button>
+        </n-space>
+      </template>
+      <n-checkbox-group v-model:value="editConfigstr">
+        <n-space item-style="display: flex;">
+          <template v-for="item in columns" :key="item.key">
+            <n-checkbox :value="item.key" :label="item.title" />
+          </template>
+        </n-space>
+      </n-checkbox-group>
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <script setup lang="ts">
-import type { Expert } from '@/types';
+import type { Expert, ExpertConfig } from '@/types';
 import type { UploadCustomRequestOptions } from 'naive-ui';
+import {
+  searchExpertListAll,
+  uploadExcel,
+  editExpertList,
+  saveExpertList,
+  searchExpertConfig,
+  deleteExpertList,
+  saveExpertConfig,
+} from '@/apis';
 // const message = useMessage();
 // const dialog = useDialog();
 const drawerVisible = ref<boolean>(false);
+const drawerConfigVisible = ref<boolean>(false);
 const searchTarget = ref<Expert>({});
 const editTarget = ref<Expert>({});
-const tableData = ref<Expert[]>([]);
+const editConfig = ref<ExpertConfig>();
+const editConfigstr = ref<string[]>([]);
+const message = useMessage();
 const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
-  console.log(file);
+  const data = await uploadExcel({ file: file.file! });
+  if (data.code === 0) {
+    message.success('上传成功！');
+    pageChange(1);
+  } else {
+    message.success('上传失败！');
+  }
 };
 const onFinish = () => {
   console.log('finish');
 };
+const columns = [
+  {
+    title: '编号',
+    key: 'number',
+  },
+  {
+    title: '姓名',
+    key: 'name',
+    fixed: 'left',
+  },
+  {
+    title: '性别',
+    key: 'gender',
+  },
+  {
+    title: '民族',
+    key: 'ethnic',
+  },
+  {
+    title: '面貌',
+    key: 'politicalStatus',
+  },
+  {
+    title: '身份证',
+    key: 'idCard',
+  },
+  {
+    title: '出生年月',
+    key: 'birthDate',
+  },
+  {
+    title: '关键词',
+    key: 'keywords',
+  },
+  {
+    title: '移动电话',
+    key: 'mobilePhone',
+  },
+  {
+    title: '邮箱',
+    key: 'email',
+  },
+  {
+    title: '毕业院校',
+    key: 'graduateSchool',
+  },
+  {
+    title: '所学专业',
+    key: 'major',
+  },
+  {
+    title: '学位',
+    key: 'degree',
+  },
+  {
+    title: '从事领域',
+    key: 'fields',
+  },
+  {
+    title: '领域细分',
+    key: 'domainDetail',
+  },
+  {
+    title: '单位地址',
+    key: 'unitAddress',
+  },
+  {
+    title: '单位性质',
+    key: 'unitNature',
+  },
+  {
+    title: '（原）所在单位',
+    key: 'originalUnit',
+  },
+  {
+    title: '工作部门',
+    key: 'department',
+  },
+  {
+    title: '职务',
+    key: 'position',
+  },
+  {
+    title: '职称',
+    key: 'title',
+  },
+  {
+    title: '办公电话',
+    key: 'officePhone',
+  },
+  {
+    title: '操作',
+    key: 'actions',
+    fixed: 'right',
+  },
+];
+const expertList = ref<Expert[]>();
 const pages = ref({
   page: 1,
   size: 10,
@@ -205,19 +378,139 @@ const pages = ref({
 });
 const pageChange = (page: number) => {
   pages.value.page = page;
-  searchData();
+  searchExpert();
 };
-const searchData = () => {
-  tableData.value = [];
+//专家库列表查询
+const searchExpert = () => {
+  searchExpertListAll({
+    name: searchTarget.value.name,
+    page: pages.value.page,
+    size: pages.value.size,
+  }).then((data) => {
+    if (data.code === 0) {
+      expertList.value = data.data?.records;
+      pages.value.total = data.data ? data.data.total! : 0;
+    }
+  });
 };
-const closed = () => {
-  drawerVisible.value = false;
-  editTarget.value = {};
+//配置查询
+const searchExpertConfigBox = () => {
+  searchExpertConfig().then((data) => {
+    if (data.code === 0) {
+      editConfigstr.value = data.data?.visibleFields.split(',') || [];
+      editConfig.value = data.data;
+    }
+  });
 };
 const addExpert = () => {
   drawerVisible.value = true;
 };
-searchData();
+const editExpertConfig = () => {
+  searchExpertConfigBox();
+  drawerConfigVisible.value = true;
+};
+const editExpert = (row: Expert) => {
+  drawerVisible.value = true;
+  editTarget.value = row;
+};
+//删除专家
+const delExpert = (row: Expert) => {
+  deleteExpertList(row.id ? row.id : 0).then((data) => {
+    if (data.code === 0) {
+      message.success('删除成功！');
+      pageChange(1);
+    }
+  });
+};
+const closedConfig = () => {
+  drawerConfigVisible.value = false;
+};
+const cancel = () => {
+  drawerVisible.value = false;
+  editTarget.value = {};
+};
+//编辑配置
+const saveExpertConfigBtn = () => {
+  console.log(editConfigstr);
+  if (editConfigstr.value!.length > 0) {
+    let configStr = '';
+    for (let i = 0; i < editConfigstr.value!.length; i++) {
+      if (i != editConfigstr.value!.length - 1) {
+        configStr += `${!editConfigstr!.value[i]},`;
+      } else {
+        configStr += `${!editConfigstr!.value[i]}`;
+      }
+    }
+    const params = {
+      id: editConfig.value!.id,
+      configName: editConfig.value?.configName,
+      visibleFields: configStr,
+    };
+    saveExpertConfig(params).then((data) => {
+      if (data.code === 0) {
+        message.success('修改成功！');
+        closedConfig();
+      }
+    });
+  }
+};
+//编辑/新增专家
+const saveExpert = () => {
+  if (editTarget.value?.id) {
+    editExpertList(editTarget.value).then((data) => {
+      if (data.code === 0) {
+        message.success('修改成功！');
+        if (editTarget.value.id) {
+          pageChange(pages.value.page);
+        } else {
+          pageChange(1);
+        }
+        cancel();
+      }
+    });
+  } else {
+    const params = {
+      academicAchievements: editTarget.value.academicAchievements || '',
+      birthDate: editTarget.value.birthDate || '',
+      createTime: editTarget.value.createTime || '',
+      degree: editTarget.value.degree || '',
+      department: editTarget.value.department || '',
+      domainDetail: editTarget.value.domainDetail || '',
+      email: editTarget.value.email || '',
+      ethnic: editTarget.value.ethnic || '',
+      fields: editTarget.value.fields || '',
+      gender: editTarget.value.gender || '',
+      graduateSchool: editTarget.value.graduateSchool || '',
+      id: 0,
+      idCard: editTarget.value.idCard || '',
+      keywords: editTarget.value.keywords || '',
+      major: editTarget.value.major || '',
+      mobilePhone: editTarget.value.mobilePhone || '',
+      name: editTarget.value.name || '',
+      number: editTarget.value.number || '',
+      officePhone: editTarget.value.officePhone || '',
+      originalUnit: editTarget.value.originalUnit || '',
+      politicalStatus: editTarget.value.politicalStatus || '',
+      position: editTarget.value.position || '',
+      title: editTarget.value.title || '',
+      unitAddress: editTarget.value.unitAddress || '',
+      unitNature: editTarget.value.unitNature || '',
+      updateTime: editTarget.value.updateTime || '',
+    };
+    saveExpertList(params).then((data) => {
+      if (data.code === 0) {
+        message.success('保存成功！');
+        if (editTarget.value.id) {
+          pageChange(pages.value.page);
+        } else {
+          pageChange(1);
+        }
+        cancel();
+      }
+    });
+  }
+};
+searchExpert();
 </script>
 
 <style scoped lang="scss">
