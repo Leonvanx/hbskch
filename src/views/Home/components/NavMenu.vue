@@ -60,18 +60,18 @@ const searchMenuList = async () => {
   const res = await searchMenu();
   if (res.code === 0) {
     menuList.value = res.data || [];
-    menuList.value.push({
-      id: 10000,
-      name: '专家库',
-      parentId: 0,
-      menuType: 'main',
-      fixed: 0,
-      orderNum: 0,
-      status: 1,
-      tabNum: 1,
-      showType: 1,
-      children: [],
-    });
+    // menuList.value.push({
+    //   id: 10000,
+    //   name: '专家库',
+    //   parentId: 0,
+    //   menuType: 'main',
+    //   fixed: 0,
+    //   orderNum: 0,
+    //   status: 1,
+    //   tabNum: 1,
+    //   showType: 1,
+    //   children: [],
+    // });
   }
 };
 
