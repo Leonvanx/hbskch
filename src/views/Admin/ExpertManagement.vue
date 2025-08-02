@@ -104,13 +104,7 @@
       />
     </n-card>
   </n-flex>
-  <n-drawer
-    v-model:show="drawerVisible"
-    width="90%"
-    placement="right"
-    :on-esc="closed"
-    :on-mask-click="() => closed()"
-  >
+  <n-drawer v-model:show="drawerVisible" width="90%" placement="right">
     <n-drawer-content>
       <template #header>
         {{ editTarget?.id ? '编辑' : '新增' }}
@@ -226,7 +220,7 @@
       </template>
       <template #footer>
         <n-space>
-          <n-button @click="cancelConfig">取消</n-button>
+          <n-button>取消</n-button>
           <n-button type="primary" @click="saveExpertConfigBtn">保存</n-button>
         </n-space>
       </template>
@@ -253,6 +247,7 @@ import {
   deleteExpertList,
   saveExpertConfig,
 } from '@/apis';
+import dayjs from 'dayjs';
 // const message = useMessage();
 // const dialog = useDialog();
 const drawerVisible = ref<boolean>(false);
@@ -282,7 +277,7 @@ const columns = [
   {
     title: '姓名',
     key: 'name',
-    fixed: 'left',
+    fixed: 'left' as const,
   },
   {
     title: '性别',
@@ -367,10 +362,10 @@ const columns = [
   {
     title: '操作',
     key: 'actions',
-    fixed: 'right',
+    fixed: 'right' as const,
   },
 ];
-const expertList = ref<Expert[]>();
+const expertList = ref<Expert[]>([]);
 const pages = ref({
   page: 1,
   size: 10,
@@ -387,7 +382,7 @@ const searchExpert = () => {
     page: pages.value.page,
     size: pages.value.size,
   }).then((data) => {
-    if (data.code === 0) {
+    if (data.code === 0 && data.data) {
       expertList.value = data.data?.records;
       pages.value.total = data.data ? data.data.total! : 0;
     }
@@ -410,8 +405,9 @@ const editExpertConfig = () => {
   drawerConfigVisible.value = true;
 };
 const editExpert = (row: Expert) => {
-  drawerVisible.value = true;
   editTarget.value = row;
+  editTarget.value.birthDate = dayjs(row.birthDate?.split('.').join('-')).format('YYYY.MM');
+  drawerVisible.value = true;
 };
 //删除专家
 const delExpert = (row: Expert) => {
