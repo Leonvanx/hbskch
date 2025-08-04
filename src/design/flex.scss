@@ -1,0 +1,246 @@
+.flex {
+  display: flex;
+
+  &.row {
+    flex-direction: row;
+  }
+
+  &.column {
+    flex-direction: column;
+  }
+
+  &.center {
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.center-h {
+    justify-content: center;
+  }
+
+  &.center-v {
+    align-items: center;
+  }
+
+  &.between {
+    justify-content: space-between;
+  }
+
+  &.end {
+    justify-content: flex-end;
+  }
+  &.start {
+    justify-content: flex-start;
+  }
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  &.no-wrap {
+    flex-wrap: nowrap;
+  }
+
+  .flex-none {
+    flex: none;
+  }
+}
+@for $i from 1 through 12 {
+  .flex-#{$i} {
+    flex: $i;
+  }
+}
+// 原代码逻辑正确，无需修改，此处直接保留
+@for $i from 1 through 30 {
+  .gap-#{$i} {
+    gap: #{$i}px;
+  }
+}
+
+.text {
+  &-center {
+    text-align: center;
+  }
+
+  &-left {
+    text-align: left;
+  }
+
+  &-right {
+    text-align: right;
+  }
+
+  &-ellipsis {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  &.underline {
+    text-decoration: underline;
+  }
+
+  &-wrap {
+    word-wrap: break-word;
+  }
+
+  &-nowrap {
+    word-wrap: keep-all;
+    white-space: nowrap;
+  }
+
+  // 大写字母
+  &-up {
+    text-transform: uppercase;
+  }
+
+  &-lh-1em {
+    line-height: 1em;
+  }
+}
+
+// 字体大小 fs-{size} [10-60]
+@for $i from 10 through 60 {
+  @if $i % 2 == 0 {
+    .fs-#{$i} {
+      font-size: #{$i}px;
+    }
+  }
+}
+
+// 字体weight w-{weight} [100-900]
+@for $i from 100 through 900 {
+  @if $i % 100 == 0 {
+    .fw-#{$i} {
+      font-weight: $i;
+    }
+  }
+}
+
+// 盒模型 size:0-32px m-{size} ml-{size} mr-{size} mt-{size} mb-{size}
+@for $i from 0 through 32 {
+  // 直接使用 $i 拼接像素单位，移除多余的 $size 和 $sizePx 变量
+  .m-#{$i} {
+    margin: #{$i}px;
+  }
+
+  .mt-#{$i} {
+    margin-top: #{$i}px;
+  }
+
+  .ml-#{$i} {
+    margin-left: #{$i}px;
+  }
+
+  .mr-#{$i} {
+    margin-right: #{$i}px;
+  }
+
+  .mb-#{$i} {
+    margin-bottom: #{$i}px;
+  }
+  .mx-#{$i} {
+    margin-left: #{$i}px;
+    margin-right: #{$i}px;
+  }
+  .my-#{$i} {
+    margin-top: #{$i}px;
+    margin-bottom: #{$i}px;
+  }
+
+  .p-#{$i} {
+    padding: #{$i}px;
+  }
+
+  .pt-#{$i} {
+    padding-top: #{$i}px;
+  }
+
+  .pl-#{$i} {
+    padding-left: #{$i}px;
+  }
+
+  .pr-#{$i} {
+    padding-right: #{$i}px;
+  }
+
+  .pb-#{$i} {
+    padding-bottom: #{$i}px;
+  }
+  .px-#{$i} {
+    padding-left: #{$i}px;
+    padding-right: #{$i}px;
+  }
+  .py-#{$i} {
+    padding-top: #{$i}px;
+    padding-bottom: #{$i}px;
+  }
+}
+
+// 生成 1～30 的 border-radius 类
+@for $i from 0 through 30 {
+  .b-rd-#{$i} {
+    border-radius: #{$i}px;
+  }
+}
+
+.ovf-auto {
+  overflow: auto;
+}
+.ovx-auto {
+  overflow-x: auto;
+}
+.ovy-auto {
+  overflow-y: auto;
+}
+
+.color {
+  &-primary {
+    color: #1f4d83;
+  }
+  &-warning {
+    color: #ff875c;
+  }
+  &-error {
+    color: #ff4d4d;
+  }
+  &-gray1 {
+    color: #1a1a1a;
+  }
+  &-gray2 {
+    color: #666;
+  }
+  &-gray3 {
+    color: #999;
+  }
+  &-gray4 {
+    color: #bfbfbf;
+  }
+}
+.bg {
+  &-white {
+    background-color: #fff;
+  }
+  &-primary {
+    background-color: #1f4d83;
+  }
+  &-warning {
+    background-color: #ff875c;
+  }
+  &-error {
+    background-color: #ff4d4d;
+  }
+  &-gray1 {
+    background-color: #1a1a1a;
+  }
+  &-gray2 {
+    background-color: #666;
+  }
+  &-gray3 {
+    background-color: #999;
+  }
+  &-gray4 {
+    background-color: #bfbfbf;
+  }
+}
