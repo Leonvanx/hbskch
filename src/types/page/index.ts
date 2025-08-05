@@ -33,3 +33,8 @@ export interface searchExpertOptions {
   id?: number;
   displayFields: object;
 }
+export interface searArticleOptions {
+  clickCount: number;
+  menuId: number;
+  menuName: string;
+}

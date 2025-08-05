@@ -5,8 +5,8 @@ import type {
   ResultSuccess,
   ExpertOptions,
   searchOptions,
-  Expert,
   searchExpertOptions,
+  searArticleOptions,
 } from '@/types';
 // 查询子文章
 export const searchPageById = (id: number, config?: AxiosRequestConfig) => {
@@ -18,6 +18,24 @@ export const searchExpertList = (params: ExpertOptions, config?: AxiosRequestCon
   return request.post<ResultSuccess<searchOptions<searchExpertOptions>>>(
     `/tech/api/expert/experts`,
     params,
+    config,
+  );
+};
+
+// 获取文章点击数
+export const searchArticleClick = (articleId: number, config?: AxiosRequestConfig) => {
+  return request.get<ResultSuccess<searArticleOptions>>(
+    `/tech/article/click/${articleId}`,
+    {},
+    config,
+  );
+};
+
+// 记录文章点击数
+export const recordArticleClick = (articleId: number, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess>(
+    `/tech/article/click/record?articleId=${articleId}`,
+    {},
     config,
   );
 };
