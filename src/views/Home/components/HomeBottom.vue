@@ -57,6 +57,7 @@
                 >鄂公网安备42010602005000号</a
               >
             </div>
+            <div class="info-one" @click="openbeian">鄂ICP备2025115975号-1</div>
           </div>
         </div>
         <div class="footer-tips">
@@ -91,6 +92,9 @@ const getLinkList = async () => {
   }
 };
 
+const openbeian = () => {
+  window.open('https://beian.miit.gov.cn/#/Integrated/index', '_black');
+};
 getLinkList();
 </script>
 
