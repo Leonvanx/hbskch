@@ -45,7 +45,18 @@
             <div v-for="text in text3.split('\n')" :key="text" class="info-one">
               {{ text }}
             </div>
-            <div class="info-one" @click="openbeian">备案号：鄂ICP备2025115975号-1</div>
+            <div class="info-one">
+              <!-- 加一个备案图标 -->
+              <img width="15px" src="@/assets/imgs/batb.png" alt="备案图标" />
+              <!-- 加一个空格 -->
+              &nbsp;
+              <a
+                href="https://beian.mps.gov.cn/#/query/webSearch?code=42010602005000"
+                rel="noreferrer"
+                target="_blank"
+                >鄂公网安备42010602005000号</a
+              >
+            </div>
           </div>
         </div>
         <div class="footer-tips">
@@ -80,9 +91,6 @@ const getLinkList = async () => {
   }
 };
 
-const openbeian = () => {
-  window.open('https://beian.miit.gov.cn/#/Integrated/index', '_black');
-};
 getLinkList();
 </script>
 
