@@ -277,7 +277,7 @@ onMounted(() => {
       }
       &:hover {
         .article-title {
-          color: #ff3401;
+          color: #026efb;
         }
       }
 

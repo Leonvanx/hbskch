@@ -208,6 +208,7 @@
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Page, Menu } from '@/types';
+import { searchArticleClick } from '@/apis';
 import { savePage, searchPage, searchMenu, deletePage } from '@/apis';
 const message = useMessage();
 const dialog = useDialog();
@@ -288,6 +289,11 @@ const columns = [
     width: '200px',
   },
   {
+    title: '点击量',
+    key: 'clickNum',
+    width: '100px',
+  },
+  {
     title: '操作',
     key: 'actions',
     width: '150px',
@@ -344,6 +350,13 @@ const searchData = async () => {
   if (data.code === 0) {
     tableData.value = data.data ? data.data.records : [];
     pages.value.total = data.data ? data.data.total! : 0;
+    tableData.value.map((itemOne: Page) => {
+      searchArticleClick(Number(itemOne.id)).then((val) => {
+        if (val.code === 0) {
+          itemOne.clickNum = val.data ? val.data.clickCount : 0;
+        }
+      });
+    });
   }
 };
 const add = () => {

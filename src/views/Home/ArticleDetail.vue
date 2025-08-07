@@ -14,7 +14,7 @@
     <div class="article-title">{{ articleContent.title }}</div>
     <div class="article-info">
       <span class="publish-time">{{ dayjs(articleContent.publishTime).format('YYYY-MM-DD') }}</span>
-      <span class="click-number"> 点击数：{{ articleClickNum }}</span>
+      <span v-show="false" class="click-number"> 点击数：{{ articleClickNum }}</span>
     </div>
     <div ref="divRef">
       <div class="aie-container" style="border-width: 0px">
