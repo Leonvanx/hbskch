@@ -14,6 +14,7 @@ export interface Page {
   showType?: number | null;
   publishTime?: string | null;
   publishStatus?: number | null;
+  clickNum?: number | null;
 }
 export interface PageOptions {
   searchWord?: string;
