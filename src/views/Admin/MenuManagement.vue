@@ -21,6 +21,13 @@
           </template>
           新增</n-button
         >
+        <n-button style="margin-left: auto" type="primary" @click="() => sortTabLink()"
+          ><template #icon>
+            <n-icon>
+              <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
+            </n-icon> </template
+          >Tab排序</n-button
+        >
         <n-button style="margin-left: auto" type="primary" @click="() => sortLink()"
           ><template #icon>
             <n-icon>
@@ -115,6 +122,89 @@
       </n-form>
     </n-drawer-content>
   </n-drawer>
+  <n-modal v-model:show="sortTabVisible">
+    <n-card
+      style="width: 1000px"
+      title="Tab排序"
+      :bordered="false"
+      size="huge"
+      role="dialog"
+      aria-modal="true"
+    >
+      <CTable
+        :columns="columns"
+        :table-data="sortTabList"
+        :flex-height="false"
+        :row-key="(row) => row.id"
+      >
+        <template #menuType="{ row }">
+          {{ menuTypeOptions.find((menu) => menu.value === row.menuType)?.label }}
+        </template>
+        <template #showType="{ row }">
+          {{ showTypeOptions.find((menu) => menu.value === row.showType)?.label }}
+        </template>
+        <template #actions="{ row }">
+          <n-space>
+            <n-button
+              strong
+              tertiary
+              title="在当前层级置顶"
+              size="small"
+              :disabled="row.id === 1 || row.id === 2 || isTabDisable(row, 'up')"
+              @click="toTabTop(row)"
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-fast-arrow-up style="font-size: 1.1rem; color: #000" />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button
+              strong
+              tertiary
+              title="在当前层级上移"
+              size="small"
+              :disabled="row.id === 1 || row.id === 2 || isTabDisable(row, 'up')"
+              @click="upTabSort(row)"
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-arrow-up style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
+            <n-button
+              strong
+              tertiary
+              title="在当前层级下移"
+              size="small"
+              :disabled="row.id === 1 || row.id === 2 || isTabDisable(row, 'down')"
+              @click="downTabSort(row)"
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-arrow-down style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
+            <n-button
+              strong
+              tertiary
+              title="在当前层级置底"
+              size="small"
+              :disabled="row.id === 1 || row.id === 2 || isTabDisable(row, 'down')"
+              @click="toTabBottom(row)"
+              ><template #icon>
+                <n-icon>
+                  <i-iconoir-fast-arrow-down style="font-size: 1.1rem; color: #000" />
+                </n-icon> </template
+            ></n-button>
+          </n-space>
+        </template>
+      </CTable>
+      <template #footer>
+        <n-flex justify="end">
+          <n-button type="primary" @click="submitTabSort">确定</n-button>
+          <n-button @click="sortTabVisible = false">取消</n-button>
+        </n-flex>
+      </template>
+    </n-card>
+  </n-modal>
   <n-modal v-model:show="sortVisible">
     <n-card
       style="width: 1000px"
@@ -203,7 +293,14 @@
 <script setup lang="ts">
 import type { FormRules, FormInst } from 'naive-ui';
 import type { Menu } from '@/types';
-import { searchMenu, deleteMenu, saveMenu, sortMenu } from '@/apis/admin';
+import {
+  searchMenu,
+  searchMenuByTab,
+  deleteMenu,
+  saveMenu,
+  sortMenu,
+  sortTabMenu,
+} from '@/apis/admin';
 const menuList = ref<Menu[]>([]);
 const parendMenuOptions = ref<{ label: string; value: number }[]>();
 const showTypeOptions = [
@@ -366,10 +463,18 @@ const delMenu = ({ id }: Menu) => {
 };
 
 const sortVisible = ref(false);
+const sortTabVisible = ref(false);
 const sortList = ref<Menu[]>([]);
+const sortTabList = ref<Menu[]>([]);
+// 菜单排序
 const sortLink = () => {
   sortList.value = JSON.parse(JSON.stringify(menuList.value));
   sortVisible.value = true;
+};
+// Tab标签排序
+const sortTabLink = async () => {
+  await searchTabData();
+  sortTabVisible.value = true;
 };
 const toTop = (row: Menu) => {
   //匹配到当前列并将当前列移动到数据列表的最顶端
@@ -433,10 +538,55 @@ const downSort = (row: Menu) => {
     }
   }
 };
+const toTabTop = (row: Menu) => {
+  //匹配到当前列并将当前列移动到数据列表的最顶端
+  const indexRow = findTabMain(row);
+  if (sortTabList.value[indexRow].children) {
+    const index = sortTabList.value[indexRow].children.findIndex((item) => item.id === row.id);
+    sortTabList.value[indexRow].children.splice(index, 1);
+    sortTabList.value[indexRow].children.unshift(row);
+  }
+};
+const toTabBottom = (row: Menu) => {
+  //匹配到当前列并将当前列移动到数据列表的最底端
+  const indexRow = findTabMain(row);
+  if (sortTabList.value[indexRow].children) {
+    const index = sortTabList.value[indexRow].children.findIndex((item) => item.id === row.id);
+    sortTabList.value[indexRow].children.splice(index, 1);
+    sortTabList.value[indexRow].children.push(row);
+  }
+};
+const upTabSort = (row: Menu) => {
+  //匹配到当前列并将当前列向上移动一列
+  const indexRow = findTabMain(row);
+  if (sortTabList.value[indexRow].children) {
+    const index = sortTabList.value[indexRow].children.findIndex((item) => item.id === row.id);
+    if (index !== 0) {
+      sortTabList.value[indexRow].children.splice(index, 1);
+      sortTabList.value[indexRow].children.splice(index - 1, 0, row);
+    }
+  }
+};
+const downTabSort = (row: Menu) => {
+  //匹配到当前列并将当前列向下移动一列
+  const indexRow = findTabMain(row);
+  if (sortTabList.value[indexRow].children) {
+    const index = sortTabList.value[indexRow].children.findIndex((item) => item.id === row.id);
+    sortTabList.value[indexRow].children.splice(index, 1);
+    sortTabList.value[indexRow].children.splice(index + 1, 0, row);
+  }
+};
 // 寻找对应父级
 const findParentMain = (row: Menu) => {
   const index = sortList.value.findIndex((item) =>
     item.children && item.children.length > 0 ? item.children[0].parentId === row.parentId : false,
+  );
+  return index;
+};
+// 寻找所属Tab
+const findTabMain = (row: Menu) => {
+  const index = sortTabList.value.findIndex((item) =>
+    item.children && item.children.length > 0 ? item.children[0].tabNum === row.tabNum : false,
   );
   return index;
 };
@@ -450,6 +600,14 @@ const isDisable = (row: Menu, flag: string) => {
   } else {
     return false;
   }
+};
+// 判断Tab的children是否禁用
+const isTabDisable = (row: Menu, flag: string) => {
+  const index = sortTabList.value.findIndex((item) => item.id === row.tabNum);
+  return flag === 'up'
+    ? sortTabList.value[index].children![0].id === row.id
+    : sortTabList.value[index].children![sortTabList.value[index].children!.length - 1].id ===
+        row.id;
 };
 const submitSort = async () => {
   const params = [];
@@ -474,6 +632,29 @@ const submitSort = async () => {
     searchData();
   }
 };
+const submitTabSort = async () => {
+  const params = [];
+  for (let i = 0; i < sortTabList.value.length; i++) {
+    params.push({ id: sortTabList.value[i].id, tabOrderNum: i });
+    if (sortTabList.value[i].children) {
+      for (let l = 0; l < sortTabList.value[i].children!.length; l++) {
+        if (sortTabList.value[i].children) {
+          params.push({ id: sortTabList.value[i].children![l].id, tabOrderNum: l });
+        }
+      }
+    }
+  }
+  // const params = sortList.value.map(({ id }, index) => ({
+  //   id,
+  //   orderNum: index,
+  // }));
+  const res = await sortTabMenu(params);
+  if (res.code === 0) {
+    message.success('修改Tab排序成功！');
+    sortTabVisible.value = false;
+    searchData();
+  }
+};
 const searchData = () => {
   searchMenu().then((data) => {
     if (data.code === 0) {
@@ -481,6 +662,39 @@ const searchData = () => {
       parendMenuOptions.value = data.data?.map((item) => {
         return { label: item.name!, value: item.id! };
       });
+    }
+  });
+};
+// Tab标签查询（加异步弹窗打开时做同步查询）
+const searchTabData = async () => {
+  sortTabList.value = [
+    {
+      id: 1,
+      name: '展示标签1',
+      tabNum: 1,
+      menuType: 'main',
+      showType: 0,
+      children: [],
+    },
+    {
+      id: 2,
+      name: '展示标签2',
+      tabNum: 1,
+      menuType: 'main',
+      showType: 0,
+      children: [],
+    },
+  ];
+  await searchMenuByTab({ tabId: 1 }).then((data) => {
+    if (data.code === 0) {
+      const dataFilter = data.data?.filter((item) => item.showType === 1) as Menu[];
+      sortTabList.value[0].children = dataFilter ? dataFilter : [];
+    }
+  });
+  await searchMenuByTab({ tabId: 2 }).then((data) => {
+    if (data.code === 0) {
+      const dataFilter = data.data?.filter((item) => item.showType === 1) as Menu[];
+      sortTabList.value[1].children = dataFilter ? dataFilter : [];
     }
   });
 };

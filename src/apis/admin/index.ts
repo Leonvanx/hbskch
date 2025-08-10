@@ -151,6 +151,17 @@ export const sortMenu = (
     config,
   );
 };
+// 对Tab菜单排序
+export const sortTabMenu = (
+  params: { id?: number; orderNum?: number }[],
+  config?: AxiosRequestConfig,
+) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/menu/tabOrder`,
+    params,
+    config,
+  );
+};
 
 // 专家库列表查询All
 export const searchExpertListAll = (params: ExpertOptions, config?: AxiosRequestConfig) => {
