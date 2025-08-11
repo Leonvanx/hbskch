@@ -278,7 +278,6 @@ const columns = [
     title: '从事领域',
     key: 'fields',
   },
-
   {
     title: '姓名',
     key: 'name',
@@ -348,7 +347,6 @@ const columns = [
     title: '邮箱',
     key: 'email',
   },
-
   {
     title: '所学专业',
     key: 'major',
@@ -365,7 +363,6 @@ const columns = [
     key: 'academicAchievements',
     title: '学术成就',
     width: 400,
-    type: 'textarea',
   },
   {
     title: '操作',
