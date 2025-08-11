@@ -270,6 +270,11 @@ const onFinish = () => {
   console.log('finish');
 };
 const columns = [
+  //加上序号展示
+  {
+    key: 'index',
+    title: '序号',
+  },
   {
     title: '领域细分',
     key: 'domainDetail',
@@ -390,6 +395,10 @@ const searchExpert = () => {
     if (data.code === 0 && data.data) {
       expertList.value = data.data?.records;
       pages.value.total = data.data ? data.data.total! : 0;
+      expertList.value.forEach((item, index) => {
+        //根据分页，页数*每页展示数量计算出实际顺序
+        item.index = (pages.value.page - 1) * pages.value.size + index + 1;
+      });
     }
   });
 };

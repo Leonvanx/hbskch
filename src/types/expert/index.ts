@@ -25,6 +25,7 @@ export interface Expert {
   unitAddress?: string; //单位地址
   unitNature?: string; //	单位性质
   updateTime?: string;
+  index?: number;
 }
 
 export interface ExpertOptions {
