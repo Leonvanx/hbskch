@@ -271,17 +271,25 @@ const onFinish = () => {
 };
 const columns = [
   {
-    title: '编号',
-    key: 'number',
+    title: '领域细分',
+    key: 'domainDetail',
   },
+  {
+    title: '从事领域',
+    key: 'fields',
+  },
+
   {
     title: '姓名',
     key: 'name',
-    fixed: 'left' as const,
   },
   {
     title: '性别',
     key: 'gender',
+  },
+  {
+    title: '出生年月',
+    key: 'birthDate',
   },
   {
     title: '民族',
@@ -292,60 +300,16 @@ const columns = [
     key: 'politicalStatus',
   },
   {
-    title: '身份证',
-    key: 'idCard',
-  },
-  {
-    title: '出生年月',
-    key: 'birthDate',
-  },
-  {
-    title: '关键词',
-    key: 'keywords',
-  },
-  {
-    title: '移动电话',
-    key: 'mobilePhone',
-  },
-  {
-    title: '邮箱',
-    key: 'email',
+    title: '学位',
+    key: 'degree',
   },
   {
     title: '毕业院校',
     key: 'graduateSchool',
   },
   {
-    title: '所学专业',
-    key: 'major',
-  },
-  {
-    title: '学位',
-    key: 'degree',
-  },
-  {
-    title: '从事领域',
-    key: 'fields',
-  },
-  {
-    title: '领域细分',
-    key: 'domainDetail',
-  },
-  {
-    title: '单位地址',
-    key: 'unitAddress',
-  },
-  {
-    title: '单位性质',
-    key: 'unitNature',
-  },
-  {
-    title: '（原）所在单位',
-    key: 'originalUnit',
-  },
-  {
-    title: '工作部门',
-    key: 'department',
+    title: '身份证',
+    key: 'idCard',
   },
   {
     title: '职务',
@@ -356,8 +320,52 @@ const columns = [
     key: 'title',
   },
   {
+    title: '（原）所在单位',
+    key: 'originalUnit',
+  },
+  {
+    title: '工作部门',
+    key: 'department',
+  },
+  {
+    title: '单位地址',
+    key: 'unitAddress',
+  },
+  {
+    title: '单位性质',
+    key: 'unitNature',
+  },
+
+  {
     title: '办公电话',
     key: 'officePhone',
+  },
+  {
+    title: '移动电话',
+    key: 'mobilePhone',
+  },
+  {
+    title: '邮箱',
+    key: 'email',
+  },
+
+  {
+    title: '所学专业',
+    key: 'major',
+  },
+  {
+    title: '关键词',
+    key: 'keywords',
+  },
+  {
+    title: '编号',
+    key: 'number',
+  },
+  {
+    key: 'academicAchievements',
+    title: '学术成就',
+    width: 400,
+    type: 'textarea',
   },
   {
     title: '操作',

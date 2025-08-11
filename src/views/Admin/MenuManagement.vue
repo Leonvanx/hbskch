@@ -21,20 +21,22 @@
           </template>
           新增</n-button
         >
-        <n-button style="margin-left: auto" type="primary" @click="() => sortTabLink()"
-          ><template #icon>
-            <n-icon>
-              <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
-            </n-icon> </template
-          >Tab排序</n-button
-        >
-        <n-button style="margin-left: auto" type="primary" @click="() => sortLink()"
-          ><template #icon>
-            <n-icon>
-              <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
-            </n-icon> </template
-          >排序</n-button
-        >
+        <n-space>
+          <n-button type="primary" @click="() => sortTabLink()"
+            ><template #icon>
+              <n-icon>
+                <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
+              </n-icon> </template
+            >Tab排序</n-button
+          >
+          <n-button type="primary" @click="() => sortLink()"
+            ><template #icon>
+              <n-icon>
+                <i-iconoir-sort style="font-size: 1.1rem; color: #fff" />
+              </n-icon> </template
+            >排序</n-button
+          >
+        </n-space>
       </n-space>
     </n-card>
     <n-card class="menu-tree">
