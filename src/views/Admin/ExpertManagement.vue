@@ -119,7 +119,7 @@
       <n-form ref="formRef" :model="editTarget" label-placement="top">
         <n-grid :cols="16" :x-gap="24">
           <n-form-item-gi :span="8" label="序号" path="onnumber">
-            <n-input v-model:value="onumberForForm" placeholder="请输入序号" />
+            <n-input v-model:value="editTarget.onumber" placeholder="请输入序号" />
           </n-form-item-gi>
           <n-form-item-gi :span="8" label="姓名" path="name">
             <n-input v-model:value="editTarget.name" placeholder="请输入姓名" />
@@ -256,18 +256,11 @@ import dayjs from 'dayjs';
 const drawerVisible = ref<boolean>(false);
 const drawerConfigVisible = ref<boolean>(false);
 const searchTarget = ref<Expert>({});
-const editTarget = ref<Expert & { onumber?: string | number }>({});
+const editTarget = ref<Expert & { onumber?: string }>({});
 const editConfig = ref<ExpertConfig>();
 const editConfigstr = ref<string[]>([]);
 const message = useMessage();
 
-// 计算属性，用于表单绑定
-const onumberForForm = computed({
-  get: () => editTarget.value.onumber?.toString() || '',
-  set: (value: string) => {
-    editTarget.value.onumber = value;
-  },
-});
 const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
   const data = await uploadExcel({ file: file.file! });
   if (data.code === 0) {
@@ -532,10 +525,11 @@ const saveExpertConfigBtn = () => {
 //编辑/新增专家
 const saveExpert = () => {
   if (editTarget.value?.id) {
-    if (editTarget.value.onumber && typeof editTarget.value.onumber === 'string') {
-      editTarget.value.onumber = Number(editTarget.value.onumber);
-    }
-    editExpertList(editTarget.value).then((data) => {
+    const payload = {
+      ...editTarget.value,
+      onumber: editTarget.value.onumber ? Number(editTarget.value.onumber) : undefined,
+    };
+    editExpertList(payload).then((data) => {
       if (data.code === 0) {
         message.success('修改成功！');
         if (editTarget.value.id) {
