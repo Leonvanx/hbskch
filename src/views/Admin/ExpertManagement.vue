@@ -118,6 +118,9 @@
       <!-- 表单，覆盖所有信息 -->
       <n-form ref="formRef" :model="editTarget" label-placement="top">
         <n-grid :cols="16" :x-gap="24">
+          <n-form-item-gi :span="8" label="序号" path="onnumber">
+            <n-input v-model:value="onumberForForm" placeholder="请输入序号" />
+          </n-form-item-gi>
           <n-form-item-gi :span="8" label="姓名" path="name">
             <n-input v-model:value="editTarget.name" placeholder="请输入姓名" />
           </n-form-item-gi>
@@ -253,10 +256,18 @@ import dayjs from 'dayjs';
 const drawerVisible = ref<boolean>(false);
 const drawerConfigVisible = ref<boolean>(false);
 const searchTarget = ref<Expert>({});
-const editTarget = ref<Expert>({});
+const editTarget = ref<Expert & { onumber?: string | number }>({});
 const editConfig = ref<ExpertConfig>();
 const editConfigstr = ref<string[]>([]);
 const message = useMessage();
+
+// 计算属性，用于表单绑定
+const onumberForForm = computed({
+  get: () => editTarget.value.onumber?.toString() || '',
+  set: (value: string) => {
+    editTarget.value.onumber = value;
+  },
+});
 const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
   const data = await uploadExcel({ file: file.file! });
   if (data.code === 0) {
@@ -272,16 +283,24 @@ const onFinish = () => {
 const columns = [
   //加上序号展示
   {
-    key: 'index',
+    key: 'onumber',
     title: '序号',
   },
   {
     title: '领域细分',
     key: 'domainDetail',
+    width: 220,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '从事领域',
     key: 'fields',
+    width: 260,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '姓名',
@@ -310,22 +329,46 @@ const columns = [
   {
     title: '毕业院校',
     key: 'graduateSchool',
+    width: 120,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '身份证',
     key: 'idCard',
+    width: 180,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '职务',
     key: 'position',
+    width: 220,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '职称',
     key: 'title',
+    width: 220,
+    ellipsis: {
+      tooltip: true,
+    },
+  },
+  {
+    title: '职称级别',
+    key: 'titleLevel',
   },
   {
     title: '（原）所在单位',
     key: 'originalUnit',
+    width: 280,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '工作部门',
@@ -334,6 +377,10 @@ const columns = [
   {
     title: '单位地址',
     key: 'unitAddress',
+    width: 280,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '单位性质',
@@ -347,10 +394,15 @@ const columns = [
   {
     title: '移动电话',
     key: 'mobilePhone',
+    width: 120,
   },
   {
     title: '邮箱',
     key: 'email',
+    width: 180,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '所学专业',
@@ -359,22 +411,35 @@ const columns = [
   {
     title: '关键词',
     key: 'keywords',
+    width: 200,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '编号',
     key: 'number',
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     key: 'academicAchievements',
     title: '学术成就',
     width: 400,
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '操作',
     key: 'actions',
     fixed: 'right' as const,
   },
-];
+].map((column) => ({
+  ...column,
+  minWidth: 100,
+}));
 const expertList = ref<Expert[]>([]);
 const pages = ref({
   page: 1,
@@ -418,9 +483,10 @@ const editExpertConfig = () => {
   searchExpertConfigBox();
   drawerConfigVisible.value = true;
 };
-const editExpert = (row: Expert) => {
+const editExpert = (row: Expert & { onumber?: string }) => {
   editTarget.value = row;
   editTarget.value.birthDate = dayjs(row.birthDate?.split('.').join('-')).format('YYYY.MM');
+  editTarget.value.onumber = row.onumber ? row.onumber.toString() : '';
   drawerVisible.value = true;
 };
 //删除专家
@@ -466,6 +532,9 @@ const saveExpertConfigBtn = () => {
 //编辑/新增专家
 const saveExpert = () => {
   if (editTarget.value?.id) {
+    if (editTarget.value.onumber && typeof editTarget.value.onumber === 'string') {
+      editTarget.value.onumber = Number(editTarget.value.onumber);
+    }
     editExpertList(editTarget.value).then((data) => {
       if (data.code === 0) {
         message.success('修改成功！');
@@ -539,5 +608,10 @@ searchExpert();
 
   .pagination-part {
   }
+}
+</style>
+<style>
+.v-binder-follower-content {
+  max-width: 600px;
 }
 </style>
