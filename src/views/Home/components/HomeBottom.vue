@@ -51,6 +51,7 @@
               <!-- 加一个空格 -->
               &nbsp;
               <a
+                style="text-decoration: none; color: inherit"
                 href="https://beian.mps.gov.cn/#/query/webSearch?code=42010602005000"
                 rel="noreferrer"
                 target="_blank"
