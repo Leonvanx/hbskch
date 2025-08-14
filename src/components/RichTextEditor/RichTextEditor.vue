@@ -91,7 +91,7 @@ onMounted(() => {
     image: {
       allowBase64: false,
       defaultSize: 350,
-      uploadUrl: `${import.meta.env.VITE_BASEURL}/tech/files/upload`,
+      uploadUrl: `http://hbkch.cn/tech/files/upload`,
       uploadFormName: 'image', //上传时的文件表单名称
       uploadHeaders: {
         jwt: 'xxxxx',
@@ -147,7 +147,7 @@ onMounted(() => {
       bubbleMenuItems: ['AlignLeft', 'AlignCenter', 'AlignRight', 'delete'],
     },
     video: {
-      uploadUrl: `${import.meta.env.VITE_BASEURL}/tech/files/upload`,
+      uploadUrl: `http://hbkch.cn/tech/files/upload`,
       uploadFormName: 'image', //上传时的文件表单名称
       uploadHeaders: {
         jwt: 'xxxxx',
@@ -202,7 +202,7 @@ onMounted(() => {
       },
     },
     attachment: {
-      uploadUrl: `${import.meta.env.VITE_BASEURL}/tech/files/upload`,
+      uploadUrl: `http://hbkch.cn/tech/files/upload`,
       uploadFormName: 'attachment', //上传时的文件表单名称
       uploadHeaders: {
         jwt: 'xxxxx',
