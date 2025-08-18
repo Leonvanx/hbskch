@@ -248,6 +248,9 @@ onMounted(() => {
     font-weight: 600;
     color: #1f4d83;
   }
+  :deep(.n-tabs-tab-pad) {
+    width: 20px;
+  }
   :deep(.n-tabs-bar) {
     background-color: #1f4d83;
   }
