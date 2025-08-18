@@ -254,6 +254,9 @@ onMounted(() => {
   :deep(.n-tabs-bar) {
     background-color: #1f4d83;
   }
+  :deep(.n-tabs-nav--top) {
+    padding-left: 15px;
+  }
   :deep(.n-tabs-bar) {
     bottom: 0px;
   }
