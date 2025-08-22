@@ -36,7 +36,6 @@
               </template>
               搜索</n-button
             >
-            <n-button type="primary"> 重置</n-button>
             <n-button type="primary" @click="addExpert">
               <template #icon>
                 <n-icon>
@@ -53,7 +52,7 @@
             >
               <n-button type="primary">上传</n-button>
             </n-upload>
-            <n-button type="primary" @click="editExpertConfig">
+            <n-button v-if="false" type="primary" @click="editExpertConfig">
               <template #icon>
                 <n-icon>
                   <i-mdi-add style="font-size: 1.1rem; color: #fff" />
