@@ -31,6 +31,7 @@ export interface Expert {
 export interface ExpertOptions {
   name?: string;
   cardId?: string;
+  fields?: string;
   page?: number;
   size?: number;
 }

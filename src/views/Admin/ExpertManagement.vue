@@ -25,6 +25,9 @@
         <n-form-item label="专家姓名">
           <n-input v-model:value="searchTarget.name" placeholder="请输入专家姓名" />
         </n-form-item>
+        <n-form-item label="从事领域">
+          <n-input v-model:value="searchTarget.fields" placeholder="请输入从事领域" />
+        </n-form-item>
         <!-- 按钮，新增，上传专家excel文件 -->
         <n-form-item>
           <n-space>
@@ -446,6 +449,7 @@ const pageChange = (page: number) => {
 const searchExpert = () => {
   searchExpertListAll({
     name: searchTarget.value.name,
+    fields: searchTarget.value.fields,
     page: pages.value.page,
     size: pages.value.size,
   }).then((data) => {
