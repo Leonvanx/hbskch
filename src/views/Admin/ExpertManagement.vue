@@ -25,9 +25,6 @@
         <n-form-item label="专家姓名">
           <n-input v-model:value="searchTarget.name" placeholder="请输入专家姓名" />
         </n-form-item>
-        <n-form-item label="从事领域">
-          <n-input v-model:value="searchTarget.fields" placeholder="请输入从事领域" />
-        </n-form-item>
         <!-- 按钮，新增，上传专家excel文件 -->
         <n-form-item>
           <n-space>
@@ -39,6 +36,7 @@
               </template>
               搜索</n-button
             >
+            <n-button type="primary"> 重置</n-button>
             <n-button type="primary" @click="addExpert">
               <template #icon>
                 <n-icon>
@@ -55,7 +53,15 @@
             >
               <n-button type="primary">上传</n-button>
             </n-upload>
-            <n-button v-if="false" type="primary" @click="editExpertConfig">
+            <n-button type="primary" @click="handleExportExpert">
+              <template #icon>
+                <n-icon>
+                  <i-mdi-download style="font-size: 1.1rem; color: #fff" />
+                </n-icon>
+              </template>
+              导出</n-button
+            >
+            <n-button type="primary" @click="editExpertConfig">
               <template #icon>
                 <n-icon>
                   <i-mdi-add style="font-size: 1.1rem; color: #fff" />
@@ -251,6 +257,7 @@ import {
   searchExpertConfig,
   deleteExpertList,
   saveExpertConfig,
+  exportExpert,
 } from '@/apis';
 import dayjs from 'dayjs';
 // const message = useMessage();
@@ -449,7 +456,6 @@ const pageChange = (page: number) => {
 const searchExpert = () => {
   searchExpertListAll({
     name: searchTarget.value.name,
-    fields: searchTarget.value.fields,
     page: pages.value.page,
     size: pages.value.size,
   }).then((data) => {
@@ -584,6 +590,44 @@ const saveExpert = () => {
       }
     });
   }
+};
+// 导出专家库
+const handleExportExpert = () => {
+  const params = {
+    name: searchTarget.value.name,
+    page: 1,
+    size: 999999, // 导出全部数据
+  };
+  exportExpert(params)
+    .then((response) => {
+      // 创建 blob 对象
+      const blob = new Blob([response], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+
+      // 创建下载链接
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      // 设置文件名
+      const fileName = `专家库列表_${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
+      link.download = fileName;
+
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+
+      // 清理
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      message.success('导出成功！');
+    })
+    .catch((error) => {
+      console.error('导出失败:', error);
+      message.error('导出失败！');
+    });
 };
 searchExpert();
 </script>

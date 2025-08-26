@@ -215,3 +215,10 @@ export const uploadExcel = (file: UploadFileParams, config?: AxiosRequestConfig)
     config,
   );
 };
+// 专家库导出
+export const exportExpert = (params: ExpertOptions, config?: AxiosRequestConfig) => {
+  return request.post<Blob>('/tech/api/expert/export', params, {
+    ...config,
+    responseType: 'blob',
+  });
+};
