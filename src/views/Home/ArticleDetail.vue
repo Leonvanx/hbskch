@@ -85,6 +85,15 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
+:deep(.aie-container-main) {
+  .aie-content:has(video) {
+    display: flex;
+    flex-direction: column;
+    video {
+      align-self: center;
+    }
+  }
+}
 .article-content {
   width: 1000px;
   margin: 36px auto;
