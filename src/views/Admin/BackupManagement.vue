@@ -53,7 +53,7 @@ const loadBackupList = async () => {
 // 创建备份
 const handleCreateBackup = () => {
   message.loading('正在创建备份...', { duration: 0 });
-  createBackup({ timeout: 20000 })
+  createBackup({ timeout: 50000 })
     .then((res) => {
       if (res.code === 0) {
         message.destroyAll();
@@ -75,7 +75,7 @@ const handleRestore = async (timestamp: string) => {
     draggable: true,
     onPositiveClick: () => {
       message.loading('正在恢复备份...', { duration: 0 });
-      restoreBackup(timestamp, { timeout: 20000 })
+      restoreBackup(timestamp, { timeout: 50000 })
         .then((res) => {
           if (res.code === 0) {
             message.destroyAll();
@@ -105,7 +105,7 @@ const handleDelete = async (timestamp: string) => {
     onPositiveClick: () => {
       message.loading('正在删除备份...', { duration: 0 });
       const str = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
-      deleteBackup(str, { timeout: 20000 })
+      deleteBackup(str, { timeout: 50000 })
         .then((res) => {
           if (res.code === 0) {
             message.destroyAll();
