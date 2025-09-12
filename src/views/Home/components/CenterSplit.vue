@@ -38,5 +38,6 @@ const jumpTo = () => {
   margin: 0 auto;
   max-width: 1200px;
   max-height: 200px;
+  width: 100%;
 }
 </style>

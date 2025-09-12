@@ -160,7 +160,7 @@ getLinkList();
 }
 @media (min-width: 1200px) {
   .contain {
-    width: 1166px;
+    width: 1200px;
     .link-one {
       width: calc(25% - 6px);
     }
