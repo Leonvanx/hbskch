@@ -1,37 +1,28 @@
 export interface Demand {
   id?: number;
-  academicAchievements?: string; //学术成就
-  birthDate?: string; //出生年月
-  createTime?: string;
-  degree?: string; //	学位
-  department?: string; //工作部门
-  domainDetail?: string; //领域细分
+  contactPerson?: string; //联系人
+  contactPhone?: string; //联系电话
+  createTime?: string; //创建时间
+  demandDetails?: string; //需求详情
+  demandName?: string; //需求名称
+  demandOverview?: string; //需求概述
+  demandTime?: string; //需求时间
+  demandUnit?: string; //需求单位
   email?: string; //邮箱
-  ethnic?: string; //民族
-  fields?: string; //从事领域
-  gender?: string; //性别
-  graduateSchool?: string; //毕业院校
-  idCard?: string; //身份证
-  keywords?: string; //关键词
-  major?: string; //所学专业
-  mobilePhone?: string; //移动电话
-  name?: string; //姓名
-  number?: string; //编号
-  officePhone?: string; //	办公电话
-  originalUnit?: string; //（原）所在单位
-  politicalStatus?: string; //面貌
-  position?: string; //职务
-  title?: string; //	职称
-  unitAddress?: string; //单位地址
-  unitNature?: string; //	单位性质
-  updateTime?: string;
+  expectedEffect?: string; //预期效果
+  expectedInvestment?: string; //预期投资
+  field?: string; //所属领域
+  isDeleted?: number; //是否删除
+  remarks?: string; //备注
+  serialNumber?: string; //序号
+  technicalParameters?: string; //技术参数
+  updateTime?: string; //更新时间
   index?: number;
 }
 
 export interface DemandOptions {
-  name?: string;
-  cardId?: string;
-  fields?: string;
+  name?: string; // 需求名称
+  field?: string; // 所属领域
   page?: number;
   size?: number;
 }

@@ -16,6 +16,9 @@ import type {
   ExpertOptions,
   SupplyOptions,
   Supply,
+  Demand,
+  DemandOptions,
+  DemandConfig,
 } from '@/types';
 // 保存文章
 export const savePage = (params: Page, config?: AxiosRequestConfig) => {
@@ -270,4 +273,65 @@ export const exportSupply = (params: SupplyOptions, config?: AxiosRequestConfig)
     ...config,
     responseType: 'blob',
   });
+};
+
+// 成果需方列表查询All
+export const searchDemandListAll = (params: DemandOptions, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<searchOptions<Demand>>>(
+    `/tech/api/demands/search`,
+    params,
+    config,
+  );
+};
+// 成果需方列表编辑
+export const editDemandList = (params: Demand, config?: AxiosRequestConfig) => {
+  return request.put<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/demands/${params.id}`,
+    params,
+    config,
+  );
+};
+// 成果需方列表保存
+export const saveDemandList = (params: Demand, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/demands`,
+    params,
+    config,
+  );
+};
+// 导入成果需方excel上传
+export const uploadDemandExcel = (file: UploadFileParams, config?: AxiosRequestConfig) => {
+  return request.uploadFile<UploadResult<{ url: string; message: string }>>(
+    `/tech/api/suppliers/import`,
+    file,
+    config,
+  );
+};
+// 删除成果需方
+export const deleteDemandList = (id: number, config?: AxiosRequestConfig) => {
+  return request.delete<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/demands/${id}`,
+    {},
+    config,
+  );
+};
+// 成果需方导出
+export const exportDemand = (params: DemandOptions, config?: AxiosRequestConfig) => {
+  return request.get<Blob>('/tech/api/demands/export/all', {
+    ...config,
+    params,
+    responseType: 'blob',
+  });
+};
+// 成果需方配置查询
+export const searchDemandConfig = (config?: AxiosRequestConfig) => {
+  return request.get<ResultSuccess<DemandConfig>>(`/tech/api/demands/config/current`, config);
+};
+// 成果需方配置更新
+export const saveDemandConfig = (params: DemandConfig, config?: AxiosRequestConfig) => {
+  return request.put<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/demands/config/update`,
+    params,
+    config,
+  );
 };
