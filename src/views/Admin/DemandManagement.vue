@@ -1,8 +1,8 @@
 <!--
-  功能：专家库维护
+  功能：成果需方管理
   作者：disonlv
   邮箱：disonlv@outlook.com
-  时间：2025年06月05日 10:32:16
+  时间：2025年09月21日 12:56:16
   版本：v1.0
   修改记录：
   修改内容：
@@ -249,7 +249,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Expert, ExpertConfig } from '@/types';
+import type { Demand, DemandConfig } from '@/types';
 import type { UploadCustomRequestOptions } from 'naive-ui';
 import {
   searchExpertListAll,
@@ -266,9 +266,9 @@ import dayjs from 'dayjs';
 // const dialog = useDialog();
 const drawerVisible = ref<boolean>(false);
 const drawerConfigVisible = ref<boolean>(false);
-const searchTarget = ref<Expert>({});
-const editTarget = ref<Expert & { onumber?: string }>({});
-const editConfig = ref<ExpertConfig>();
+const searchTarget = ref<Demand>({});
+const editTarget = ref<Demand & { onumber?: string }>({});
+const editConfig = ref<DemandConfig>();
 const editConfigstr = ref<string[]>([]);
 const message = useMessage();
 
@@ -444,7 +444,7 @@ const columns = [
   ...column,
   minWidth: 100,
 }));
-const expertList = ref<Expert[]>([]);
+const expertList = ref<Demand[]>([]);
 const pages = ref({
   page: 1,
   size: 10,
@@ -488,14 +488,14 @@ const editExpertConfig = () => {
   searchExpertConfigBox();
   drawerConfigVisible.value = true;
 };
-const editExpert = (row: Expert & { onumber?: string }) => {
+const editExpert = (row: Demand & { onumber?: string }) => {
   editTarget.value = row;
   editTarget.value.birthDate = dayjs(row.birthDate?.split('.').join('-')).format('YYYY.MM');
   editTarget.value.onumber = row.onumber ? row.onumber.toString() : '';
   drawerVisible.value = true;
 };
 //删除专家
-const delExpert = (row: Expert) => {
+const delExpert = (row: Demand) => {
   deleteExpertList(row.id ? row.id : 0).then((data) => {
     if (data.code === 0) {
       message.success('删除成功！');

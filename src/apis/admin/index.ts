@@ -14,6 +14,8 @@ import type {
   Expert,
   ExpertConfig,
   ExpertOptions,
+  SupplyOptions,
+  Supply,
 } from '@/types';
 // 保存文章
 export const savePage = (params: Page, config?: AxiosRequestConfig) => {
@@ -218,6 +220,53 @@ export const uploadExcel = (file: UploadFileParams, config?: AxiosRequestConfig)
 // 专家库导出
 export const exportExpert = (params: ExpertOptions, config?: AxiosRequestConfig) => {
   return request.post<Blob>('/tech/api/expert/export', params, {
+    ...config,
+    responseType: 'blob',
+  });
+};
+// 成果供方列表查询All
+export const searchSupplyListAll = (params: SupplyOptions, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<searchOptions<Supply>>>(
+    `/tech/api/suppliers/search`,
+    params,
+    config,
+  );
+};
+// 成果供方列表编辑
+export const editSupplyList = (params: Supply, config?: AxiosRequestConfig) => {
+  return request.put<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/suppliers/${params.id}`,
+    params,
+    config,
+  );
+};
+// 成果供方列表保存
+export const saveSupplyList = (params: Supply, config?: AxiosRequestConfig) => {
+  return request.post<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/suppliers/save`,
+    params,
+    config,
+  );
+};
+// 导入成果供方excel上传
+export const uploadSupplyExcel = (file: UploadFileParams, config?: AxiosRequestConfig) => {
+  return request.uploadFile<UploadResult<{ url: string; message: string }>>(
+    `/tech/api/suppliers/import`,
+    file,
+    config,
+  );
+};
+// 删除成果供方
+export const deleteSupplyList = (id: number, config?: AxiosRequestConfig) => {
+  return request.delete<ResultSuccess<{ code: number; message: string }>>(
+    `/tech/api/suppliers/${id}`,
+    id,
+    config,
+  );
+};
+// 成果供方导出
+export const exportSupply = (params: SupplyOptions, config?: AxiosRequestConfig) => {
+  return request.post<Blob>('/tech/api/suppliers/export', params, {
     ...config,
     responseType: 'blob',
   });

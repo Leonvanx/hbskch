@@ -4,3 +4,5 @@ export * from './menu';
 export * from './resource';
 export * from './expert';
 export * from './backup';
+export * from './demand';
+export * from './supply';

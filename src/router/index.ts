@@ -58,6 +58,19 @@ const routes = [
         meta: { label: '专家管理', iconName: 'expert' },
         component: () => import('@/views/Admin/ExpertManagement.vue'),
       },
+      // 添加路由：成果供方，成果需方
+      {
+        path: 'supplyManagement',
+        name: 'supplyManagement',
+        meta: { label: '成果供方管理', iconName: 'supply' },
+        component: () => import('@/views/Admin/SupplyManagement.vue'),
+      },
+      {
+        path: 'demandManagement',
+        name: 'demandManagement',
+        meta: { label: '成果需方管理', iconName: 'demand' },
+        component: () => import('@/views/Admin/DemandManagement.vue'),
+      },
       {
         path: 'backupManagement',
         name: 'backupManagement',
