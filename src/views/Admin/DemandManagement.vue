@@ -22,16 +22,16 @@
         :label-width="80"
         :model="searchTarget"
       >
-        <n-form-item label="专家姓名">
-          <n-input v-model:value="searchTarget.name" placeholder="请输入专家姓名" />
+        <n-form-item label="需求名称">
+          <n-input v-model:value="searchTarget.name" placeholder="请输入需求名称" />
         </n-form-item>
-        <n-form-item label="从事领域">
-          <n-input v-model:value="searchTarget.fields" placeholder="请输入从事领域" />
+        <n-form-item label="所属领域">
+          <n-input v-model:value="searchTarget.field" placeholder="请输入所属领域" />
         </n-form-item>
-        <!-- 按钮，新增，上传专家excel文件 -->
+        <!-- 按钮，新增，上传需方excel文件 -->
         <n-form-item>
           <n-space>
-            <n-button type="primary" @click="searchExpert">
+            <n-button type="primary" @click="searchDemand">
               <template #icon>
                 <n-icon>
                   <i-mdi-search style="font-size: 1.1rem; color: #fff" />
@@ -39,7 +39,7 @@
               </template>
               搜索</n-button
             >
-            <n-button type="primary" @click="addExpert">
+            <n-button type="primary" @click="addDemand">
               <template #icon>
                 <n-icon>
                   <i-mdi-add style="font-size: 1.1rem; color: #fff" />
@@ -55,21 +55,13 @@
             >
               <n-button type="primary">上传</n-button>
             </n-upload>
-            <n-button type="primary" @click="handleExportExpert">
+            <n-button type="primary" @click="handleExportDemand">
               <template #icon>
                 <n-icon>
                   <i-mdi-download style="font-size: 1.1rem; color: #fff" />
                 </n-icon>
               </template>
               导出</n-button
-            >
-            <n-button v-if="false" type="primary" @click="editExpertConfig">
-              <template #icon>
-                <n-icon>
-                  <i-mdi-add style="font-size: 1.1rem; color: #fff" />
-                </n-icon>
-              </template>
-              编辑配置</n-button
             >
           </n-space>
         </n-form-item>
@@ -80,19 +72,19 @@
       <CTable
         :columns="columns"
         :scroll-x="5000"
-        :table-data="expertList"
+        :table-data="demandList"
         :row-key="(row) => row.id"
       >
         <template #actions="{ row }">
           <n-space>
-            <n-button strong tertiary size="small" title="编辑" @click="editExpert(row)">
+            <n-button strong tertiary size="small" title="编辑" @click="editDemand(row)">
               <template #icon>
                 <n-icon>
                   <i-iconoir-edit style="font-size: 1.1rem; color: #000" />
                 </n-icon>
               </template>
             </n-button>
-            <n-button strong tertiary size="small" title="删除" @click="delExpert(row)">
+            <n-button strong tertiary size="small" title="删除" @click="delDemand(row)">
               <template #icon>
                 <n-icon>
                   <i-material-symbols-light-delete style="font-size: 1.1rem; color: #000" />
@@ -122,158 +114,109 @@
       <template #footer>
         <n-space>
           <n-button @click="cancel">取消</n-button>
-          <n-button type="primary" @click="saveExpert">保存</n-button>
+          <n-button type="primary" @click="saveDemand">保存</n-button>
         </n-space>
       </template>
       <!-- 表单，覆盖所有信息 -->
       <n-form ref="formRef" :model="editTarget" label-placement="top">
         <n-grid :cols="16" :x-gap="24">
-          <n-form-item-gi :span="8" label="序号" path="onnumber">
-            <n-input v-model:value="editTarget.onumber" placeholder="请输入序号" />
+          <n-form-item-gi :span="8" label="序号" path="serialNumber">
+            <n-input v-model:value="editTarget.serialNumber" placeholder="请输入序号" />
           </n-form-item-gi>
-          <n-form-item-gi :span="8" label="姓名" path="name">
-            <n-input v-model:value="editTarget.name" placeholder="请输入姓名" />
+          <n-form-item-gi :span="8" label="所属领域" path="field">
+            <n-input v-model:value="editTarget.field" placeholder="请输入所属领域" />
           </n-form-item-gi>
-          <n-form-item-gi :span="8" label="性别" path="gender">
-            <n-input v-model:value="editTarget.gender" placeholder="请输入性别" />
+          <n-form-item-gi :span="8" label="需求名称" path="demandName">
+            <n-input v-model:value="editTarget.demandName" placeholder="请输入需求名称" />
           </n-form-item-gi>
-          <n-form-item-gi :span="8" label="出生年月" path="birthDate">
-            <!-- 日期选择器 -->
-            <n-date-picker
-              v-model:formatted-value="editTarget.birthDate"
-              value-format="yyyy.MM"
-              placeholder="请选择出生年月"
-              format="y年 M月"
-              year-format="y年"
-              month-format="M月"
-              type="month"
-              clearable
-              style="width: '100%'"
-            >
-            </n-date-picker>
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="民族" path="ethnic">
-            <n-input v-model:value="editTarget.ethnic" placeholder="请输入民族" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="面貌" path="politicalStatus">
-            <n-input v-model:value="editTarget.politicalStatus" placeholder="请输入政治面貌" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="从事领域" path="fields">
-            <n-input v-model:value="editTarget.fields" placeholder="请输入从事领域" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="领域细分" path="domainDetail">
-            <n-input v-model:value="editTarget.domainDetail" placeholder="请输入领域细分" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="学位" path="degree">
-            <n-input v-model:value="editTarget.degree" placeholder="请输入学位" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="毕业院校" path="graduateSchool">
-            <n-input v-model:value="editTarget.graduateSchool" placeholder="请输入毕业院校" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="身份证" path="idCard">
-            <n-input v-model:value="editTarget.idCard" placeholder="请输入身份证" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="职务" path="position">
-            <n-input v-model:value="editTarget.position" placeholder="请输入职务" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="职称" path="title">
-            <n-input v-model:value="editTarget.title" placeholder="请输入职称" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="（原）所在单位" path="originalUnit">
-            <n-input v-model:value="editTarget.originalUnit" placeholder="请输入（原）所在单位" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="工作部门" path="department">
-            <n-input v-model:value="editTarget.department" placeholder="请输入工作部门" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="单位地址" path="unitAddress">
-            <n-input v-model:value="editTarget.unitAddress" placeholder="请输入单位地址" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="单位性质" path="unitNature">
-            <n-input v-model:value="editTarget.unitNature" placeholder="请输入单位性质" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="办公电话" path="officePhone">
-            <n-input v-model:value="editTarget.officePhone" placeholder="请输入办公电话" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="移动电话" path="mobilePhone">
-            <n-input v-model:value="editTarget.mobilePhone" placeholder="请输入移动电话" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="邮箱" path="email">
-            <n-input v-model:value="editTarget.email" placeholder="请输入邮箱" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="所学专业" path="major">
-            <n-input v-model:value="editTarget.major" placeholder="请输入所学专业" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="关键词" path="keywords">
-            <n-input v-model:value="editTarget.keywords" placeholder="请输入关键词" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="8" label="编号" path="number">
-            <n-input v-model:value="editTarget.number" placeholder="请输入编号" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="16" label="学术成就" path="academicAchievements">
+          <n-form-item-gi :span="8" label="预计投入" path="expectedInvestment">
             <n-input
-              v-model:value="editTarget.academicAchievements"
+              v-model:value="editTarget.expectedInvestment"
+              placeholder="请输入预计投入金额"
+            />
+          </n-form-item-gi>
+          <n-form-item-gi :span="8" label="需求单位" path="demandUnit">
+            <n-input v-model:value="editTarget.demandUnit" placeholder="请输入需求单位" />
+          </n-form-item-gi>
+          <n-form-item-gi :span="8" label="需求时间" path="demandTime">
+            <n-input v-model:value="editTarget.demandTime" placeholder="请输入需求时间" />
+          </n-form-item-gi>
+          <n-form-item-gi :span="8" label="联系人" path="contactPerson">
+            <n-input v-model:value="editTarget.contactPerson" placeholder="请输入联系人" />
+          </n-form-item-gi>
+          <n-form-item-gi :span="8" label="联系电话" path="contactPhone">
+            <n-input v-model:value="editTarget.contactPhone" placeholder="请输入联系电话" />
+          </n-form-item-gi>
+          <n-form-item-gi :span="8" label="电子邮箱" path="email">
+            <n-input v-model:value="editTarget.email" placeholder="请输入电子邮箱" />
+          </n-form-item-gi>
+          <n-form-item-gi :span="16" label="需求概述" path="demandOverview">
+            <n-input
+              v-model:value="editTarget.demandOverview"
               type="textarea"
-              placeholder="请输入学术成就"
+              placeholder="请输入需求概述"
+              :autosize="{ minRows: 3, maxRows: 5 }"
+            />
+          </n-form-item-gi>
+          <n-form-item-gi :span="16" label="需求详情" path="demandDetails">
+            <n-input
+              v-model:value="editTarget.demandDetails"
+              type="textarea"
+              placeholder="请输入需求详情"
+              :autosize="{ minRows: 3, maxRows: 5 }"
+            />
+          </n-form-item-gi>
+          <n-form-item-gi :span="16" label="技术参数" path="technicalParameters">
+            <n-input
+              v-model:value="editTarget.technicalParameters"
+              type="textarea"
+              placeholder="请输入技术参数"
+              :autosize="{ minRows: 3, maxRows: 5 }"
+            />
+          </n-form-item-gi>
+          <n-form-item-gi :span="16" label="预期效果" path="expectedEffect">
+            <n-input
+              v-model:value="editTarget.expectedEffect"
+              type="textarea"
+              placeholder="请输入预期效果"
+              :autosize="{ minRows: 3, maxRows: 5 }"
+            />
+          </n-form-item-gi>
+          <n-form-item-gi :span="16" label="备注" path="remarks">
+            <n-input
+              v-model:value="editTarget.remarks"
+              type="textarea"
+              placeholder="请输入备注"
+              :autosize="{ minRows: 2, maxRows: 4 }"
             />
           </n-form-item-gi>
         </n-grid>
       </n-form>
     </n-drawer-content>
   </n-drawer>
-  <n-drawer
-    v-model:show="drawerConfigVisible"
-    width="40%"
-    placement="right"
-    :on-esc="closedConfig"
-    :on-mask-click="() => closedConfig()"
-  >
-    <n-drawer-content>
-      <template #header>
-        {{ '编辑' }}
-      </template>
-      <template #footer>
-        <n-space>
-          <n-button>取消</n-button>
-          <n-button type="primary" @click="saveExpertConfigBtn">保存</n-button>
-        </n-space>
-      </template>
-      <n-checkbox-group v-model:value="editConfigstr">
-        <n-space item-style="display: flex;">
-          <template v-for="item in columns" :key="item.key">
-            <n-checkbox :value="item.key" :label="item.title" />
-          </template>
-        </n-space>
-      </n-checkbox-group>
-    </n-drawer-content>
-  </n-drawer>
 </template>
 
 <script setup lang="ts">
-import type { Demand, DemandConfig } from '@/types';
+import type { Demand, DemandOptions } from '@/types';
 import type { UploadCustomRequestOptions } from 'naive-ui';
 import {
-  searchExpertListAll,
-  uploadExcel,
-  editExpertList,
-  saveExpertList,
-  searchExpertConfig,
-  deleteExpertList,
-  saveExpertConfig,
-  exportExpert,
+  searchDemandListAll,
+  uploadDemandExcel,
+  editDemandList,
+  saveDemandList,
+  deleteDemandList,
+  exportDemand,
 } from '@/apis';
 import dayjs from 'dayjs';
 // const message = useMessage();
-// const dialog = useDialog();
+const dialog = useDialog();
 const drawerVisible = ref<boolean>(false);
-const drawerConfigVisible = ref<boolean>(false);
-const searchTarget = ref<Demand>({});
-const editTarget = ref<Demand & { onumber?: string }>({});
-const editConfig = ref<DemandConfig>();
-const editConfigstr = ref<string[]>([]);
+const searchTarget = ref<DemandOptions>({});
+const editTarget = ref<Demand>({});
 const message = useMessage();
 
 const handleCustomRequest = async ({ file }: UploadCustomRequestOptions) => {
-  const data = await uploadExcel({ file: file.file! });
+  const data = await uploadDemandExcel({ file: file.file! });
   if (data.code === 0) {
     message.success('上传成功！');
     pageChange(1);
@@ -287,121 +230,88 @@ const onFinish = () => {
 const columns = [
   //加上序号展示
   {
-    key: 'onumber',
+    key: 'serialNumber',
     title: '序号',
+    width: 80,
   },
   {
-    title: '领域细分',
-    key: 'domainDetail',
-    width: 220,
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-  {
-    title: '从事领域',
-    key: 'fields',
-    width: 260,
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-  {
-    title: '姓名',
-    key: 'name',
-  },
-  {
-    title: '性别',
-    key: 'gender',
-  },
-  {
-    title: '出生年月',
-    key: 'birthDate',
-  },
-  {
-    title: '民族',
-    key: 'ethnic',
-  },
-  {
-    title: '面貌',
-    key: 'politicalStatus',
-  },
-  {
-    title: '学位',
-    key: 'degree',
-  },
-  {
-    title: '毕业院校',
-    key: 'graduateSchool',
+    title: '所属领域',
+    key: 'field',
     width: 120,
+  },
+  {
+    title: '需求名称',
+    key: 'demandName',
+    width: 200,
     ellipsis: {
       tooltip: true,
     },
   },
   {
-    title: '身份证',
-    key: 'idCard',
+    title: '预计投入',
+    key: 'expectedInvestment',
+    width: 120,
+  },
+  {
+    title: '需求单位',
+    key: 'demandUnit',
     width: 180,
     ellipsis: {
       tooltip: true,
     },
   },
   {
-    title: '职务',
-    key: 'position',
-    width: 220,
+    title: '需求概述',
+    key: 'demandOverview',
+    width: 200,
     ellipsis: {
       tooltip: true,
     },
   },
   {
-    title: '职称',
-    key: 'title',
-    width: 220,
+    title: '需求详情',
+    key: 'demandDetails',
+    width: 200,
     ellipsis: {
       tooltip: true,
     },
   },
   {
-    title: '职称级别',
-    key: 'titleLevel',
-  },
-  {
-    title: '（原）所在单位',
-    key: 'originalUnit',
-    width: 280,
+    title: '技术参数',
+    key: 'technicalParameters',
+    width: 180,
     ellipsis: {
       tooltip: true,
     },
   },
   {
-    title: '工作部门',
-    key: 'department',
-  },
-  {
-    title: '单位地址',
-    key: 'unitAddress',
-    width: 280,
+    title: '预期效果',
+    key: 'expectedEffect',
+    width: 180,
     ellipsis: {
       tooltip: true,
     },
   },
   {
-    title: '单位性质',
-    key: 'unitNature',
-  },
-
-  {
-    title: '办公电话',
-    key: 'officePhone',
-  },
-  {
-    title: '移动电话',
-    key: 'mobilePhone',
+    title: '需求时间',
+    key: 'demandTime',
     width: 120,
   },
   {
-    title: '邮箱',
+    title: '联系人',
+    key: 'contactPerson',
+    width: 100,
+  },
+  {
+    title: '联系电话',
+    key: 'contactPhone',
+    width: 140,
+    ellipsis: {
+      tooltip: true,
+    },
+  },
+  {
+    title: '电子邮箱',
     key: 'email',
     width: 180,
     ellipsis: {
@@ -409,28 +319,9 @@ const columns = [
     },
   },
   {
-    title: '所学专业',
-    key: 'major',
-  },
-  {
-    title: '关键词',
-    key: 'keywords',
+    title: '备注',
+    key: 'remarks',
     width: 200,
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-  {
-    title: '编号',
-    key: 'number',
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-  {
-    key: 'academicAchievements',
-    title: '学术成就',
-    width: 400,
     ellipsis: {
       tooltip: true,
     },
@@ -438,13 +329,14 @@ const columns = [
   {
     title: '操作',
     key: 'actions',
+    width: 120,
     fixed: 'right' as const,
   },
 ].map((column) => ({
   ...column,
   minWidth: 100,
 }));
-const expertList = ref<Demand[]>([]);
+const demandList = ref<Demand[]>([]);
 const pages = ref({
   page: 1,
   size: 10,
@@ -452,96 +344,65 @@ const pages = ref({
 });
 const pageChange = (page: number) => {
   pages.value.page = page;
-  searchExpert();
+  searchDemand();
 };
-//专家库列表查询
-const searchExpert = () => {
-  searchExpertListAll({
+//需方列表查询
+const searchDemand = () => {
+  pages.value.page = 1;
+  searchDemandListAll({
     name: searchTarget.value.name,
     page: pages.value.page,
     size: pages.value.size,
-    fields: searchTarget.value.fields,
+    field: searchTarget.value.field,
   }).then((data) => {
     if (data.code === 0 && data.data) {
-      expertList.value = data.data?.records;
+      demandList.value = data.data?.records;
       pages.value.total = data.data ? data.data.total! : 0;
-      expertList.value.forEach((item, index) => {
-        //根据分页，页数*每页展示数量计算出实际顺序
-        item.index = (pages.value.page - 1) * pages.value.size + index + 1;
+    }
+  });
+};
+
+const addDemand = () => {
+  editTarget.value = {};
+  drawerVisible.value = true;
+};
+
+const editDemand = (row: Demand) => {
+  editTarget.value = { ...row };
+  drawerVisible.value = true;
+};
+//删除需方
+const delDemand = (row: Demand) => {
+  // 提示
+  dialog.warning({
+    title: '警告',
+    content: `你确定删除该需方信息吗？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    draggable: true,
+    onPositiveClick: () => {
+      deleteDemandList(row.id ? row.id : 0).then((data) => {
+        if (data.code === 0) {
+          message.success('删除成功！');
+          pageChange(1);
+        }
       });
-    }
+    },
   });
 };
-//配置查询
-const searchExpertConfigBox = () => {
-  searchExpertConfig().then((data) => {
-    if (data.code === 0) {
-      editConfigstr.value = data.data?.visibleFields.split(',') || [];
-      editConfig.value = data.data;
-    }
-  });
-};
-const addExpert = () => {
-  drawerVisible.value = true;
-};
-const editExpertConfig = () => {
-  searchExpertConfigBox();
-  drawerConfigVisible.value = true;
-};
-const editExpert = (row: Demand & { onumber?: string }) => {
-  editTarget.value = row;
-  editTarget.value.birthDate = dayjs(row.birthDate?.split('.').join('-')).format('YYYY.MM');
-  editTarget.value.onumber = row.onumber ? row.onumber.toString() : '';
-  drawerVisible.value = true;
-};
-//删除专家
-const delExpert = (row: Demand) => {
-  deleteExpertList(row.id ? row.id : 0).then((data) => {
-    if (data.code === 0) {
-      message.success('删除成功！');
-      pageChange(1);
-    }
-  });
-};
-const closedConfig = () => {
-  drawerConfigVisible.value = false;
-};
+
 const cancel = () => {
   drawerVisible.value = false;
   editTarget.value = {};
 };
-//编辑配置
-const saveExpertConfigBtn = () => {
-  if (editConfigstr.value!.length > 0) {
-    let configStr = '';
-    for (let i = 0; i < editConfigstr.value!.length; i++) {
-      if (i != editConfigstr.value!.length - 1) {
-        configStr += `${editConfigstr!.value[i]},`;
-      } else {
-        configStr += `${editConfigstr!.value[i]}`;
-      }
-    }
-    const params = {
-      id: editConfig.value!.id,
-      configName: editConfig.value?.configName,
-      visibleFields: configStr,
-    };
-    saveExpertConfig(params).then((data) => {
-      if (data.code === 0) {
-        message.success('修改成功！');
-        closedConfig();
-      }
-    });
-  }
-};
-//编辑/新增专家
-const saveExpert = () => {
+
+//编辑/新增需方
+const saveDemand = () => {
   if (editTarget.value?.id) {
     const payload = {
       ...editTarget.value,
-      onumber: editTarget.value.onumber ? Number(editTarget.value.onumber) : undefined,
     };
-    editExpertList(payload).then((data) => {
+    editDemandList(payload).then((data) => {
       if (data.code === 0) {
         message.success('修改成功！');
         if (editTarget.value.id) {
@@ -554,34 +415,9 @@ const saveExpert = () => {
     });
   } else {
     const params = {
-      academicAchievements: editTarget.value.academicAchievements || '',
-      birthDate: editTarget.value.birthDate || '',
-      createTime: editTarget.value.createTime || '',
-      degree: editTarget.value.degree || '',
-      department: editTarget.value.department || '',
-      domainDetail: editTarget.value.domainDetail || '',
-      email: editTarget.value.email || '',
-      ethnic: editTarget.value.ethnic || '',
-      fields: editTarget.value.fields || '',
-      gender: editTarget.value.gender || '',
-      graduateSchool: editTarget.value.graduateSchool || '',
-      id: 0,
-      idCard: editTarget.value.idCard || '',
-      keywords: editTarget.value.keywords || '',
-      major: editTarget.value.major || '',
-      mobilePhone: editTarget.value.mobilePhone || '',
-      name: editTarget.value.name || '',
-      number: editTarget.value.number || '',
-      officePhone: editTarget.value.officePhone || '',
-      originalUnit: editTarget.value.originalUnit || '',
-      politicalStatus: editTarget.value.politicalStatus || '',
-      position: editTarget.value.position || '',
-      title: editTarget.value.title || '',
-      unitAddress: editTarget.value.unitAddress || '',
-      unitNature: editTarget.value.unitNature || '',
-      updateTime: editTarget.value.updateTime || '',
+      ...editTarget.value,
     };
-    saveExpertList(params).then((data) => {
+    saveDemandList(params).then((data) => {
       if (data.code === 0) {
         message.success('保存成功！');
         if (editTarget.value.id) {
@@ -594,14 +430,10 @@ const saveExpert = () => {
     });
   }
 };
-// 导出专家库
-const handleExportExpert = () => {
-  const params = {
-    name: searchTarget.value.name,
-    page: 1,
-    size: 999999, // 导出全部数据
-  };
-  exportExpert(params)
+// 导出需方
+const handleExportDemand = () => {
+  const params = {};
+  exportDemand(params)
     .then((response) => {
       // 创建 blob 对象
       const blob = new Blob([response], {
@@ -614,7 +446,7 @@ const handleExportExpert = () => {
       link.href = url;
 
       // 设置文件名
-      const fileName = `专家库列表_${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
+      const fileName = `成果需方_${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
       link.download = fileName;
 
       // 触发下载
@@ -632,7 +464,7 @@ const handleExportExpert = () => {
       message.error('导出失败！');
     });
 };
-searchExpert();
+searchDemand();
 </script>
 
 <style scoped lang="scss">
