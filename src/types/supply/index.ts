@@ -6,7 +6,7 @@ export interface Supply {
   achievementProofMaterials?: string; //成果证明材料
   achievementUnit?: string; //成果单位
   contactPhone?: string; //联系电话
-  coreCompetitiveness?: string; //核心核心竞争力
+  coreCompetitiveness?: string; //核心竞争力
   createTime?: string; //创建时间
   field?: string; //所属领域
   intellectualPropertyForm?: string; //知识产权形式

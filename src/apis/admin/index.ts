@@ -224,8 +224,8 @@ export const exportExpert = (params: ExpertOptions, config?: AxiosRequestConfig)
     responseType: 'blob',
   });
 };
-// 成果供方列表查询All
-export const searchSupplyListAll = (params: SupplyOptions, config?: AxiosRequestConfig) => {
+// 查找成果供方列表
+export const searchSupplyList = (params: SupplyOptions, config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess<searchOptions<Supply>>>(
     `/tech/api/suppliers/search`,
     params,
@@ -243,7 +243,7 @@ export const editSupplyList = (params: Supply, config?: AxiosRequestConfig) => {
 // 成果供方列表保存
 export const saveSupplyList = (params: Supply, config?: AxiosRequestConfig) => {
   return request.post<ResultSuccess<{ code: number; message: string }>>(
-    `/tech/api/suppliers/save`,
+    `/tech/api/suppliers`,
     params,
     config,
   );
@@ -266,7 +266,7 @@ export const deleteSupplyList = (id: number, config?: AxiosRequestConfig) => {
 };
 // 成果供方导出
 export const exportSupply = (params: SupplyOptions, config?: AxiosRequestConfig) => {
-  return request.post<Blob>('/tech/api/suppliers/export', params, {
+  return request.get<Blob>('/tech/api/suppliers/export/all', params, {
     ...config,
     responseType: 'blob',
   });
