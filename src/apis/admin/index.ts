@@ -317,9 +317,8 @@ export const deleteDemandList = (id: number, config?: AxiosRequestConfig) => {
 };
 // 成果需方导出
 export const exportDemand = (params: DemandOptions, config?: AxiosRequestConfig) => {
-  return request.get<Blob>('/tech/api/demands/export/all', {
+  return request.get<Blob>('/tech/api/demands/export/all', params, {
     ...config,
-    params,
     responseType: 'blob',
   });
 };
