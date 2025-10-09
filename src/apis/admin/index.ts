@@ -302,7 +302,7 @@ export const saveDemandList = (params: Demand, config?: AxiosRequestConfig) => {
 // 导入成果需方excel上传
 export const uploadDemandExcel = (file: UploadFileParams, config?: AxiosRequestConfig) => {
   return request.uploadFile<UploadResult<{ url: string; message: string }>>(
-    `/tech/api/suppliers/import`,
+    `/tech/api/demands/import`,
     file,
     config,
   );
