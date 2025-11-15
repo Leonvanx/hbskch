@@ -77,6 +77,12 @@ const routes = [
         meta: { label: '备份管理', iconName: 'backup' },
         component: () => import('@/views/Admin/BackupManagement.vue'),
       },
+      {
+        path: 'backupV2Management',
+        name: 'backupV2Management',
+        meta: { label: '备份管理v2', iconName: 'backup' },
+        component: () => import('@/views/Admin/BackupV2Management.vue'),
+      },
     ],
   },
   {

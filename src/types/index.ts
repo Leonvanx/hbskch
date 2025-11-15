@@ -6,3 +6,4 @@ export * from './expert';
 export * from './backup';
 export * from './demand';
 export * from './supply';
+export * from './backupV2';
