@@ -162,13 +162,18 @@ const handleCreateBackupSubmit = () => {
         { timeout: 120000 },
       )
         .then((res) => {
+          message.destroyAll();
           if (res.code === 0) {
-            message.destroyAll();
             message.success('创建备份成功');
             showCreateBackupModal.value = false;
             loadBackupList(); // 刷新列表
             // 重置表单
-            editTarget.value = {};
+            editTarget.value = {
+              backupName: '',
+              description: '',
+              startTime: dayjs().format('YYYY-MM-DD'),
+              endTime: dayjs().format('YYYY-MM-DD'),
+            };
           }
         })
         .catch(() => {
