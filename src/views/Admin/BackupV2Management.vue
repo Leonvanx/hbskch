@@ -153,7 +153,7 @@ const handleCreateBackupSubmit = () => {
       message.success('新增备份成功');
       // 重置表单
       editTarget.value = {};
-      editFormRef.value?.resetFields();
+      // editFormRef.value?.resetFields();
     }
   });
 };
