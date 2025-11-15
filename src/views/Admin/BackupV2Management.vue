@@ -42,13 +42,13 @@
     >
       <!-- 表单 -->
       <n-form ref="editFormRef" :model="editTarget" :rules="editRules">
-        <n-form-item label="备份名称" prop="backupName">
+        <n-form-item label="备份名称" path="backupName">
           <n-input v-model:value="editTarget.backupName" placeholder="请输入备份名称"></n-input>
         </n-form-item>
-        <n-form-item label="备份描述" prop="description">
+        <n-form-item label="备份描述" path="description">
           <n-input v-model:value="editTarget.description" placeholder="请输入备份描述"></n-input>
         </n-form-item>
-        <n-form-item label="备份开始时间" prop="startTime">
+        <n-form-item label="备份开始时间" path="startTime">
           <n-date-picker
             v-model:formatted-value="editTarget.startTime"
             placeholder="请选择备份开始时间"
@@ -60,7 +60,7 @@
             @update:formatted-value="handleStartTimeUpdate"
           ></n-date-picker>
         </n-form-item>
-        <n-form-item label="备份结束时间" prop="endTime">
+        <n-form-item label="备份结束时间" path="endTime">
           <n-date-picker
             v-model:formatted-value="editTarget.endTime"
             placeholder="请选择备份结束时间"
@@ -92,7 +92,12 @@ const message = useMessage();
 const dialog = useDialog();
 // 新增备份弹窗
 const editFormRef = ref<FormInst | null>(null);
-const editTarget = ref<BackupV2Item>({});
+const editTarget = ref<BackupV2Item>({
+  backupName: '',
+  description: '',
+  startTime: dayjs().format('YYYY-MM-DD'),
+  endTime: dayjs().format('YYYY-MM-DD'),
+});
 const showCreateBackupModal = ref(false);
 
 const isStartTimeDisabled = (ts: number) => {
@@ -175,30 +180,26 @@ const handleCreateBackupSubmit = () => {
   });
 };
 const editRules: FormRules = {
-  backupName: [
-    {
-      required: true,
-      message: '请输入备份名称',
-    },
-  ],
-  description: [
-    {
-      required: true,
-      message: '请输入备份描述',
-    },
-  ],
-  startTime: [
-    {
-      required: true,
-      message: '请选择备份开始时间',
-    },
-  ],
-  endTime: [
-    {
-      required: true,
-      message: '请选择备份结束时间',
-    },
-  ],
+  backupName: {
+    required: true,
+    message: '请输入备份名称',
+    trigger: 'blur',
+  },
+  description: {
+    required: true,
+    message: '请输入备份描述',
+    trigger: 'blur',
+  },
+  startTime: {
+    required: true,
+    message: '请选择备份开始时间',
+    trigger: 'change',
+  },
+  endTime: {
+    required: true,
+    message: '请选择备份结束时间',
+    trigger: 'change',
+  },
 };
 // 表格列定义
 const columns = [
