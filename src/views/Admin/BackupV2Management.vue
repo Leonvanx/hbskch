@@ -21,13 +21,12 @@
     </template>
     <CTable :columns="columns" :table-data="tableData" :bordered="true" :striped="true">
       <template #time="{ row }">
-        {{ formatDate(row.time) }}
+        {{ formatDate(row.startTime) }} ~ {{ formatDate(row.endTime) }}
       </template>
       <template #actions="{ row }">
         <n-flex>
-          <n-button type="primary" @click="handleRestore(row.timeStr)"> 恢复备份 </n-button>
-          <n-button type="error" @click="handleDelete(row.time)"> 删除备份 </n-button>
-          <n-button type="info" @click="download(row.time)"> 导出备份 </n-button>
+          <n-button type="primary" @click="handleRestore(row.backupId)"> 恢复备份 </n-button>
+          <n-button type="error" @click="handleDelete(row.backupId)"> 删除备份 </n-button>
         </n-flex>
       </template>
     </CTable>
@@ -86,10 +85,9 @@
 
 <script lang="ts" setup>
 import { NButton, type FormInst, type FormRules } from 'naive-ui';
-import { createBackup, deleteBackup, getBackupList, restoreBackup, downloadBackup } from '@/apis';
-import type { BackupItem } from '@/types';
-import dayjs from 'dayjs';
+import { createBackup, deleteBackup, getBackupList, restoreBackup } from '@/apis/backupV2';
 import type { BackupV2Item } from '@/types';
+import dayjs from 'dayjs';
 const message = useMessage();
 const dialog = useDialog();
 // 新增备份弹窗
@@ -148,11 +146,30 @@ const handleCreateBackupSubmit = () => {
   editFormRef.value?.validate((errors) => {
     if (!errors) {
       //添加新增内容接口
-      console.log('新增备份内容：', editTarget.value);
-      showCreateBackupModal.value = false;
-      message.success('新增备份成功');
-      // 重置表单
-      editTarget.value = {};
+      message.loading('正在创建备份...', { duration: 0 });
+      createBackup(
+        {
+          backupName: editTarget.value.backupName,
+          description: editTarget.value.description,
+          startTime: `${editTarget.value.startTime} 00:00:00`,
+          endTime: `${editTarget.value.endTime} 23:59:59`,
+        },
+        { timeout: 120000 },
+      )
+        .then((res) => {
+          if (res.code === 0) {
+            message.destroyAll();
+            message.success('创建备份成功');
+            showCreateBackupModal.value = false;
+            loadBackupList(); // 刷新列表
+            // 重置表单
+            editTarget.value = {};
+          }
+        })
+        .catch(() => {
+          message.destroyAll();
+        });
+
       // editFormRef.value?.resetFields();
     }
   });
@@ -186,8 +203,20 @@ const editRules: FormRules = {
 // 表格列定义
 const columns = [
   {
+    title: '备份名称',
+    key: 'backupName',
+  },
+  {
     title: '备份时间点',
     key: 'time',
+  },
+  {
+    title: '备份记录数',
+    key: 'recordCount',
+  },
+  {
+    title: '备份描述',
+    key: 'description',
   },
   {
     title: '操作',
@@ -196,7 +225,7 @@ const columns = [
 ];
 
 // 模拟数据
-const tableData = ref<BackupItem[]>([]);
+const tableData = ref<BackupV2Item[]>([]);
 const loadBackupList = async () => {
   const res = await getBackupList();
   if (res.data) {
@@ -208,21 +237,9 @@ const handleCreateBackup = () => {
   // 显示新增备份弹窗
   showCreateBackupModal.value = true;
   return;
-  message.loading('正在创建备份...', { duration: 0 });
-  createBackup({ timeout: 120000 })
-    .then((res) => {
-      if (res.code === 0) {
-        message.destroyAll();
-        message.success('创建备份成功');
-        loadBackupList(); // 刷新列表
-      }
-    })
-    .catch(() => {
-      message.destroyAll();
-    });
 };
 // 恢复备份
-const handleRestore = async (timestamp: string) => {
+const handleRestore = async (backupId: string) => {
   dialog.success({
     title: '警告',
     content: '你确定恢复备份吗？',
@@ -231,7 +248,7 @@ const handleRestore = async (timestamp: string) => {
     draggable: true,
     onPositiveClick: () => {
       message.loading('正在恢复备份...', { duration: 0 });
-      restoreBackup(timestamp, { timeout: 120000 })
+      restoreBackup(backupId, { timeout: 120000 })
         .then((res) => {
           if (res.code === 0) {
             message.destroyAll();
@@ -247,11 +264,8 @@ const handleRestore = async (timestamp: string) => {
     },
   });
 };
-const download = async (timestamp: string) => {
-  // 直接跳到新页面打开
-  window.open(downloadBackup(formatDate(timestamp)), '_blank');
-};
-const handleDelete = async (timestamp: string) => {
+
+const handleDelete = async (backupId: string) => {
   dialog.warning({
     title: '警告',
     content: '你确定删除备份吗？',
@@ -260,8 +274,7 @@ const handleDelete = async (timestamp: string) => {
     draggable: true,
     onPositiveClick: () => {
       message.loading('正在删除备份...', { duration: 0 });
-      const str = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
-      deleteBackup(str, { timeout: 120000 })
+      deleteBackup(backupId, { timeout: 120000 })
         .then((res) => {
           if (res.code === 0) {
             message.destroyAll();
@@ -278,7 +291,7 @@ const handleDelete = async (timestamp: string) => {
   });
 };
 const formatDate = (date: string) => {
-  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+  return dayjs(date).format('YYYY-MM-DD');
 };
 onMounted(() => {
   loadBackupList();
